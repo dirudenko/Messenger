@@ -3,18 +3,18 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 51;
 	objects = {
 
 /* Begin PBXBuildFile section */
 		6908E3D326E35459001082ED /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6908E3D226E35459001082ED /* AppDelegate.swift */; };
 		6908E3D526E35459001082ED /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6908E3D426E35459001082ED /* SceneDelegate.swift */; };
-		6908E3D726E35459001082ED /* AuthViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6908E3D626E35459001082ED /* AuthViewController.swift */; };
-		6908E3DA26E35459001082ED /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6908E3D826E35459001082ED /* Main.storyboard */; };
 		6908E3DC26E3545A001082ED /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6908E3DB26E3545A001082ED /* Assets.xcassets */; };
 		6908E3DF26E3545A001082ED /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6908E3DD26E3545A001082ED /* LaunchScreen.storyboard */; };
 		6931D64526E365DD0086AE5B /* AppStartManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6931D64426E365DD0086AE5B /* AppStartManager.swift */; };
 		6931D64726E3663B0086AE5B /* MessengerBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6931D64626E3663B0086AE5B /* MessengerBuilder.swift */; };
+		6931D64D26E400080086AE5B /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6931D64C26E400080086AE5B /* LoginView.swift */; };
+		6931D64F26E401880086AE5B /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6931D64E26E401880086AE5B /* LoginViewController.swift */; };
 		6EFF7B23AD2862276C5A7714 /* Pods_Messenger.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 878E6A11935E181B2A53B407 /* Pods_Messenger.framework */; };
 /* End PBXBuildFile section */
 
@@ -24,13 +24,13 @@
 		6908E3CF26E35459001082ED /* Messenger.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Messenger.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6908E3D226E35459001082ED /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		6908E3D426E35459001082ED /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		6908E3D626E35459001082ED /* AuthViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthViewController.swift; sourceTree = "<group>"; };
-		6908E3D926E35459001082ED /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		6908E3DB26E3545A001082ED /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		6908E3DE26E3545A001082ED /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		6908E3E026E3545A001082ED /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		6931D64426E365DD0086AE5B /* AppStartManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStartManager.swift; sourceTree = "<group>"; };
 		6931D64626E3663B0086AE5B /* MessengerBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessengerBuilder.swift; sourceTree = "<group>"; };
+		6931D64C26E400080086AE5B /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
+		6931D64E26E401880086AE5B /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		878E6A11935E181B2A53B407 /* Pods_Messenger.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Messenger.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -52,7 +52,6 @@
 				328C7F74D9DBB0571DCF3801 /* Pods-Messenger.debug.xcconfig */,
 				464824C4CA8533FB21CDB38E /* Pods-Messenger.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -77,11 +76,10 @@
 		6908E3D126E35459001082ED /* Messenger */ = {
 			isa = PBXGroup;
 			children = (
+				6931D64826E3FF3A0086AE5B /* Login */,
 				6931D64126E365BF0086AE5B /* Model */,
 				6931D63E26E365760086AE5B /* Core */,
 				6908E3D426E35459001082ED /* SceneDelegate.swift */,
-				6908E3D626E35459001082ED /* AuthViewController.swift */,
-				6908E3D826E35459001082ED /* Main.storyboard */,
 				6908E3DB26E3545A001082ED /* Assets.xcassets */,
 				6908E3DD26E3545A001082ED /* LaunchScreen.storyboard */,
 				6908E3E026E3545A001082ED /* Info.plist */,
@@ -128,6 +126,39 @@
 				6931D64626E3663B0086AE5B /* MessengerBuilder.swift */,
 			);
 			path = AppStartManager;
+			sourceTree = "<group>";
+		};
+		6931D64826E3FF3A0086AE5B /* Login */ = {
+			isa = PBXGroup;
+			children = (
+				6931D64B26E3FF580086AE5B /* Presenter */,
+				6931D64A26E3FF4E0086AE5B /* View */,
+				6931D64926E3FF420086AE5B /* Model */,
+			);
+			path = Login;
+			sourceTree = "<group>";
+		};
+		6931D64926E3FF420086AE5B /* Model */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		6931D64A26E3FF4E0086AE5B /* View */ = {
+			isa = PBXGroup;
+			children = (
+				6931D64C26E400080086AE5B /* LoginView.swift */,
+				6931D64E26E401880086AE5B /* LoginViewController.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		6931D64B26E3FF580086AE5B /* Presenter */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Presenter;
 			sourceTree = "<group>";
 		};
 		F455B4A503D2003B4ABE5130 /* Frameworks */ = {
@@ -199,7 +230,6 @@
 			files = (
 				6908E3DF26E3545A001082ED /* LaunchScreen.storyboard in Resources */,
 				6908E3DC26E3545A001082ED /* Assets.xcassets in Resources */,
-				6908E3DA26E35459001082ED /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -252,7 +282,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6908E3D726E35459001082ED /* AuthViewController.swift in Sources */,
+				6931D64F26E401880086AE5B /* LoginViewController.swift in Sources */,
+				6931D64D26E400080086AE5B /* LoginView.swift in Sources */,
 				6931D64726E3663B0086AE5B /* MessengerBuilder.swift in Sources */,
 				6908E3D326E35459001082ED /* AppDelegate.swift in Sources */,
 				6931D64526E365DD0086AE5B /* AppStartManager.swift in Sources */,
@@ -263,14 +294,6 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
-		6908E3D826E35459001082ED /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				6908E3D926E35459001082ED /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
 		6908E3DD26E3545A001082ED /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (

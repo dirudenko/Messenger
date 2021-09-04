@@ -10,7 +10,7 @@ import UIKit
 class MessengerBuilder {
   
   static func build() -> UIViewController {
-    let viewController = AuthViewController()
+    let viewController = LoginViewController()
     return viewController
   }
 

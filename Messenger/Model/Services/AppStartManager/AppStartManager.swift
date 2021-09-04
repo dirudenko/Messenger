@@ -17,7 +17,7 @@ final class AppStartManager {
     
     func start() {
         let rootVC = MessengerBuilder.build()
-        rootVC.navigationItem.title = "Choose search"
+       // rootVC.navigationItem.title = "Choose search"
         let navVC = self.configuredNavigationController
         navVC.viewControllers = [rootVC]
         
