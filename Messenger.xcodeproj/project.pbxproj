@@ -15,6 +15,8 @@
 		6931D64726E3663B0086AE5B /* MessengerBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6931D64626E3663B0086AE5B /* MessengerBuilder.swift */; };
 		6931D64D26E400080086AE5B /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6931D64C26E400080086AE5B /* LoginView.swift */; };
 		6931D64F26E401880086AE5B /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6931D64E26E401880086AE5B /* LoginViewController.swift */; };
+		6931D65526E4BE300086AE5B /* RegisterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6931D65426E4BE300086AE5B /* RegisterView.swift */; };
+		6931D65726E4BEE80086AE5B /* RegisterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6931D65626E4BEE80086AE5B /* RegisterViewController.swift */; };
 		6EFF7B23AD2862276C5A7714 /* Pods_Messenger.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 878E6A11935E181B2A53B407 /* Pods_Messenger.framework */; };
 /* End PBXBuildFile section */
 
@@ -31,6 +33,8 @@
 		6931D64626E3663B0086AE5B /* MessengerBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessengerBuilder.swift; sourceTree = "<group>"; };
 		6931D64C26E400080086AE5B /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
 		6931D64E26E401880086AE5B /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
+		6931D65426E4BE300086AE5B /* RegisterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterView.swift; sourceTree = "<group>"; };
+		6931D65626E4BEE80086AE5B /* RegisterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterViewController.swift; sourceTree = "<group>"; };
 		878E6A11935E181B2A53B407 /* Pods_Messenger.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Messenger.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -76,6 +80,7 @@
 		6908E3D126E35459001082ED /* Messenger */ = {
 			isa = PBXGroup;
 			children = (
+				6931D65026E4BDFE0086AE5B /* Register */,
 				6931D64826E3FF3A0086AE5B /* Login */,
 				6931D64126E365BF0086AE5B /* Model */,
 				6931D63E26E365760086AE5B /* Core */,
@@ -159,6 +164,39 @@
 			children = (
 			);
 			path = Presenter;
+			sourceTree = "<group>";
+		};
+		6931D65026E4BDFE0086AE5B /* Register */ = {
+			isa = PBXGroup;
+			children = (
+				6931D65326E4BE1C0086AE5B /* Model */,
+				6931D65226E4BE150086AE5B /* Controller */,
+				6931D65126E4BE0E0086AE5B /* Presenter */,
+			);
+			path = Register;
+			sourceTree = "<group>";
+		};
+		6931D65126E4BE0E0086AE5B /* Presenter */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Presenter;
+			sourceTree = "<group>";
+		};
+		6931D65226E4BE150086AE5B /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				6931D65426E4BE300086AE5B /* RegisterView.swift */,
+				6931D65626E4BEE80086AE5B /* RegisterViewController.swift */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		6931D65326E4BE1C0086AE5B /* Model */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Model;
 			sourceTree = "<group>";
 		};
 		F455B4A503D2003B4ABE5130 /* Frameworks */ = {
@@ -285,6 +323,8 @@
 				6931D64F26E401880086AE5B /* LoginViewController.swift in Sources */,
 				6931D64D26E400080086AE5B /* LoginView.swift in Sources */,
 				6931D64726E3663B0086AE5B /* MessengerBuilder.swift in Sources */,
+				6931D65526E4BE300086AE5B /* RegisterView.swift in Sources */,
+				6931D65726E4BEE80086AE5B /* RegisterViewController.swift in Sources */,
 				6908E3D326E35459001082ED /* AppDelegate.swift in Sources */,
 				6931D64526E365DD0086AE5B /* AppStartManager.swift in Sources */,
 				6908E3D526E35459001082ED /* SceneDelegate.swift in Sources */,

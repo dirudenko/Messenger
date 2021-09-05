@@ -16,7 +16,7 @@ final class AppStartManager {
     }
     
     func start() {
-        let rootVC = MessengerBuilder.build()
+        let rootVC = MessengerBuilder.createLoginScreen()
        // rootVC.navigationItem.title = "Choose search"
         let navVC = self.configuredNavigationController
         navVC.viewControllers = [rootVC]
