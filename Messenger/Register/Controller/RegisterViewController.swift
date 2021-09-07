@@ -6,22 +6,31 @@
 //
 
 import UIKit
+import Firebase
 
 class RegisterViewController: UIViewController {
-    
-  private let registerView = RegisterView()
   
-    override func viewDidLoad() {
-        super.viewDidLoad()
-      //navigationController?.navigationBar.isHidden = false
-
-      let gesture = UITapGestureRecognizer(target: self, action: #selector(didTapChangeAvatar))
-      registerView.createButton.addTarget(self, action: #selector(didTapRegister), for: .touchDown)
-      registerView.avatarImage.isUserInteractionEnabled = true
-      registerView.avatarImage.addGestureRecognizer(gesture)
-      
-      self.view = registerView
-    }
+  private let registerView = RegisterView()
+  private let presenter: RegisterViewPresenterProtocol
+  
+  init(presenter: RegisterViewPresenterProtocol) {
+    self.presenter = presenter
+    super.init(nibName: nil, bundle: nil)
+  }
+  
+  required init?(coder: NSCoder) {
+    fatalError("init(coder:) has not been implemented")
+  }
+  
+  override func viewDidLoad() {
+    super.viewDidLoad()
+    
+    let gesture = UITapGestureRecognizer(target: self, action: #selector(didTapChangeAvatar))
+    registerView.createButton.addTarget(self, action: #selector(didTapRegister), for: .touchDown)
+    registerView.avatarImage.isUserInteractionEnabled = true
+    registerView.avatarImage.addGestureRecognizer(gesture)
+    self.view = registerView
+  }
   
   override func viewWillDisappear(_ animated: Bool) {
     super.viewWillDisappear(animated)
@@ -35,7 +44,7 @@ class RegisterViewController: UIViewController {
     registerView.lastNameField.resignFirstResponder()
     registerView.emailField.resignFirstResponder()
     registerView.passwordField.resignFirstResponder()
-
+    
     guard let email = registerView.emailField.text,
           let firstName = registerView.firstNameField.text,
           let lastName = registerView.lastNameField.text,
@@ -44,25 +53,21 @@ class RegisterViewController: UIViewController {
           !password.isEmpty,
           !email.isEmpty,
           !firstName.isEmpty else {
-      alertUser()
+      alertUser("Введите корректную информацию о пользователе")
       return
     }
+    
+    presenter.viewDidRegister(email: email, password: password)
   }
   
   @objc private func didTapChangeAvatar() {
     presentPhoto()
   }
-  
-  private func alertUser() {
-    let alert = UIAlertController(title: "Ошибка", message:"Введите корректную информацию о пользователе", preferredStyle: .alert)
-    alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
-    present(alert, animated: true)
-  }
 }
 
 extension RegisterViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
   
-  func presentPhoto() {
+  private func presentPhoto() {
     let action = UIAlertController(title: "Фотография профиля",
                                    message: "Как вы хотите выбрать фотграфию профиля",
                                    preferredStyle: .actionSheet)
@@ -84,7 +89,7 @@ extension RegisterViewController: UIImagePickerControllerDelegate, UINavigationC
   }
   
   
-  func presentFromCamera() {
+  private func presentFromCamera() {
     let vc = UIImagePickerController()
     vc.sourceType = .camera
     vc.delegate = self
@@ -92,7 +97,7 @@ extension RegisterViewController: UIImagePickerControllerDelegate, UINavigationC
     present(vc, animated: true)
   }
   
-  func presentFromPhotoLibrary() {
+  private func presentFromPhotoLibrary() {
     let vc = UIImagePickerController()
     vc.sourceType = .photoLibrary
     vc.delegate = self
@@ -100,14 +105,31 @@ extension RegisterViewController: UIImagePickerControllerDelegate, UINavigationC
     present(vc, animated: true)
   }
   
-  func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+  internal func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
     picker.dismiss(animated: true, completion: nil)
     guard let selectedImage = info[UIImagePickerController.InfoKey.editedImage] as? UIImage else { return }
     registerView.avatarImage.image = selectedImage
   }
   
-  func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+  internal func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
     picker.dismiss(animated: true, completion: nil)
   }
   
+}
+
+extension RegisterViewController: RegisterViewProtocol {
+  func success() {
+    let alert = UIAlertController(title: "Ура", message: "Пользователь успешно создан", preferredStyle: .alert)
+    alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler:
+                                    { _ in
+                                      self.navigationController?.popViewController(animated: true)
+                                    }))
+    present(alert, animated: true)
+    
+  }
+  func alertUser(_ alert: String) {
+    let alert = UIAlertController(title: "Ошибка", message: alert, preferredStyle: .alert)
+    alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
+    present(alert, animated: true)
+  }
 }
