@@ -8,14 +8,19 @@
 import UIKit
 
 protocol Builder {
-  static func createLoginScreen() -> UIViewController
+  static func buildValidation() -> UIViewController
+  static func buildLoginScreen() -> UIViewController
   static func buildRegisterViewController() -> UIViewController
 }
 
-
 class MessengerBuilder: Builder {
+  static func buildValidation() -> UIViewController {
+    let vc = StartViewController()
+    return vc
+  }
   
-  static func createLoginScreen() -> UIViewController {
+  
+  static func buildLoginScreen() -> UIViewController {
     let presenter = LoginPresenter()
     let viewController = LoginViewController(presenter: presenter)
     presenter.view = viewController
@@ -25,7 +30,8 @@ class MessengerBuilder: Builder {
   }
   
   static func buildRegisterViewController() -> UIViewController {
-    let presenter = RegisterPresenter()
+    let databaseService = DatabaseService()
+    let presenter = RegisterPresenter(databaseService: databaseService)
     let viewController = RegisterViewController(presenter: presenter)
     presenter.view = viewController
     return viewController

@@ -6,11 +6,11 @@
 //
 
 import UIKit
-import FirebaseAuth
 
 class LoginViewController: UIViewController {
   
   private let loginView = LoginView()
+  
   private let presenter: LoginViewPresenterProtocol
   
   init(presenter: LoginViewPresenterProtocol) {
@@ -22,13 +22,16 @@ class LoginViewController: UIViewController {
     fatalError("init(coder:) has not been implemented")
   }
   
+  override func loadView() {
+      super.loadView()
+      self.view = loginView
+  }
   
   override func viewDidLoad() {
     super.viewDidLoad()
     navigationController?.navigationBar.isHidden = true
     loginView.createButton.addTarget(self, action: #selector(didTapRegister), for: .touchDown)
     loginView.loginButton.addTarget(self, action: #selector(didTapLogin), for: .touchDown)
-    self.view = loginView
   }
   
   override func viewWillDisappear(_ animated: Bool) {
@@ -59,7 +62,7 @@ class LoginViewController: UIViewController {
 extension LoginViewController: LoginViewProtocol {
   func login() {
     
-    //Переход на след контролер
+    navigationController?.dismiss(animated: true, completion: nil)
     
     print("Login success")
   }

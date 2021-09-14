@@ -9,6 +9,13 @@ import UIKit
 
 class LoginView: UIView {
   
+  private(set) lazy var scrollView: UIScrollView = {
+    let scrollView = UIScrollView()
+    scrollView.translatesAutoresizingMaskIntoConstraints = false
+
+    return scrollView
+  }()
+  
   private(set) lazy var logoImage: UIImageView = {
     let imageView = UIImageView()
     imageView.layer.cornerRadius = 30.0

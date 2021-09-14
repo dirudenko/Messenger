@@ -6,7 +6,6 @@
 //
 
 import UIKit
-import Firebase
 
 class RegisterViewController: UIViewController {
   
@@ -22,6 +21,11 @@ class RegisterViewController: UIViewController {
     fatalError("init(coder:) has not been implemented")
   }
   
+  override func loadView() {
+      super.loadView()
+      self.view = registerView
+  }
+  
   override func viewDidLoad() {
     super.viewDidLoad()
     
@@ -29,7 +33,6 @@ class RegisterViewController: UIViewController {
     registerView.createButton.addTarget(self, action: #selector(didTapRegister), for: .touchDown)
     registerView.avatarImage.isUserInteractionEnabled = true
     registerView.avatarImage.addGestureRecognizer(gesture)
-    self.view = registerView
   }
   
   override func viewWillDisappear(_ animated: Bool) {
@@ -57,7 +60,7 @@ class RegisterViewController: UIViewController {
       return
     }
     
-    presenter.viewDidRegister(email: email, password: password)
+    presenter.viewDidRegister(firstName: firstName, lastName: lastName, email: email, password: password)
   }
   
   @objc private func didTapChangeAvatar() {
@@ -125,6 +128,9 @@ extension RegisterViewController: RegisterViewProtocol {
                                       self.navigationController?.popViewController(animated: true)
                                     }))
     present(alert, animated: true)
+    
+   // navigationController?.dismiss(animated: true, completion: nil)
+
     
   }
   func alertUser(_ alert: String) {

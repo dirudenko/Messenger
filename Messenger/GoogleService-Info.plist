@@ -3,21 +3,21 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>432477770981-0p62qjbbo6fhdv73rd8jdot91t6f0mhp.apps.googleusercontent.com</string>
+	<string>368082364748-p3d4ed9c1co77fb821272tefd5fugdt7.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.432477770981-0p62qjbbo6fhdv73rd8jdot91t6f0mhp</string>
+	<string>com.googleusercontent.apps.368082364748-p3d4ed9c1co77fb821272tefd5fugdt7</string>
 	<key>API_KEY</key>
-	<string>AIzaSyDEkYHEuRrL5bIHWTNYOF-jSvK-Km6iLPQ</string>
+	<string>AIzaSyAJ-GSjKL-SDrvUwuGRudi5QbQMuBccnbI</string>
 	<key>GCM_SENDER_ID</key>
-	<string>432477770981</string>
+	<string>368082364748</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
 	<string>home.Messenger</string>
 	<key>PROJECT_ID</key>
-	<string>messenger-d0392</string>
+	<string>messenger-6df1e</string>
 	<key>STORAGE_BUCKET</key>
-	<string>messenger-d0392.appspot.com</string>
+	<string>messenger-6df1e.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -29,6 +29,8 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:432477770981:ios:c4c57620e88d709187f00c</string>
+	<string>1:368082364748:ios:b8cb5303e2733c3e3147e9</string>
+	<key>DATABASE_URL</key>
+	<string>https://messenger-6df1e-default-rtdb.europe-west1.firebasedatabase.app</string>
 </dict>
 </plist>

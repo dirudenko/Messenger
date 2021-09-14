@@ -16,7 +16,7 @@ class RegisterView: UIView {
     let imageView = UIImageView()
     imageView.layer.cornerRadius = imageSize / 2
     imageView.contentMode = .scaleAspectFit
-    imageView.image = UIImage(systemName: "person")
+    imageView.image = UIImage(systemName: "person.circle")
     imageView.tintColor = .systemBlue
     imageView.layer.masksToBounds = true
     imageView.translatesAutoresizingMaskIntoConstraints = false
