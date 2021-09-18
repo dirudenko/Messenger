@@ -22,11 +22,11 @@ class StartViewController: UIViewController {
   override func viewDidAppear(_ animated: Bool) {
     super.viewDidAppear(animated)
     
-    if let token = KeychainWrapper.standard.string(forKey: "login") {
+   // if let token = KeychainWrapper.standard.string(forKey: "login") {
       
-    } else {
+   // } else {
     authorizate()
-    }
+   // }
   }
 
   
@@ -34,7 +34,8 @@ class StartViewController: UIViewController {
     if FirebaseAuth.Auth.auth().currentUser == nil {
       let vc = MessengerBuilder.buildLoginScreen()
       vc.modalPresentationStyle = .fullScreen
-      present(vc, animated: false)
+      //present(vc, animated: false)
+      navigationController?.pushViewController(vc, animated: false)
     
 //    if let token = params["access_token"] {
 //         KeychainWrapper.standard.set(token, forKey: "login")

@@ -24,6 +24,10 @@
 		69C5D6E326EFCE2A00AB2D87 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69C5D6E226EFCE2A00AB2D87 /* User.swift */; };
 		69C5D6E526F0A72600AB2D87 /* UserFBModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69C5D6E426F0A72600AB2D87 /* UserFBModel.swift */; };
 		69C5D6EB26F0AF2000AB2D87 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 69C5D6EA26F0AF2000AB2D87 /* GoogleService-Info.plist */; };
+		69F5939926F5F574005AD477 /* TabBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69F5939826F5F574005AD477 /* TabBarViewController.swift */; };
+		69F5939B26F5F887005AD477 /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69F5939A26F5F887005AD477 /* ProfileViewController.swift */; };
+		69F5939D26F5FA53005AD477 /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69F5939C26F5FA53005AD477 /* ProfileView.swift */; };
+		69F5939F26F5FE24005AD477 /* ProfilePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69F5939E26F5FE24005AD477 /* ProfilePresenter.swift */; };
 		6EFF7B23AD2862276C5A7714 /* Pods_Messenger.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 878E6A11935E181B2A53B407 /* Pods_Messenger.framework */; };
 /* End PBXBuildFile section */
 
@@ -49,6 +53,10 @@
 		69C5D6E226EFCE2A00AB2D87 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		69C5D6E426F0A72600AB2D87 /* UserFBModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserFBModel.swift; sourceTree = "<group>"; };
 		69C5D6EA26F0AF2000AB2D87 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		69F5939826F5F574005AD477 /* TabBarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarViewController.swift; sourceTree = "<group>"; };
+		69F5939A26F5F887005AD477 /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
+		69F5939C26F5FA53005AD477 /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
+		69F5939E26F5FE24005AD477 /* ProfilePresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfilePresenter.swift; sourceTree = "<group>"; };
 		878E6A11935E181B2A53B407 /* Pods_Messenger.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Messenger.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -94,6 +102,8 @@
 		6908E3D126E35459001082ED /* Messenger */ = {
 			isa = PBXGroup;
 			children = (
+				69F5939726F5F544005AD477 /* StartScreen */,
+				69F5939326F5F3C0005AD477 /* Profile */,
 				69C5D6EA26F0AF2000AB2D87 /* GoogleService-Info.plist */,
 				6908E3E026E3545A001082ED /* Info.plist */,
 				69C5D6E126EFCE0B00AB2D87 /* Resources */,
@@ -102,7 +112,6 @@
 				6931D64826E3FF3A0086AE5B /* Login */,
 				6931D64126E365BF0086AE5B /* Model */,
 				6931D63E26E365760086AE5B /* Core */,
-				69C5D6DC26EFC44500AB2D87 /* StartViewController.swift */,
 			);
 			path = Messenger;
 			sourceTree = "<group>";
@@ -236,6 +245,49 @@
 			path = Resources;
 			sourceTree = "<group>";
 		};
+		69F5939326F5F3C0005AD477 /* Profile */ = {
+			isa = PBXGroup;
+			children = (
+				69F5939626F5F533005AD477 /* Presenter */,
+				69F5939526F5F529005AD477 /* View */,
+				69F5939426F5F50C005AD477 /* Model */,
+			);
+			path = Profile;
+			sourceTree = "<group>";
+		};
+		69F5939426F5F50C005AD477 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		69F5939526F5F529005AD477 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				69F5939A26F5F887005AD477 /* ProfileViewController.swift */,
+				69F5939C26F5FA53005AD477 /* ProfileView.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		69F5939626F5F533005AD477 /* Presenter */ = {
+			isa = PBXGroup;
+			children = (
+				69F5939E26F5FE24005AD477 /* ProfilePresenter.swift */,
+			);
+			path = Presenter;
+			sourceTree = "<group>";
+		};
+		69F5939726F5F544005AD477 /* StartScreen */ = {
+			isa = PBXGroup;
+			children = (
+				69C5D6DC26EFC44500AB2D87 /* StartViewController.swift */,
+				69F5939826F5F574005AD477 /* TabBarViewController.swift */,
+			);
+			path = StartScreen;
+			sourceTree = "<group>";
+		};
 		F455B4A503D2003B4ABE5130 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -364,13 +416,17 @@
 				6931D64726E3663B0086AE5B /* MessengerBuilder.swift in Sources */,
 				6931D65B26E683CC0086AE5B /* LoginPresenter.swift in Sources */,
 				6931D65526E4BE300086AE5B /* RegisterView.swift in Sources */,
+				69F5939B26F5F887005AD477 /* ProfileViewController.swift in Sources */,
 				69C5D6DD26EFC44500AB2D87 /* StartViewController.swift in Sources */,
 				6931D65F26E75A570086AE5B /* RegisterPresenter.swift in Sources */,
 				6931D65726E4BEE80086AE5B /* RegisterViewController.swift in Sources */,
 				69C5D6E026EFCBE100AB2D87 /* DatabaseService.swift in Sources */,
 				6908E3D326E35459001082ED /* AppDelegate.swift in Sources */,
+				69F5939D26F5FA53005AD477 /* ProfileView.swift in Sources */,
 				69C5D6E326EFCE2A00AB2D87 /* User.swift in Sources */,
+				69F5939F26F5FE24005AD477 /* ProfilePresenter.swift in Sources */,
 				6931D64526E365DD0086AE5B /* AppStartManager.swift in Sources */,
+				69F5939926F5F574005AD477 /* TabBarViewController.swift in Sources */,
 				6908E3D526E35459001082ED /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

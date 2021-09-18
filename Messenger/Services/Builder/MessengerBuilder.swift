@@ -8,12 +8,19 @@
 import UIKit
 
 protocol Builder {
+  static func buildTabBar() -> UIViewController
   static func buildValidation() -> UIViewController
   static func buildLoginScreen() -> UIViewController
   static func buildRegisterViewController() -> UIViewController
+  static func buildProfileViewController() -> UIViewController
 }
 
 class MessengerBuilder: Builder {
+  static func buildTabBar() -> UIViewController {
+    let vc = TabBarViewController()
+    return vc
+  }
+  
   static func buildValidation() -> UIViewController {
     let vc = StartViewController()
     return vc
@@ -24,9 +31,9 @@ class MessengerBuilder: Builder {
     let presenter = LoginPresenter()
     let viewController = LoginViewController(presenter: presenter)
     presenter.view = viewController
-    let navVC = UINavigationController()
-    navVC.viewControllers = [viewController]
-    return navVC
+   // let navVC = UINavigationController()
+   // navVC.viewControllers = [viewController]
+    return viewController
   }
   
   static func buildRegisterViewController() -> UIViewController {
@@ -37,4 +44,11 @@ class MessengerBuilder: Builder {
     return viewController
   }
 
+  static func buildProfileViewController() -> UIViewController {
+    let presenter = ProfilePresenter()
+    let viewController = ProfileViewController(presenter: presenter)
+    presenter.view = viewController
+    return viewController
+  }
+  
 }

@@ -34,6 +34,12 @@ class LoginViewController: UIViewController {
     loginView.loginButton.addTarget(self, action: #selector(didTapLogin), for: .touchDown)
   }
   
+  override func viewDidAppear(_ animated: Bool) {
+    super.viewDidAppear(animated)
+    navigationController?.navigationItem.title = ""
+
+  }
+  
   override func viewWillDisappear(_ animated: Bool) {
     super.viewWillDisappear(animated)
     navigationController?.navigationBar.isHidden = false
