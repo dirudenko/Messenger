@@ -7,7 +7,7 @@
 
 import Foundation
 import FirebaseAuth
-
+import GoogleSignIn
 
 protocol ProfileViewProtocol: AnyObject {
   func sucessLogout()
@@ -28,6 +28,9 @@ class ProfilePresenter: ProfileViewPresenterProtocol {
                                   style: .destructive,
                                   handler: { [weak self] _ in
                                     do {
+                                      
+                                      GIDSignIn.sharedInstance.signOut()
+                                      
                                       try FirebaseAuth.Auth.auth().signOut()
                                       self?.view?.sucessLogout()
                                     }

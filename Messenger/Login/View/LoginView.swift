@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import GoogleSignIn
 
 class LoginView: UIView {
   
@@ -87,6 +88,12 @@ class LoginView: UIView {
     return button
   }()
   
+  private(set) lazy var googleButton: GIDSignInButton = {
+    let button = GIDSignInButton()
+    button.translatesAutoresizingMaskIntoConstraints = false
+    return button
+  }()
+  
   override init(frame: CGRect) {
     super.init(frame: frame)
     configureUI()
@@ -104,6 +111,7 @@ class LoginView: UIView {
     self.addSubview(loginButton)
     self.addSubview(createButton)
     self.addSubview(passwordField)
+    self.addSubview(googleButton)
     
     
     NSLayoutConstraint.activate([
@@ -127,6 +135,12 @@ class LoginView: UIView {
       createButton.topAnchor.constraint(equalTo: loginButton.bottomAnchor, constant: 16),
       createButton.widthAnchor.constraint(equalToConstant: 200),
       createButton.heightAnchor.constraint(equalToConstant: 32),
+      
+      googleButton.leftAnchor.constraint(equalTo: self.centerXAnchor, constant: -100),
+      googleButton.topAnchor.constraint(equalTo: createButton.bottomAnchor, constant: 16),
+     // googleButton.widthAnchor.constraint(equalToConstant: 200),
+      googleButton.heightAnchor.constraint(equalToConstant: 32)
+      
     ])
   }
   

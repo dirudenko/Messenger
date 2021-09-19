@@ -28,7 +28,8 @@ class MessengerBuilder: Builder {
   
   
   static func buildLoginScreen() -> UIViewController {
-    let presenter = LoginPresenter()
+    let databaseService = DatabaseService()
+    let presenter = LoginPresenter(databaseService: databaseService)
     let viewController = LoginViewController(presenter: presenter)
     presenter.view = viewController
    // let navVC = UINavigationController()

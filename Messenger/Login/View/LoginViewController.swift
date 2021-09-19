@@ -32,11 +32,12 @@ class LoginViewController: UIViewController {
     navigationController?.navigationBar.isHidden = true
     loginView.createButton.addTarget(self, action: #selector(didTapRegister), for: .touchDown)
     loginView.loginButton.addTarget(self, action: #selector(didTapLogin), for: .touchDown)
+    loginView.googleButton.addTarget(self, action: #selector(didTapGoogle), for: .touchDown)
   }
   
   override func viewDidAppear(_ animated: Bool) {
     super.viewDidAppear(animated)
-    navigationController?.navigationItem.title = ""
+    navigationController?.navigationBar.isHidden = true
 
   }
   
@@ -63,6 +64,11 @@ class LoginViewController: UIViewController {
     }
     presenter.viewDidLogin(email: login, password: password)
   }
+  
+  @objc private func didTapGoogle() {
+    presenter.viewGoogleRegister()
+  }
+  
 }
 
 extension LoginViewController: LoginViewProtocol {
