@@ -20,24 +20,25 @@ protocol ProfileViewPresenterProtocol: AnyObject {
 class ProfilePresenter: ProfileViewPresenterProtocol {
   weak var view: (UIViewController & ProfileViewProtocol)?
   
-  func viewDidLogout()-> UIViewController {
+  func viewDidLogout() -> UIViewController {
     let alert = UIAlertController(title: "Внимание",
                                   message: "Вы действительно хотитте выйти?",
                                   preferredStyle: .actionSheet)
     alert.addAction(UIAlertAction(title: "Выйти",
                                   style: .destructive,
                                   handler: { [weak self] _ in
-                                    do {
-                                      
-                                      GIDSignIn.sharedInstance.signOut()
-                                      
-                                      try FirebaseAuth.Auth.auth().signOut()
-                                      self?.view?.sucessLogout()
-                                    }
-                                    catch {
-                                      print("Failed to logout")
-                                    }
-                                  }))
+      guard let self = self else { return }
+      do {
+        /// Выход из Google
+        GIDSignIn.sharedInstance.signOut()
+        
+        try FirebaseAuth.Auth.auth().signOut()
+        self.view?.sucessLogout()
+      }
+      catch {
+        print("Failed to logout")
+      }
+    }))
     alert.addAction(UIAlertAction(title: "Отмена", style: .cancel))
     return alert
   }

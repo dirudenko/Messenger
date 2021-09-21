@@ -9,7 +9,7 @@ import UIKit
 import FirebaseAuth
 
 protocol RegisterViewProtocol: AnyObject {
-  func success()
+  func successToRegister()
   func alertUser(_ alert: String)
 }
 
@@ -28,16 +28,18 @@ class RegisterPresenter: RegisterViewPresenterProtocol {
   
   func viewDidRegister(firstName: String, lastName: String, email: String, password: String) {
     FirebaseAuth.Auth.auth().createUser(withEmail: email, password: password, completion: {[weak self] result, error in
+      guard let self = self else { return }
+      
       guard result != nil,
             error == nil else {
-        self?.view?.alertUser(error?.localizedDescription ?? "Error")
+        self.view?.alertUser(error?.localizedDescription ?? "Error")
         return
       }
-      self?.databaseService.addUser(user: User(firstName: firstName,
+      self.databaseService.addUser(user: User(firstName: firstName,
                                                lastName: lastName,
                                                email: email,
                                                avatarUrl: nil))
-      self?.view?.success()
+      self.view?.successToRegister()
     })
   }
 }

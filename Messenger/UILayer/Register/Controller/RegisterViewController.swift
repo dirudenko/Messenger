@@ -121,7 +121,8 @@ extension RegisterViewController: UIImagePickerControllerDelegate, UINavigationC
 }
 
 extension RegisterViewController: RegisterViewProtocol {
-  func success() {
+  
+  func successToRegister() {
     let alert = UIAlertController(title: "Ура", message: "Пользователь успешно создан", preferredStyle: .alert)
     alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler:
                                     { _ in

@@ -11,34 +11,37 @@ import FirebaseCore
 import GoogleSignIn
 
 protocol LoginViewProtocol: AnyObject {
-  func login()
+  func sucessToLogin()
   func alertUser(_ alert: String)
 }
 
 protocol LoginViewPresenterProtocol: AnyObject {
   func viewDidLogin(email: String, password: String)
   func viewDidRegister()
-  func viewGoogleRegister()
+  func viewDidGoogleRegister()
 }
 
 class LoginPresenter: LoginViewPresenterProtocol {
 
   let databaseService: DatabaseServiceProtocol
-  init(databaseService: DatabaseServiceProtocol ) {
+  init(databaseService: DatabaseServiceProtocol) {
     self.databaseService = databaseService
   }
   weak var view: (UIViewController & LoginViewProtocol)?
-  
+
+  /// Авторизация через приложение
   func viewDidLogin(email: String, password: String) {
     FirebaseAuth.Auth.auth().signIn(withEmail: email, password: password, completion: { [weak self] result , error in
+      guard let self = self else { return }
+
       guard let result = result,
             error == nil else {
-        self?.view?.alertUser(error?.localizedDescription ?? "Error")
+        self.view?.alertUser(error?.localizedDescription ?? "Error")
         return
       }
       let user = result.user
       print(user)
-      self?.view?.login()
+      self.view?.sucessToLogin()
     })
   }
   
@@ -47,20 +50,19 @@ class LoginPresenter: LoginViewPresenterProtocol {
     view?.navigationController?.pushViewController(vc, animated: true)
   }
   
-  func viewGoogleRegister() {
+  /// Авторизация через Google
+  func viewDidGoogleRegister() {
     guard let clientID = FirebaseApp.app()?.options.clientID else { return }
     
-    // Create Google Sign In configuration object.
     let config = GIDConfiguration(clientID: clientID)
     
-    // Start the sign in flow!
-    GIDSignIn.sharedInstance.signIn(with: config, presenting: view!) { [weak self] user, error in
-      
+        GIDSignIn.sharedInstance.signIn(with: config, presenting: view!) { [weak self] user, error in
+          guard let self = self else { return }
+
       if let error = error {
         print (error.localizedDescription)
         return
       }
-      
       guard let authentication = user?.authentication,
             let idToken = authentication.idToken
       else {
@@ -75,11 +77,11 @@ class LoginPresenter: LoginViewPresenterProtocol {
       
       FirebaseAuth.Auth.auth().signIn(with: credential) { result, error in
         guard  result != nil, error == nil else { return }
-        self?.databaseService.addUser(user: User(firstName: firstName,
+        self.databaseService.addUser(user: User(firstName: firstName,
                                                  lastName: lastName,
                                                  email: email,
                                                  avatarUrl: nil))
-        self?.view?.login()
+        self.view?.sucessToLogin()
       }
     }
   }

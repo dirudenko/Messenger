@@ -7,8 +7,12 @@
 
 import UIKit
 import GoogleSignIn
+import JGProgressHUD
+
 
 class LoginView: UIView {
+  
+  let spinner = JGProgressHUD(style: .dark)
   
   private(set) lazy var scrollView: UIScrollView = {
     let scrollView = UIScrollView()

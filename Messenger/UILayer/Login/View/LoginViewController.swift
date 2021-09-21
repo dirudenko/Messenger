@@ -45,7 +45,7 @@ class LoginViewController: UIViewController {
     super.viewWillDisappear(animated)
     navigationController?.navigationBar.isHidden = false
   }
-  
+  //MARK: - Private func
   @objc private func didTapRegister() {
     presenter.viewDidRegister()
   }
@@ -66,17 +66,19 @@ class LoginViewController: UIViewController {
   }
   
   @objc private func didTapGoogle() {
-    presenter.viewGoogleRegister()
+    presenter.viewDidGoogleRegister()
   }
   
 }
 
 extension LoginViewController: LoginViewProtocol {
-  func login() {
+  func sucessToLogin() {
     
-    navigationController?.dismiss(animated: true, completion: nil)
-    
-    print("Login success")
+    navigationController?.dismiss(animated: false, completion: nil)
+    //Добавить переход после успешной авторизации
+    //print("Login success")
+    let vc = MessengerBuilder.buildConversationsViewController()
+    present(vc, animated: false)
   }
   
   func alertUser(_ alert: String) {

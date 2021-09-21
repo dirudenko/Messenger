@@ -34,7 +34,7 @@ class ProfileViewController: UIViewController {
     profileView.tableView.dataSource = self
   }
 }
-
+//MARK: - DataSource, Delegate
 extension ProfileViewController: UITableViewDataSource, UITableViewDelegate {
   func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
     return data.count

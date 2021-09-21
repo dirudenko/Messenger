@@ -9,31 +9,40 @@ import UIKit
 
 protocol Builder {
   static func buildTabBar() -> UIViewController
-  static func buildValidation() -> UIViewController
-  static func buildLoginScreen() -> UIViewController
+  static func buildConversationsViewController() -> UIViewController
+  static func buildLoginScreenViewController() -> UIViewController
   static func buildRegisterViewController() -> UIViewController
   static func buildProfileViewController() -> UIViewController
+  static func buildChatViewController() -> UIViewController
+  static func buildNewConversationViewController() -> UIViewController
+
 }
 
 class MessengerBuilder: Builder {
+  static func buildNewConversationViewController() -> UIViewController {
+    let presenter = NewConversationPresenter()
+    let vc = NewConversationViewController(presenter: presenter)
+    presenter.view = vc
+    return vc
+  }
+  
   static func buildTabBar() -> UIViewController {
     let vc = TabBarViewController()
     return vc
   }
   
-  static func buildValidation() -> UIViewController {
-    let vc = StartViewController()
+  static func buildConversationsViewController() -> UIViewController {
+    let presenter = ConversationsPresenter()
+    let vc = ConversationsViewController(presenter: presenter)
+    presenter.view = vc
     return vc
   }
   
-  
-  static func buildLoginScreen() -> UIViewController {
+  static func buildLoginScreenViewController() -> UIViewController {
     let databaseService = DatabaseService()
     let presenter = LoginPresenter(databaseService: databaseService)
     let viewController = LoginViewController(presenter: presenter)
     presenter.view = viewController
-   // let navVC = UINavigationController()
-   // navVC.viewControllers = [viewController]
     return viewController
   }
   
@@ -52,4 +61,8 @@ class MessengerBuilder: Builder {
     return viewController
   }
   
+  static func buildChatViewController() -> UIViewController {
+    let vc = ChatViewController()
+    return vc
+  }
 }
