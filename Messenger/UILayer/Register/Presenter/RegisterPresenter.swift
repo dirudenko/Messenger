@@ -9,36 +9,55 @@ import UIKit
 import FirebaseAuth
 
 protocol RegisterViewProtocol: AnyObject {
+  
   func successToRegister()
   func alertUser(_ alert: String)
 }
 
 protocol RegisterViewPresenterProtocol: AnyObject {
-  func viewDidRegister(firstName: String, lastName: String,email: String, password: String)
+  func viewDidRegister(firstName: String, lastName: String,email: String, password: String, image: UIImage)
 }
 
 class RegisterPresenter: RegisterViewPresenterProtocol {
   
   weak var view: (UIViewController & RegisterViewProtocol)?
   let databaseService: DatabaseServiceProtocol
+  let storageService: StorageServiceProtocol
   
-  init(databaseService: DatabaseServiceProtocol ) {
+  init(databaseService: DatabaseServiceProtocol, storageService: StorageServiceProtocol ) {
     self.databaseService = databaseService
+    self.storageService = storageService
   }
   
-  func viewDidRegister(firstName: String, lastName: String, email: String, password: String) {
-    FirebaseAuth.Auth.auth().createUser(withEmail: email, password: password, completion: {[weak self] result, error in
+  func viewDidRegister(firstName: String, lastName: String, email: String, password: String, image: UIImage) {
+    FirebaseAuth.Auth.auth().createUser(withEmail: email, password: password, completion: { [weak self] result, error in
       guard let self = self else { return }
       
       guard result != nil,
             error == nil else {
-        self.view?.alertUser(error?.localizedDescription ?? "Error")
-        return
-      }
-      self.databaseService.addUser(user: User(firstName: firstName,
-                                               lastName: lastName,
-                                               email: email,
-                                               avatarUrl: nil))
+              self.view?.alertUser(error?.localizedDescription ?? "Error")
+              return
+            }
+      let newUser = User(firstName: firstName,
+                         lastName: lastName,
+                         email: email )
+      
+      self.databaseService.addUser(user: newUser, complition: { success in
+        if success {
+          let fileName = newUser.UserPictureName
+          guard let data = image.pngData() else { return }
+          self.storageService.uploadProfilePhoto(with: data,
+                                                 fileName: fileName) { result in
+            switch result {
+            case .success(let downloadURL):
+              UserDefaults.standard.set(downloadURL, forKey: "profile_picture_url")
+              print(downloadURL)
+            case .failure(let error):
+              print(error)
+            }
+          }
+        }
+      })
       self.view?.successToRegister()
     })
   }

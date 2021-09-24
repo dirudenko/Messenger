@@ -12,7 +12,9 @@ struct User {
   let lastName: String
   var fullName: String { firstName + lastName }
   let email: String
-  let avatarUrl: String?
+  var UserPictureName: String {
+    return "\(safeEmail)_profile_picture.png"
+  }
   var safeEmail: String {
     var safeEmail = email.replacingOccurrences(of: ".", with: "-")
     safeEmail = safeEmail.replacingOccurrences(of: "@", with: "-")

@@ -53,7 +53,7 @@ extension ProfileViewController: UITableViewDataSource, UITableViewDelegate {
     present(presenter.viewDidLogout(), animated: true)
   }
 }
-
+//MARK: - PresenterProtocol
 extension ProfileViewController: ProfileViewProtocol {
   func sucessLogout() {
     let vc = MessengerBuilder.buildTabBar()

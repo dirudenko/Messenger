@@ -59,8 +59,8 @@ class RegisterViewController: UIViewController {
       alertUser("Введите корректную информацию о пользователе")
       return
     }
-    
-    presenter.viewDidRegister(firstName: firstName, lastName: lastName, email: email, password: password)
+    let image = registerView.avatarImage.image ?? UIImage()
+    presenter.viewDidRegister(firstName: firstName, lastName: lastName, email: email, password: password, image: image)
   }
   
   @objc private func didTapChangeAvatar() {

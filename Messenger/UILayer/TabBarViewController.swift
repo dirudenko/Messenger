@@ -36,5 +36,4 @@ class TabBarViewController: UITabBarController {
     rootViewController.navigationItem.title = title
     return navController
   }
-  
 }

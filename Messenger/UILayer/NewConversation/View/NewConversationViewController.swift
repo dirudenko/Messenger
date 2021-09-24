@@ -8,7 +8,7 @@
 import UIKit
 
 class NewConversationViewController: UIViewController {
-
+  
   private let newConversation = NewConversationView()
   private let presenter: NewConversationViewPresenterProtocol
   
@@ -22,22 +22,22 @@ class NewConversationViewController: UIViewController {
   }
   
   override func loadView() {
-      super.loadView()
-      self.view = newConversation
+    super.loadView()
+    self.view = newConversation
   }
   
-    override func viewDidLoad() {
-        super.viewDidLoad()
-      navigationController?.navigationBar.topItem?.titleView = newConversation.searchBar
-      navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Отмена",
-                                                          style: .done,
-                                                          target: self,
-                                                          action: #selector(dismissSearch))
-      newConversation.searchBar.delegate = self
-      newConversation.searchBar.becomeFirstResponder()
-      newConversation.tableView.delegate = self
-      newConversation.tableView.dataSource = self
-    }
+  override func viewDidLoad() {
+    super.viewDidLoad()
+    navigationController?.navigationBar.topItem?.titleView = newConversation.searchBar
+    navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Отмена",
+                                                        style: .done,
+                                                        target: self,
+                                                        action: #selector(dismissSearch))
+    newConversation.searchBar.delegate = self
+    newConversation.searchBar.becomeFirstResponder()
+    newConversation.tableView.delegate = self
+    newConversation.tableView.dataSource = self
+  }
   //MARK: - Private func
   @objc private func dismissSearch() {
     dismiss(animated: true, completion: nil)
@@ -53,7 +53,7 @@ extension NewConversationViewController: UITableViewDataSource, UITableViewDeleg
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
     let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
     cell.textLabel?.text = "test"
-   
+    
     return cell
   }
   
@@ -68,7 +68,7 @@ extension NewConversationViewController: UISearchBarDelegate {
     
   }
 }
-
+//MARK: - PresenterProtocol
 extension NewConversationViewController: NewConversationViewProtocol {
   
 }

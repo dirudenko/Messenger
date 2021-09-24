@@ -10,7 +10,7 @@ import FirebaseDatabase
 
 protocol  DatabaseServiceProtocol {
   func didUserExist(email: String, complition: @escaping ((Bool) -> Void))
-  func addUser(user: User)
+  func addUser(user: User, complition: @escaping (Bool) -> Void)
   func test()
 }
 
@@ -43,10 +43,16 @@ extension DatabaseService {
   }
   
   /// add new user to database
-  func addUser(user: User) {
+  func addUser(user: User, complition: @escaping (Bool) -> Void) {
     database.child(user.safeEmail).setValue([
       "first_name": user.firstName,
       "last_name": user.lastName
-    ])
+    ]) { error, _ in
+      guard error == nil else  {
+        complition(false)
+        return
+      }
+      complition(true)
+    }
   }
 }

@@ -10,7 +10,6 @@ import UIKit
 class LoginViewController: UIViewController {
   
   private let loginView = LoginView()
-  
   private let presenter: LoginViewPresenterProtocol
   
   init(presenter: LoginViewPresenterProtocol) {
@@ -38,7 +37,6 @@ class LoginViewController: UIViewController {
   override func viewDidAppear(_ animated: Bool) {
     super.viewDidAppear(animated)
     navigationController?.navigationBar.isHidden = true
-
   }
   
   override func viewWillDisappear(_ animated: Bool) {
@@ -70,7 +68,7 @@ class LoginViewController: UIViewController {
   }
   
 }
-
+//MARK: - PresenterProtocol
 extension LoginViewController: LoginViewProtocol {
   func sucessToLogin() {
     

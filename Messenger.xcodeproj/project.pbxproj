@@ -18,6 +18,8 @@
 		6931D65726E4BEE80086AE5B /* RegisterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6931D65626E4BEE80086AE5B /* RegisterViewController.swift */; };
 		6931D65B26E683CC0086AE5B /* LoginPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6931D65A26E683CC0086AE5B /* LoginPresenter.swift */; };
 		6931D65F26E75A570086AE5B /* RegisterPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6931D65E26E75A570086AE5B /* RegisterPresenter.swift */; };
+		696B9D3226FDC8FE00446BA0 /* StorageService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 696B9D3126FDC8FE00446BA0 /* StorageService.swift */; };
+		696B9D3426FDDB6D00446BA0 /* StorageErrors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 696B9D3326FDDB6D00446BA0 /* StorageErrors.swift */; };
 		696E527726F9F28F00343EDB /* ConversationsPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 696E527626F9F28F00343EDB /* ConversationsPresenter.swift */; };
 		696E527926F9F5E000343EDB /* ConversationsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 696E527826F9F5E000343EDB /* ConversationsView.swift */; };
 		696E527B26F9F88900343EDB /* ImageService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 696E527A26F9F88900343EDB /* ImageService.swift */; };
@@ -33,6 +35,7 @@
 		69C5D6E526F0A72600AB2D87 /* UserFBModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69C5D6E426F0A72600AB2D87 /* UserFBModel.swift */; };
 		69C5D6EB26F0AF2000AB2D87 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 69C5D6EA26F0AF2000AB2D87 /* GoogleService-Info.plist */; };
 		69EABB4126FA56F500798E5F /* NewConversationPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69EABB4026FA56F500798E5F /* NewConversationPresenter.swift */; };
+		69EABB4326FA59A300798E5F /* ChatPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69EABB4226FA59A300798E5F /* ChatPresenter.swift */; };
 		69F5939926F5F574005AD477 /* TabBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69F5939826F5F574005AD477 /* TabBarViewController.swift */; };
 		69F5939B26F5F887005AD477 /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69F5939A26F5F887005AD477 /* ProfileViewController.swift */; };
 		69F5939D26F5FA53005AD477 /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69F5939C26F5FA53005AD477 /* ProfileView.swift */; };
@@ -56,6 +59,8 @@
 		6931D65626E4BEE80086AE5B /* RegisterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterViewController.swift; sourceTree = "<group>"; };
 		6931D65A26E683CC0086AE5B /* LoginPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginPresenter.swift; sourceTree = "<group>"; };
 		6931D65E26E75A570086AE5B /* RegisterPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterPresenter.swift; sourceTree = "<group>"; };
+		696B9D3126FDC8FE00446BA0 /* StorageService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageService.swift; sourceTree = "<group>"; };
+		696B9D3326FDDB6D00446BA0 /* StorageErrors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageErrors.swift; sourceTree = "<group>"; };
 		696E527626F9F28F00343EDB /* ConversationsPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationsPresenter.swift; sourceTree = "<group>"; };
 		696E527826F9F5E000343EDB /* ConversationsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationsView.swift; sourceTree = "<group>"; };
 		696E527A26F9F88900343EDB /* ImageService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageService.swift; sourceTree = "<group>"; };
@@ -71,6 +76,7 @@
 		69C5D6E426F0A72600AB2D87 /* UserFBModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserFBModel.swift; sourceTree = "<group>"; };
 		69C5D6EA26F0AF2000AB2D87 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		69EABB4026FA56F500798E5F /* NewConversationPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewConversationPresenter.swift; sourceTree = "<group>"; };
+		69EABB4226FA59A300798E5F /* ChatPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatPresenter.swift; sourceTree = "<group>"; };
 		69F5939826F5F574005AD477 /* TabBarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarViewController.swift; sourceTree = "<group>"; };
 		69F5939A26F5F887005AD477 /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
 		69F5939C26F5FA53005AD477 /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
@@ -146,8 +152,10 @@
 		6917783526F9DB8D00A1808E /* StorageLayer */ = {
 			isa = PBXGroup;
 			children = (
+				696B9D3126FDC8FE00446BA0 /* StorageService.swift */,
 				6917783626F9DCEE00A1808E /* Database */,
 				69C5D6E226EFCE2A00AB2D87 /* User.swift */,
+				696B9D3326FDDB6D00446BA0 /* StorageErrors.swift */,
 			);
 			path = StorageLayer;
 			sourceTree = "<group>";
@@ -309,6 +317,7 @@
 		696E528026F9FDA000343EDB /* Presenter */ = {
 			isa = PBXGroup;
 			children = (
+				69EABB4226FA59A300798E5F /* ChatPresenter.swift */,
 			);
 			path = Presenter;
 			sourceTree = "<group>";
@@ -543,6 +552,7 @@
 				6931D65526E4BE300086AE5B /* RegisterView.swift in Sources */,
 				696E527926F9F5E000343EDB /* ConversationsView.swift in Sources */,
 				69F5939B26F5F887005AD477 /* ProfileViewController.swift in Sources */,
+				696B9D3426FDDB6D00446BA0 /* StorageErrors.swift in Sources */,
 				69C5D6DD26EFC44500AB2D87 /* ConversationsViewController.swift in Sources */,
 				6931D65F26E75A570086AE5B /* RegisterPresenter.swift in Sources */,
 				696E528626FA040800343EDB /* Sender.swift in Sources */,
@@ -550,12 +560,14 @@
 				696E528E26FA0EDD00343EDB /* NewConversationViewController.swift in Sources */,
 				6931D65726E4BEE80086AE5B /* RegisterViewController.swift in Sources */,
 				69C5D6E026EFCBE100AB2D87 /* DatabaseService.swift in Sources */,
+				696B9D3226FDC8FE00446BA0 /* StorageService.swift in Sources */,
 				69EABB4126FA56F500798E5F /* NewConversationPresenter.swift in Sources */,
 				6908E3D326E35459001082ED /* AppDelegate.swift in Sources */,
 				696E527B26F9F88900343EDB /* ImageService.swift in Sources */,
 				696E527726F9F28F00343EDB /* ConversationsPresenter.swift in Sources */,
 				69F5939D26F5FA53005AD477 /* ProfileView.swift in Sources */,
 				696E528426FA039C00343EDB /* Message.swift in Sources */,
+				69EABB4326FA59A300798E5F /* ChatPresenter.swift in Sources */,
 				69C5D6E326EFCE2A00AB2D87 /* User.swift in Sources */,
 				69F5939F26F5FE24005AD477 /* ProfilePresenter.swift in Sources */,
 				69F5939926F5F574005AD477 /* TabBarViewController.swift in Sources */,

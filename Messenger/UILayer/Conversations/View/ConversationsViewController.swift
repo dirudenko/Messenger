@@ -66,7 +66,7 @@ extension ConversationsViewController: UITableViewDataSource, UITableViewDelegat
     presenter.viewDidSelectChat()
   }
 }
-//MARK: - Protocol
+//MARK: - PresenterProtocol
 extension ConversationsViewController: ConversationsViewProtocol {
   func openChat() {
     let vc = MessengerBuilder.buildChatViewController()
@@ -83,7 +83,4 @@ extension ConversationsViewController: ConversationsViewProtocol {
     vc.modalPresentationStyle = .fullScreen
     navigationController?.pushViewController(vc, animated: false)
   }
-  
-  
-  
 }
