@@ -18,13 +18,15 @@ class NewConversationView: UIView {
   let tableView: UITableView = {
    let tableView = UITableView()
     tableView.isHidden = true
+    tableView.translatesAutoresizingMaskIntoConstraints = false
    tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
     return tableView
   }()
   
-  private let noResultLabel: UILabel = {
+   let noResultLabel: UILabel = {
     let label = UILabel()
     label.isHidden = true
+    label.translatesAutoresizingMaskIntoConstraints = false
     label.text = "Нет результата"
     label.textAlignment = .center
     label.font = .systemFont(ofSize: 22, weight: .semibold)
@@ -43,15 +45,11 @@ class NewConversationView: UIView {
   
   private func configureUI() {
     self.backgroundColor = .white
-    self.addTableView()
+    self.addSubview(tableView)
+    self.addSubview(noResultLabel)
     self.setupConstraints()
   }
 
-  private func addTableView() {
-    tableView.translatesAutoresizingMaskIntoConstraints = false
-    self.addSubview(tableView)
-  }
-  
   private func setupConstraints() {
     let safeArea = self.safeAreaLayoutGuide
     
@@ -60,7 +58,13 @@ class NewConversationView: UIView {
       self.tableView.topAnchor.constraint(equalTo: safeArea.topAnchor),
       self.tableView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
       self.tableView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
-      self.tableView.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor)
+      self.tableView.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor),
+      
+      noResultLabel.topAnchor.constraint(equalTo: self.centerYAnchor, constant: -10),
+      noResultLabel.leftAnchor.constraint(equalTo: safeAreaLayoutGuide.leftAnchor, constant: 16),
+      noResultLabel.rightAnchor.constraint(equalTo: safeAreaLayoutGuide.rightAnchor, constant: -16),
+      noResultLabel.heightAnchor.constraint(equalToConstant: 52)
+      
     ])
 }
   

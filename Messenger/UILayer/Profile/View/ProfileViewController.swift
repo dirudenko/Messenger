@@ -33,6 +33,19 @@ class ProfileViewController: UIViewController {
     profileView.tableView.delegate = self
     profileView.tableView.dataSource = self
   }
+  
+  
+  override func viewDidAppear(_ animated: Bool) {
+    super.viewDidAppear(animated)
+    print(UserDefaults.standard.value(forKey: "email"))
+    guard let email = UserDefaults.standard.value(forKey: "email") as? String else {
+      return
+    }
+    let safeMail = presenter.safeEmail(for: email)
+    let fileName = safeMail + "_profile_picture.png"
+    let path = "images/" + fileName
+    presenter.downloadURL(for: path, image: profileView.photoImage)
+  }
 }
 //MARK: - DataSource, Delegate
 extension ProfileViewController: UITableViewDataSource, UITableViewDelegate {
@@ -60,6 +73,4 @@ extension ProfileViewController: ProfileViewProtocol {
     vc.modalPresentationStyle = .fullScreen
     present(vc, animated: true)
   }
-  
-  
 }

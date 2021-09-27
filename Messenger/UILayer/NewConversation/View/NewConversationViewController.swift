@@ -47,12 +47,12 @@ class NewConversationViewController: UIViewController {
 //MARK: - DataSource, Delegate
 extension NewConversationViewController: UITableViewDataSource, UITableViewDelegate {
   func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    return 1
+    return presenter.results.count
   }
   
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
     let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
-    cell.textLabel?.text = "test"
+    cell.textLabel?.text = presenter.results[indexPath.row]["name"]
     
     return cell
   }
@@ -65,10 +65,40 @@ extension NewConversationViewController: UITableViewDataSource, UITableViewDeleg
 
 extension NewConversationViewController: UISearchBarDelegate {
   func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+//    guard let text = searchBar.text, !text.replacingOccurrences(of: " ", with: "").isEmpty else {
+//      return
+//    }
+//    newConversation.searchBar.resignFirstResponder()
+//
+//    presenter.results.removeAll()
+//    presenter.searchUsers(query: text)
+    presenter.results.removeAll()
     
   }
+  
+  
+  func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+      guard let text = searchBar.text, !text.replacingOccurrences(of: " ", with: "").isEmpty else {
+        return
+      }
+      newConversation.searchBar.resignFirstResponder()
+      
+      presenter.results.removeAll()
+      presenter.searchUsers(query: text)
+  }
+  
 }
 //MARK: - PresenterProtocol
 extension NewConversationViewController: NewConversationViewProtocol {
-  
+  func updateUI() {
+    if presenter.results.isEmpty {
+      newConversation.noResultLabel.isHidden = false
+      newConversation.tableView.isHidden = true
+      newConversation.tableView.reloadData()
+    } else {
+      newConversation.noResultLabel.isHidden = true
+      newConversation.tableView.isHidden = false
+      newConversation.tableView.reloadData()
+    }
+  }
 }

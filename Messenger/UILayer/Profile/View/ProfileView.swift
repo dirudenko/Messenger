@@ -10,6 +10,20 @@ import UIKit
 class ProfileView: UIView {
 
   let tableView = UITableView()
+  let headerView = UIView()
+  
+  private let imageSize: CGFloat = 150
+  
+  private(set) lazy var photoImage: UIImageView = {
+    let imageView = UIImageView()
+    imageView.layer.cornerRadius = imageSize / 2
+    imageView.contentMode = .scaleAspectFit
+    imageView.image = UIImage(systemName: "person.circle")
+    imageView.tintColor = .systemBlue
+    imageView.layer.masksToBounds = true
+    imageView.translatesAutoresizingMaskIntoConstraints = false
+    return imageView
+  }()
 
   override init(frame: CGRect) {
     super.init(frame: frame)
@@ -28,12 +42,13 @@ class ProfileView: UIView {
   }
   
   private func addTableView() {
-   // self.tableView.rowHeight = 72.0
-    //self.tableView.separatorInset = UIEdgeInsets(top: 0.0, left: 12.0, bottom: 0.0, right: 0.0)
     tableView.translatesAutoresizingMaskIntoConstraints = false
-    //self.tableView.isHidden = true
-    //self.tableView.tableFooterView = UIView()
+    headerView.translatesAutoresizingMaskIntoConstraints = false
+    
+    headerView.backgroundColor = .blue
     self.addSubview(tableView)
+    self.addSubview(headerView)
+    addPhoto()
   }
   
   private func setupConstraints() {
@@ -41,10 +56,39 @@ class ProfileView: UIView {
     
     NSLayoutConstraint.activate([
       
-      self.tableView.topAnchor.constraint(equalTo: self.topAnchor, constant: 8.0),
+      self.headerView.topAnchor.constraint(equalTo: safeArea.topAnchor),
+      self.headerView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
+      self.headerView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
+      self.headerView.heightAnchor.constraint(equalToConstant: 200),
+      
+      
+      self.tableView.topAnchor.constraint(equalTo: headerView.bottomAnchor, constant: 8.0),
       self.tableView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
       self.tableView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
       self.tableView.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor)
     ])
 }
+  
+  private func addPhoto() {
+    headerView.addSubview(photoImage)
+    NSLayoutConstraint.activate([
+      
+      photoImage.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: imageSize/4 ),
+      photoImage.leftAnchor.constraint(equalTo: self.centerXAnchor, constant: -imageSize/2),
+      photoImage.widthAnchor.constraint(equalToConstant: imageSize),
+      photoImage.heightAnchor.constraint(equalToConstant: imageSize)
+    ])
+    
+    
+  }
+  
+  
+//   func createTableHeader(email: String) -> UIView? {
+//    let view = UIView(frame: CGRect(x: 0,
+//                                    y: 0,
+//                                    width: 300,
+//                                    height: 300))
+//    return view
+//  }
+  
 }

@@ -43,7 +43,8 @@ class LoginPresenter: LoginViewPresenterProtocol {
               return
             }
       let user = result.user
-      print(user)
+      UserDefaults.standard.set(email, forKey: "email")
+      
       self.view?.sucessToLogin()
     })
   }
@@ -78,6 +79,8 @@ class LoginPresenter: LoginViewPresenterProtocol {
             let firstName = user?.profile?.givenName,
             let lastName = user?.profile?.familyName else { return }
       
+      UserDefaults.standard.set(email, forKey: "email")
+
       FirebaseAuth.Auth.auth().signIn(with: credential) { result, error in
         guard  result != nil, error == nil else { return }
         let newUser = User(firstName: firstName,

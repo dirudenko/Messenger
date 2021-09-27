@@ -15,10 +15,18 @@ protocol ProfileViewProtocol: AnyObject {
 
 protocol ProfileViewPresenterProtocol: AnyObject {
   func viewDidLogout() -> UIViewController
+  func safeEmail(for email: String) -> String
+  func downloadURL(for path: String, image: UIImageView)
 }
 
 class ProfilePresenter: ProfileViewPresenterProtocol {
+  
   weak var view: (UIViewController & ProfileViewProtocol)?
+  let storageService: StorageServiceProtocol
+  
+  init(storageService: StorageServiceProtocol) {
+    self.storageService = storageService
+  }
   
   func viewDidLogout() -> UIViewController {
     let alert = UIAlertController(title: "Внимание",
@@ -43,5 +51,31 @@ class ProfilePresenter: ProfileViewPresenterProtocol {
     return alert
   }
   
+  func safeEmail(for email: String) -> String {
+    return storageService.safeEmail(email: email)
+  }
+  
+  func downloadURL(for path: String, image: UIImageView) {
+    storageService.downloadURL(for: path) { result in
+      switch result {
+      case .success(let url):
+        self.downloadImage(imageView: image, url: url)
+      case .failure(let error):
+        print(error)
+      }
+    }
+  }
+  
+  private func downloadImage(imageView: UIImageView, url: URL) {
+    URLSession.shared.dataTask(with: url) { data, _, error in
+      guard let data = data, error == nil else {
+        return
+      }
+      DispatchQueue.main.async {
+        let image = UIImage(data: data)
+        imageView.image = image
+      }
+    }.resume()
+  }
   
 }

@@ -20,7 +20,9 @@ protocol Builder {
 
 class MessengerBuilder: Builder {
   static func buildNewConversationViewController() -> UIViewController {
-    let presenter = NewConversationPresenter()
+    let databaseService = DatabaseService()
+    let storageService = StorageService()
+    let presenter = NewConversationPresenter(databaseService: databaseService, storageService: storageService)
     let vc = NewConversationViewController(presenter: presenter)
     presenter.view = vc
     return vc
@@ -57,7 +59,8 @@ class MessengerBuilder: Builder {
   }
 
   static func buildProfileViewController() -> UIViewController {
-    let presenter = ProfilePresenter()
+    let storageService = StorageService()
+    let presenter = ProfilePresenter(storageService: storageService)
     let viewController = ProfileViewController(presenter: presenter)
     presenter.view = viewController
     return viewController

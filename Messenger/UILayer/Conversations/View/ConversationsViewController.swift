@@ -33,12 +33,14 @@ class ConversationsViewController: UIViewController {
                                                         action: #selector(didTabComposeButton))
     chatsView.tableView.delegate = self
     chatsView.tableView.dataSource = self
+    
+    presenter.viewDidAuthorizate()
   }
   
   
   override func viewDidAppear(_ animated: Bool) {
     super.viewDidAppear(animated)
-    presenter.viewDidAuthorizate()
+    
   }
   //MARK: - Private func
   @objc private func didTabComposeButton() {

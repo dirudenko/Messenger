@@ -9,7 +9,6 @@ import UIKit
 import FirebaseAuth
 
 protocol RegisterViewProtocol: AnyObject {
-  
   func successToRegister()
   func alertUser(_ alert: String)
 }
@@ -41,7 +40,8 @@ class RegisterPresenter: RegisterViewPresenterProtocol {
       let newUser = User(firstName: firstName,
                          lastName: lastName,
                          email: email )
-      
+      UserDefaults.standard.set(email, forKey: "email")
+
       self.databaseService.addUser(user: newUser, complition: { success in
         if success {
           let fileName = newUser.UserPictureName

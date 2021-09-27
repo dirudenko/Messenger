@@ -12,6 +12,8 @@ protocol StorageServiceProtocol: AnyObject {
   func uploadProfilePhoto(with data: Data,
                           fileName: String,
                           complition: @escaping (Result<String, Error>) -> Void)
+  func safeEmail(email: String) -> String
+  func downloadURL(for path: String, completion: @escaping (Result<URL, Error>) -> Void)
 }
 
 final class StorageService: StorageServiceProtocol {
@@ -37,6 +39,23 @@ final class StorageService: StorageServiceProtocol {
       }
       
     })
+  }
+  
+  func safeEmail(email: String) -> String {
+    var safeEmail = email.replacingOccurrences(of: ".", with: "-")
+    safeEmail = safeEmail.replacingOccurrences(of: "@", with: "-")
+    return safeEmail
+  }
+  
+  func downloadURL(for path: String, completion: @escaping (Result<URL, Error>) -> Void) {
+    let reference = storage.child(path)
+    reference.downloadURL { url, error in
+      guard let url = url, error == nil else {
+        completion(.failure(StorageErrors.failedToGetUploadedURL))
+        return
+      }
+      completion(.success(url))
+    }
   }
   
 }

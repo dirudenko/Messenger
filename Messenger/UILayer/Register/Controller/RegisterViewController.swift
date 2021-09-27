@@ -125,8 +125,10 @@ extension RegisterViewController: RegisterViewProtocol {
   func successToRegister() {
     let alert = UIAlertController(title: "Ура", message: "Пользователь успешно создан", preferredStyle: .alert)
     alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler:
-                                    { _ in
-                                      self.navigationController?.popViewController(animated: true)
+                                    { [weak self] _ in
+      let vc = MessengerBuilder.buildTabBar()
+      vc.modalPresentationStyle = .fullScreen
+      self?.present(vc, animated: false)
                                     }))
     present(alert, animated: true)
     
