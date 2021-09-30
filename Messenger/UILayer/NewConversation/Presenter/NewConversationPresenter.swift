@@ -9,19 +9,22 @@ import UIKit
 
 
 protocol NewConversationViewProtocol: AnyObject {
-   func updateUI()
+  func updateUI()
 }
 
 protocol NewConversationViewPresenterProtocol: AnyObject {
   func searchUsers(query: String)
   var results: [[String: String]] { get set }
+  var complition: (([String: String]) ->(Void))? { get set }
 }
 
 class NewConversationPresenter: NewConversationViewPresenterProtocol {
   
-  weak var view: (UIViewController & NewConversationViewProtocol)?
-  private var users = [[String: String]]()
   var results = [[String: String]]()
+  weak var view: (UIViewController & NewConversationViewProtocol)?
+  var complition: (([String : String]) -> (Void))?
+  
+  private var users = [[String: String]]()
   private var hasFetched = false
   
   let databaseService: DatabaseServiceProtocol
@@ -62,10 +65,4 @@ class NewConversationPresenter: NewConversationViewPresenterProtocol {
     self.results = results
     self.view?.updateUI()
   }
-  
-  
-  private func addUsers(user: [[String: String]]) {
-    
-  }
-  
 }

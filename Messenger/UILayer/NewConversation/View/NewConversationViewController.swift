@@ -10,7 +10,7 @@ import UIKit
 class NewConversationViewController: UIViewController {
   
   private let newConversation = NewConversationView()
-  private let presenter: NewConversationViewPresenterProtocol
+   let presenter: NewConversationViewPresenterProtocol
   
   init(presenter: NewConversationViewPresenterProtocol) {
     self.presenter = presenter
@@ -59,7 +59,13 @@ extension NewConversationViewController: UITableViewDataSource, UITableViewDeleg
   
   func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     tableView.deselectRow(at: indexPath, animated: true)
-    //present(presenter.viewDidLogout(), animated: true)
+    let targetUser = presenter.results[indexPath.row]
+    dismiss(animated: true, completion:  { [weak self] in
+      self?.presenter.complition?(targetUser)
+    })
+      
+  //  presenter.complition?(targetUser)
+    
   }
 }
 

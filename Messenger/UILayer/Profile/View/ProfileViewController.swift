@@ -37,7 +37,6 @@ class ProfileViewController: UIViewController {
   
   override func viewDidAppear(_ animated: Bool) {
     super.viewDidAppear(animated)
-    print(UserDefaults.standard.value(forKey: "email"))
     guard let email = UserDefaults.standard.value(forKey: "email") as? String else {
       return
     }

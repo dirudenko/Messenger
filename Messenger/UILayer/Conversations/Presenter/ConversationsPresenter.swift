@@ -11,7 +11,7 @@ import FirebaseAuth
 
 protocol ConversationsViewProtocol: AnyObject {
   func sucessAuthorizate()
-  func openChat()
+  func createChat()
 }
 
 protocol ConversationsViewPresenterProtocol: AnyObject {
@@ -36,7 +36,7 @@ class ConversationsPresenter: ConversationsViewPresenterProtocol {
   
   
   func viewDidSelectChat() {
-    view?.openChat()
+    view?.createChat()
   }
   
 }

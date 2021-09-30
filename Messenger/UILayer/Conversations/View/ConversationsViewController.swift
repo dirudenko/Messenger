@@ -44,9 +44,20 @@ class ConversationsViewController: UIViewController {
   }
   //MARK: - Private func
   @objc private func didTabComposeButton() {
-    let vc = MessengerBuilder.buildNewConversationViewController()
+    let vc = MessengerBuilder.buildNewConversationViewController() as? NewConversationViewController
+    guard let vc = vc else { return }
+    vc.presenter.complition = { [weak self] result in
+      self?.startNewConversation(with: result)
+    }
     let navVC = UINavigationController(rootViewController: vc)
     present(navVC, animated: true)
+  }
+  
+  private func startNewConversation(with user: [String: String]) {
+    let vc = MessengerBuilder.buildChatViewController()
+    vc.title = user["name"]
+    vc.navigationItem.largeTitleDisplayMode = .never
+    navigationController?.pushViewController(vc, animated: true)
   }
   
 }
@@ -70,14 +81,11 @@ extension ConversationsViewController: UITableViewDataSource, UITableViewDelegat
 }
 //MARK: - PresenterProtocol
 extension ConversationsViewController: ConversationsViewProtocol {
-  func openChat() {
+  func createChat() {
     let vc = MessengerBuilder.buildChatViewController()
-    // имя пользователя
     vc.title = "TEST"
     vc.navigationItem.largeTitleDisplayMode = .never
     navigationController?.pushViewController(vc, animated: true)
-    //present(vc, animated: true)
-    
   }
   
   func sucessAuthorizate() {
@@ -85,4 +93,7 @@ extension ConversationsViewController: ConversationsViewProtocol {
     vc.modalPresentationStyle = .fullScreen
     navigationController?.pushViewController(vc, animated: false)
   }
+  
+  
+  
 }
