@@ -15,7 +15,6 @@ protocol NewConversationViewProtocol: AnyObject {
 protocol NewConversationViewPresenterProtocol: AnyObject {
   func searchUsers(query: String)
   var results: [[String: String]] { get set }
-  var complition: (([String: String]) ->(Void))? { get set }
 }
 
 class NewConversationPresenter: NewConversationViewPresenterProtocol {

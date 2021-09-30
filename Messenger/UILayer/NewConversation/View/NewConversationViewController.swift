@@ -9,8 +9,10 @@ import UIKit
 
 class NewConversationViewController: UIViewController {
   
+  var complition: (([String: String]) ->(Void))?
+  
   private let newConversation = NewConversationView()
-   let presenter: NewConversationViewPresenterProtocol
+  private let presenter: NewConversationViewPresenterProtocol
   
   init(presenter: NewConversationViewPresenterProtocol) {
     self.presenter = presenter
@@ -61,11 +63,8 @@ extension NewConversationViewController: UITableViewDataSource, UITableViewDeleg
     tableView.deselectRow(at: indexPath, animated: true)
     let targetUser = presenter.results[indexPath.row]
     dismiss(animated: true, completion:  { [weak self] in
-      self?.presenter.complition?(targetUser)
+      self?.complition?(targetUser)
     })
-      
-  //  presenter.complition?(targetUser)
-    
   }
 }
 

@@ -13,7 +13,7 @@ protocol Builder {
   static func buildLoginScreenViewController() -> UIViewController
   static func buildRegisterViewController() -> UIViewController
   static func buildProfileViewController() -> UIViewController
-  static func buildChatViewController() -> UIViewController
+  static func buildChatViewController(with email: String) -> UIViewController
   static func buildNewConversationViewController() -> UIViewController
 
 }
@@ -66,9 +66,10 @@ class MessengerBuilder: Builder {
     return viewController
   }
   
-  static func buildChatViewController() -> UIViewController {
-    let presenter = ChatPresenter()
-    let vc = ChatViewController(presenter: presenter)
+  static func buildChatViewController(with email: String) -> UIViewController {
+    let databaseService = DatabaseService()
+    let presenter = ChatPresenter(databaseService: databaseService)
+    let vc = ChatViewController(presenter: presenter, email: email)
     presenter.view = vc
     return vc
   }

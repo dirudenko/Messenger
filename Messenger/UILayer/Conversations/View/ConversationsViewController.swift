@@ -15,6 +15,7 @@ class ConversationsViewController: UIViewController {
   init(presenter: ConversationsViewPresenterProtocol) {
     self.presenter = presenter
     super.init(nibName: nil, bundle: nil)
+    //presenter.viewDidAuthorizate()
   }
   
   required init?(coder: NSCoder) {
@@ -40,13 +41,14 @@ class ConversationsViewController: UIViewController {
   
   override func viewDidAppear(_ animated: Bool) {
     super.viewDidAppear(animated)
-    
+    presenter.viewDidAuthorizate()
+
   }
   //MARK: - Private func
+  /// Создание нового окна диалога с пользователем
   @objc private func didTabComposeButton() {
-    let vc = MessengerBuilder.buildNewConversationViewController() as? NewConversationViewController
-    guard let vc = vc else { return }
-    vc.presenter.complition = { [weak self] result in
+    guard let vc = MessengerBuilder.buildNewConversationViewController() as? NewConversationViewController else { return }
+    vc.complition = { [weak self] result in
       self?.startNewConversation(with: result)
     }
     let navVC = UINavigationController(rootViewController: vc)
@@ -54,12 +56,18 @@ class ConversationsViewController: UIViewController {
   }
   
   private func startNewConversation(with user: [String: String]) {
-    let vc = MessengerBuilder.buildChatViewController()
-    vc.title = user["name"]
+    guard
+          let name = user["name"],
+          let email = user["email"],
+          let vc = MessengerBuilder.buildChatViewController(with: email) as? ChatViewController else {
+            return
+          }
+
+    vc.title = name
+    vc.isNewConversation = true
     vc.navigationItem.largeTitleDisplayMode = .never
     navigationController?.pushViewController(vc, animated: true)
   }
-  
 }
 //MARK: - DataSource, Delegate
 extension ConversationsViewController: UITableViewDataSource, UITableViewDelegate {
@@ -82,7 +90,7 @@ extension ConversationsViewController: UITableViewDataSource, UITableViewDelegat
 //MARK: - PresenterProtocol
 extension ConversationsViewController: ConversationsViewProtocol {
   func createChat() {
-    let vc = MessengerBuilder.buildChatViewController()
+    let vc = MessengerBuilder.buildChatViewController(with: "")
     vc.title = "TEST"
     vc.navigationItem.largeTitleDisplayMode = .never
     navigationController?.pushViewController(vc, animated: true)
@@ -93,7 +101,4 @@ extension ConversationsViewController: ConversationsViewProtocol {
     vc.modalPresentationStyle = .fullScreen
     navigationController?.pushViewController(vc, animated: false)
   }
-  
-  
-  
 }

@@ -13,12 +13,21 @@ protocol ChatViewProtocol: AnyObject {
 }
 
 protocol ChatViewPresenterProtocol: AnyObject {
-  
+  var databaseService: DatabaseMessagingProtocol { get set }
+
 }
 
 class ChatPresenter: ChatViewPresenterProtocol {
   
   weak var view: (MessagesViewController & ChatViewProtocol)?
+  
+  var databaseService: DatabaseMessagingProtocol
+  
+  init(databaseService: DatabaseMessagingProtocol) {
+    self.databaseService = databaseService
+  }
+  
+  
   
   
 }
