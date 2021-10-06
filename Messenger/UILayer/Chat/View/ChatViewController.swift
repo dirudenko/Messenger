@@ -14,14 +14,14 @@ class ChatViewController: MessagesViewController {
   var isNewConversation = false
   let otherUserEmail: String
   
-  private var messages = [Message]()
   private let presenter: ChatViewPresenterProtocol
   
   private var sender: Sender? {
     guard let email = UserDefaults.standard.value(forKey: "email") as? String else { return nil }
-    let sender = Sender(senderId: email,
-           displayName: "Test",
-           photoURL: "")
+    let safeEmail = presenter.databaseService.safeEmail(from: email)
+    let sender = Sender(senderId: safeEmail,
+                        displayName: "Я",
+                        photoURL: "")
     return sender
   }
   
@@ -29,6 +29,9 @@ class ChatViewController: MessagesViewController {
     self.presenter = presenter
     self.otherUserEmail = email
     super.init(nibName: nil, bundle: nil)
+    if let id = presenter.conversationID {
+      presenter.listenForMessages(id: id)
+    }
   }
   
   required init?(coder: NSCoder) {
@@ -75,16 +78,15 @@ extension ChatViewController: MessagesDataSource, MessagesLayoutDelegate, Messag
       return sender
     } else {
       fatalError("sender is nil")
-    return Sender(senderId: "", displayName: "", photoURL: "")
     }
   }
   
   func messageForItem(at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> MessageType {
-    return messages[indexPath.section]
+    return presenter.messages[indexPath.section]
   }
   
   func numberOfSections(in messagesCollectionView: MessagesCollectionView) -> Int {
-    return messages.count
+    return presenter.messages.count
   }
 }
 
@@ -93,30 +95,48 @@ extension ChatViewController: InputBarAccessoryViewDelegate {
     guard !text.replacingOccurrences(of: " ", with: "").isEmpty,
     let sender = sender,
     let messageId = createMessageId() else { return }
+    let message = Message(sender: sender,
+                          messageId: messageId,
+                          sentDate: Date(),
+                          kind: .text(text))
     // send message
     if isNewConversation {
       //create conv
       
-      let message = Message(sender: sender,
-                            messageId: messageId,
-                            sentDate: Date(),
-                            kind: .text(text))
+      
       presenter.databaseService.createNewConversation(with: otherUserEmail,
+                                                      name: self.title ?? "Пользователь",
                                                       firstMessage: message) { success in
         if success {
-          print("text send")
+          print("message send")
+          self.isNewConversation = false
         } else {
-          print("text NOT send")
+          print("message NOT send")
 
         }
       }
     } else {
-      //append conv
+      guard let conversationID = presenter.conversationID,
+      let name = self.title else { return }
+      presenter.databaseService.sendMessage(to: conversationID,
+                                            otherUserEmail: otherUserEmail,
+                                            name: name,
+                                            newMessage: message) { success in
+        if success {
+          print("message send")
+        } else {
+          print("message NOT send")
+        }
+      }
     }
   }
 }
 
 //MARK: - PresenterProtocol
 extension ChatViewController: ChatViewProtocol {
-  
+  func successGetMessages() {
+    DispatchQueue.main.async {
+      self.messagesCollectionView.reloadData()
+    }
+  }
 }

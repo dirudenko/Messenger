@@ -12,7 +12,7 @@ class ConversationsView: UIView {
   let tableView: UITableView = {
     let tableView = UITableView()
     // tableView.isHidden = true
-    tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
+    tableView.register(ConversationTableViewCell.self, forCellReuseIdentifier: "ConversationTableViewCell")
     return tableView
   }()
   

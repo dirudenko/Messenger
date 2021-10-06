@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SDWebImage
 
 class ConversationsViewController: UIViewController {
   
@@ -15,7 +16,6 @@ class ConversationsViewController: UIViewController {
   init(presenter: ConversationsViewPresenterProtocol) {
     self.presenter = presenter
     super.init(nibName: nil, bundle: nil)
-    //presenter.viewDidAuthorizate()
   }
   
   required init?(coder: NSCoder) {
@@ -36,13 +36,12 @@ class ConversationsViewController: UIViewController {
     chatsView.tableView.dataSource = self
     
     presenter.viewDidAuthorizate()
+    presenter.startListeningConversation()
   }
-  
   
   override func viewDidAppear(_ animated: Bool) {
     super.viewDidAppear(animated)
     presenter.viewDidAuthorizate()
-
   }
   //MARK: - Private func
   /// Создание нового окна диалога с пользователем
@@ -57,12 +56,12 @@ class ConversationsViewController: UIViewController {
   
   private func startNewConversation(with user: [String: String]) {
     guard
-          let name = user["name"],
-          let email = user["email"],
-          let vc = MessengerBuilder.buildChatViewController(with: email) as? ChatViewController else {
-            return
-          }
-
+      let name = user["name"],
+      let email = user["email"],
+      let vc = MessengerBuilder.buildChatViewController(with: email, conversationID: nil) as? ChatViewController else {
+        return
+      }
+    
     vc.title = name
     vc.isNewConversation = true
     vc.navigationItem.largeTitleDisplayMode = .never
@@ -72,26 +71,38 @@ class ConversationsViewController: UIViewController {
 //MARK: - DataSource, Delegate
 extension ConversationsViewController: UITableViewDataSource, UITableViewDelegate {
   func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    return 1
+    return presenter.conversations.count
   }
   
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-    let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
-    cell.textLabel?.text = "test"
+    guard let cell = tableView.dequeueReusableCell(withIdentifier: "ConversationTableViewCell", for: indexPath) as? ConversationTableViewCell else { return UITableViewCell() }
+    let model = presenter.conversations[indexPath.row]
+    cell.configure(with: model)
     cell.accessoryType = .disclosureIndicator
     return cell
   }
   
   func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     tableView.deselectRow(at: indexPath, animated: true)
-    presenter.viewDidSelectChat()
+    let model = presenter.conversations[indexPath.row]
+    presenter.viewDidSelectChat(with: model)
+  }
+  
+  func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+    return 120
   }
 }
 //MARK: - PresenterProtocol
-extension ConversationsViewController: ConversationsViewProtocol {
-  func createChat() {
-    let vc = MessengerBuilder.buildChatViewController(with: "")
-    vc.title = "TEST"
+extension ConversationsViewController: ConversationsViewProtocol {  
+  func successGetConversations() {
+    DispatchQueue.main.async {
+      self.chatsView.tableView.reloadData()
+    }
+  }
+  
+  func createChat(model: Conversation) {
+    let vc = MessengerBuilder.buildChatViewController(with: model.otherUserEmail, conversationID: model.id)
+    vc.title = model.name
     vc.navigationItem.largeTitleDisplayMode = .never
     navigationController?.pushViewController(vc, animated: true)
   }

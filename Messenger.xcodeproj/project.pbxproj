@@ -11,6 +11,8 @@
 		6908E3D526E35459001082ED /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6908E3D426E35459001082ED /* SceneDelegate.swift */; };
 		6908E3DC26E3545A001082ED /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6908E3DB26E3545A001082ED /* Assets.xcassets */; };
 		6908E3DF26E3545A001082ED /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6908E3DD26E3545A001082ED /* LaunchScreen.storyboard */; };
+		69276EF2270B0E6A00D79468 /* ConversationTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69276EF1270B0E6A00D79468 /* ConversationTableViewCell.swift */; };
+		69276EF4270B159D00D79468 /* Conversation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69276EF3270B159D00D79468 /* Conversation.swift */; };
 		6931D64726E3663B0086AE5B /* MessengerBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6931D64626E3663B0086AE5B /* MessengerBuilder.swift */; };
 		6931D64D26E400080086AE5B /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6931D64C26E400080086AE5B /* LoginView.swift */; };
 		6931D64F26E401880086AE5B /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6931D64E26E401880086AE5B /* LoginViewController.swift */; };
@@ -53,6 +55,8 @@
 		6908E3DB26E3545A001082ED /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		6908E3DE26E3545A001082ED /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		6908E3E026E3545A001082ED /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		69276EF1270B0E6A00D79468 /* ConversationTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationTableViewCell.swift; sourceTree = "<group>"; };
+		69276EF3270B159D00D79468 /* Conversation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Conversation.swift; sourceTree = "<group>"; };
 		6931D64626E3663B0086AE5B /* MessengerBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessengerBuilder.swift; sourceTree = "<group>"; };
 		6931D64C26E400080086AE5B /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
 		6931D64E26E401880086AE5B /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
@@ -171,6 +175,14 @@
 			path = Database;
 			sourceTree = "<group>";
 		};
+		69276EF0270B0E4500D79468 /* Cell */ = {
+			isa = PBXGroup;
+			children = (
+				69276EF1270B0E6A00D79468 /* ConversationTableViewCell.swift */,
+			);
+			path = Cell;
+			sourceTree = "<group>";
+		};
 		6931D63E26E365760086AE5B /* Core */ = {
 			isa = PBXGroup;
 			children = (
@@ -268,6 +280,7 @@
 		696E527326F9F06C00343EDB /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				69276EF3270B159D00D79468 /* Conversation.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -275,6 +288,7 @@
 		696E527426F9F08300343EDB /* View */ = {
 			isa = PBXGroup;
 			children = (
+				69276EF0270B0E4500D79468 /* Cell */,
 				69C5D6DC26EFC44500AB2D87 /* ConversationsViewController.swift */,
 				696E527826F9F5E000343EDB /* ConversationsView.swift */,
 			);
@@ -567,8 +581,10 @@
 				696B9D3226FDC8FE00446BA0 /* StorageService.swift in Sources */,
 				69EABB4126FA56F500798E5F /* NewConversationPresenter.swift in Sources */,
 				6908E3D326E35459001082ED /* AppDelegate.swift in Sources */,
+				69276EF4270B159D00D79468 /* Conversation.swift in Sources */,
 				696E527B26F9F88900343EDB /* ImageService.swift in Sources */,
 				696E527726F9F28F00343EDB /* ConversationsPresenter.swift in Sources */,
+				69276EF2270B0E6A00D79468 /* ConversationTableViewCell.swift in Sources */,
 				69F5939D26F5FA53005AD477 /* ProfileView.swift in Sources */,
 				696E528426FA039C00343EDB /* Message.swift in Sources */,
 				69EABB4326FA59A300798E5F /* ChatPresenter.swift in Sources */,

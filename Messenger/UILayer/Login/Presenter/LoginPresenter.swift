@@ -24,10 +24,10 @@ protocol LoginViewPresenterProtocol: AnyObject {
 class LoginPresenter: LoginViewPresenterProtocol {
   
   weak var view: (UIViewController & LoginViewProtocol)?
-  let databaseService: DatabaseServiceProtocol
+  let databaseService: DatabaseServiceProtocol & DatabaseMessagingProtocol
   let storageService: StorageServiceProtocol
   
-  init(databaseService: DatabaseServiceProtocol, storageService: StorageServiceProtocol) {
+  init(databaseService: (DatabaseServiceProtocol & DatabaseMessagingProtocol), storageService: StorageServiceProtocol) {
     self.databaseService = databaseService
     self.storageService = storageService
   }
@@ -42,7 +42,21 @@ class LoginPresenter: LoginViewPresenterProtocol {
               self.view?.alertUser(error?.localizedDescription ?? "Error")
               return
             }
-      let user = result.user
+      let safeEmail = self.databaseService.safeEmail(from: email)
+      self.databaseService.getData(path: safeEmail) { result in
+        switch result {
+        case .success(let data):
+          guard let userData = data as? [String: Any],
+                let firstName = userData["first_name"] as? String,
+                let lastName = userData["last_name"] as? String else {
+                  return
+                }
+          UserDefaults.standard.set("\(firstName) \(lastName)", forKey: "name")
+
+        case .failure(let error):
+          print("Error in getting user info: \(error)")
+        }
+      }
       UserDefaults.standard.set(email, forKey: "email")
       
       self.view?.sucessToLogin()
@@ -80,7 +94,9 @@ class LoginPresenter: LoginViewPresenterProtocol {
             let lastName = user?.profile?.familyName else { return }
       
       UserDefaults.standard.set(email, forKey: "email")
-
+      UserDefaults.standard.set("\(firstName) \(lastName)", forKey: "name")
+      
+      
       FirebaseAuth.Auth.auth().signIn(with: credential) { result, error in
         guard  result != nil, error == nil else { return }
         let newUser = User(firstName: firstName,
