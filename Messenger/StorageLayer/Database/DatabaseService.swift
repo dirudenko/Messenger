@@ -100,6 +100,42 @@ extension DatabaseService {
     }
   }
   
+ // private func updateLastMessage(сonversations: [[String : Any]], email: String) {
+//
+//      self.database.child("\(email)/conversations").observeSingleEvent(of: .value) { snapshot in
+//        guard var currrentUserConversations = snapshot.value as? [[String: Any]] else {
+//          complition(false)
+//          return
+//        }
+//
+//        let updatedValue: [String: Any] = [
+//          "date": dateString,
+//          "message": message,
+//          "is_read": false
+//        ]
+//        var targetConversation: [String: Any]?
+//        var targetIndex: Int?
+//
+//        if let index = сonversations.firstIndex(where: {$0["id"] as! String == conversation}) {
+//          targetConversation = currrentUserConversations[index]
+//          targetIndex = index
+//        }
+//
+//        targetConversation?["latest_message"] = updatedValue
+//        guard let finalConversation = targetConversation,
+//              let index = targetIndex else {
+//                complition(false)
+//                return
+//              }
+//
+//        currrentUserConversations[index] = finalConversation
+//        self.database.child("\(currentEmail)/conversations").setValue(currrentUserConversations) { error, _ in
+//          guard error == nil else {
+//            complition(false)
+//            return
+//          }
+//  }
+  
 }
 //MARK: - Account Managment
 
@@ -423,6 +459,7 @@ extension DatabaseService: DatabaseMessagingProtocol {
         "name": name
       ]
       currentMessage.append(newMessageEntry)
+      
       self.database.child("\(conversation)/messages").setValue(currentMessage) { error, _ in
         guard error == nil else {
           complition(false)
@@ -441,20 +478,19 @@ extension DatabaseService: DatabaseMessagingProtocol {
             "is_read": false
           ]
           var targetConversation: [String: Any]?
+          var targetIndex: Int?
           
-          let index = currrentUserConversations.firstIndex { result in
-            if let currentID = result["id"] as? String, currentID == conversation {
-              targetConversation = result
-            }
-            return true
+          if let index = currrentUserConversations.firstIndex(where: {$0["id"] as! String == conversation}) {
+            targetConversation = currrentUserConversations[index]
+            targetIndex = index
           }
           
-          targetConversation?["latest_value"] = updatedValue
+          targetConversation?["latest_message"] = updatedValue
           guard let finalConversation = targetConversation,
-          let index = index else {
-            complition(false)
-            return
-          }
+                let index = targetIndex else {
+                  complition(false)
+                  return
+                }
           
           currrentUserConversations[index] = finalConversation
           self.database.child("\(currentEmail)/conversations").setValue(currrentUserConversations) { error, _ in
@@ -471,40 +507,37 @@ extension DatabaseService: DatabaseMessagingProtocol {
                 return
               }
               
-              let updatedValue: [String: Any] = [
-                "date": dateString,
-                "message": message,
-                "is_read": false
-              ]
-              var targetConversation: [String: Any]?
+//              let updatedValue: [String: Any] = [
+//                "date": dateString,
+//                "message": message,
+//                "is_read": false
+//              ]
               
-              let index = otherUserConversations.firstIndex { result in
-                if let currentID = result["id"] as? String, currentID == conversation {
-                  targetConversation = result
-                }
-                return true
+              var recipient_targetConversation: [String: Any]?
+              var recipient_targetIndex: Int?
+              
+              
+              if let recipient_index = otherUserConversations.firstIndex(where: {$0["id"] as! String == conversation}) {
+                recipient_targetConversation = otherUserConversations[index]
+                recipient_targetIndex = recipient_index
               }
               
-              targetConversation?["latest_value"] = updatedValue
-              guard let finalConversation = targetConversation,
-              let index = index else {
-                complition(false)
-                return
-              }
+              recipient_targetConversation?["latest_message"] = updatedValue
+              guard let recipient_finalConversation = recipient_targetConversation,
+                    let recipient_index = recipient_targetIndex else {
+                      complition(false)
+                      return
+                    }
               
-              otherUserConversations[index] = finalConversation
+              otherUserConversations[recipient_index] = recipient_finalConversation
               self.database.child("\(otherUserEmail)/conversations").setValue(otherUserConversations) { error, _ in
                 guard error == nil else {
                   complition(false)
                   return
                 }
                 complition(true)
-                
               }
             }
-            
-            //complition(true)
-            
           }
         }
       }
