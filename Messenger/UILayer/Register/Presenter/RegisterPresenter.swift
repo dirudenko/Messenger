@@ -29,37 +29,46 @@ class RegisterPresenter: RegisterViewPresenterProtocol {
   }
   
   func viewDidRegister(firstName: String, lastName: String, email: String, password: String, image: UIImage) {
-    FirebaseAuth.Auth.auth().createUser(withEmail: email, password: password, completion: { [weak self] result, error in
-      guard let self = self else { return }
-      
-      guard result != nil,
-            error == nil else {
-              self.view?.alertUser(error?.localizedDescription ?? "Error")
-              return
-            }
-      let newUser = User(firstName: firstName,
-                         lastName: lastName,
-                         email: email )
-      UserDefaults.standard.set(email, forKey: "email")
+    
+    databaseService.didUserExist(email: email) { exist in
+      guard !exist else {
+        self.view?.alertUser("Пользователь уже существует")
+        return
+      }
+      FirebaseAuth.Auth.auth().createUser(withEmail: email, password: password, completion: { [weak self] result, error in
+        guard let self = self else { return }
+        
+        guard result != nil,
+              error == nil else {
+                self.view?.alertUser(error?.localizedDescription ?? "Error")
+                return
+              }
+        let newUser = User(firstName: firstName,
+                           lastName: lastName,
+                           email: email )
+        UserDefaults.standard.set(email, forKey: "email")
 
-      self.databaseService.addUser(user: newUser, complition: { success in
-        if success {
-          let fileName = newUser.UserPictureName
-          guard let data = image.pngData() else { return }
-          self.storageService.uploadProfilePhoto(with: data,
-                                                 fileName: fileName) { result in
-            switch result {
-            case .success(let downloadURL):
-              UserDefaults.standard.set(downloadURL, forKey: "profile_picture_url")
-              print(downloadURL)
-            case .failure(let error):
-              print(error)
+        self.databaseService.addUser(user: newUser, complition: { success in
+          if success {
+            let fileName = newUser.UserPictureName
+            guard let data = image.pngData() else { return }
+            self.storageService.uploadProfilePhoto(with: data,
+                                                   fileName: fileName) { result in
+              switch result {
+              case .success(let downloadURL):
+                UserDefaults.standard.set(downloadURL, forKey: "profile_picture_url")
+                print(downloadURL)
+              case .failure(let error):
+                print(error)
+              }
             }
           }
-        }
+        })
+        self.view?.successToRegister()
       })
-      self.view?.successToRegister()
-    })
+    }
+    
+    
   }
 }
 

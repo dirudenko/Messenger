@@ -52,7 +52,7 @@ class LoginPresenter: LoginViewPresenterProtocol {
                   return
                 }
           UserDefaults.standard.set("\(firstName) \(lastName)", forKey: "name")
-
+          
         case .failure(let error):
           print("Error in getting user info: \(error)")
         }
@@ -96,37 +96,46 @@ class LoginPresenter: LoginViewPresenterProtocol {
       UserDefaults.standard.set(email, forKey: "email")
       UserDefaults.standard.set("\(firstName) \(lastName)", forKey: "name")
       
-      
-      FirebaseAuth.Auth.auth().signIn(with: credential) { result, error in
-        guard  result != nil, error == nil else { return }
-        let newUser = User(firstName: firstName,
-                           lastName: lastName,
-                           email: email)
-        
-        self.databaseService.addUser(user: newUser, complition: { success in
-          if success {
-            if (user?.profile?.hasImage) != nil {
-              guard let url = user?.profile?.imageURL(withDimension: 200) else { return }
-              URLSession.shared.dataTask(with: url) { data, _, _ in
-                guard let data  = data else { return }
-                let fileName = newUser.UserPictureName
-                self.storageService.uploadProfilePhoto(with: data,
-                                                       fileName: fileName) { result in
-                  switch result {
-                  case .success(let downloadURL):
-                    UserDefaults.standard.set(downloadURL, forKey: "profile_picture_url")
-                    print(downloadURL)
-                  case .failure(let error):
-                    print(error)
-                  }
-                }
-              }.resume()
-            }
+      self.databaseService.didUserExist(email: email) { exist in
+        if exist {
+          print("User is exist")
+          FirebaseAuth.Auth.auth().signIn(with: credential) { result, error in
+            guard  result != nil, error == nil else { return }
+            self.view?.sucessToLogin()
           }
-        })
-        self.view?.sucessToLogin()
+        } else {
+          print("User is not exist")
+          FirebaseAuth.Auth.auth().signIn(with: credential) { result, error in
+            guard  result != nil, error == nil else { return }
+            let newUser = User(firstName: firstName,
+                               lastName: lastName,
+                               email: email)
+            
+            self.databaseService.addUser(user: newUser, complition: { success in
+              if success {
+                if (user?.profile?.hasImage) != nil {
+                  guard let url = user?.profile?.imageURL(withDimension: 200) else { return }
+                  URLSession.shared.dataTask(with: url) { data, _, _ in
+                    guard let data  = data else { return }
+                    let fileName = newUser.UserPictureName
+                    self.storageService.uploadProfilePhoto(with: data,
+                                                           fileName: fileName) { result in
+                      switch result {
+                      case .success(let downloadURL):
+                        UserDefaults.standard.set(downloadURL, forKey: "profile_picture_url")
+                        //print(downloadURL)
+                      case .failure(let error):
+                        print(error)
+                      }
+                    }
+                  }.resume()
+                }
+              }
+              self.view?.sucessToLogin()
+            })
+          }
+        }
       }
     }
   }
-  
 }

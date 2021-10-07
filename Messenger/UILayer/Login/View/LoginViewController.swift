@@ -73,8 +73,6 @@ extension LoginViewController: LoginViewProtocol {
   func sucessToLogin() {
     
     navigationController?.dismiss(animated: false, completion: nil)
-    //Добавить переход после успешной авторизации
-    //print("Login success")
     let vc = MessengerBuilder.buildTabBar()
     vc.modalPresentationStyle = .fullScreen
     present(vc, animated: false)

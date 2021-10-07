@@ -152,11 +152,9 @@ extension DatabaseService: DatabaseServiceProtocol {
   
   /// проверка на наличие пользователя в БД
   func didUserExist(email: String, complition: @escaping ((Bool) -> Void)) {
-    var safeEmail = email.replacingOccurrences(of: ".", with: "-")
-    safeEmail = safeEmail.replacingOccurrences(of: "@", with: "-")
-    
+    let safeEmail = self.safeEmail(from: email)
     database.child(safeEmail).observeSingleEvent(of: .value) { snapshot in
-      guard snapshot.value as? String != nil else {
+      guard snapshot.exists() else {
         complition(false)
         return
       }
@@ -185,7 +183,11 @@ extension DatabaseService: DatabaseServiceProtocol {
         return
       }
       
-      self.database.child("users").observeSingleEvent(of: .value) { snapshot in
+      self.database.child("users").observeSingleEvent(of: .value) { [weak self] snapshot in
+        guard let self = self else {
+          complition(false)
+          return
+        }
         if var usersCollection = snapshot.value as? [[String: String]] {
           let newElement = [
             "name": user.firstName + " " + user.lastName,
