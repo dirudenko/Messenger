@@ -15,6 +15,7 @@ protocol ChatViewProtocol: AnyObject {
 
 protocol ChatViewPresenterProtocol: AnyObject {
   var databaseService: DatabaseMessagingProtocol { get set }
+  var storageService: StorageServiceProtocol { get set }
   var conversationID: String? { get set }
   var messages: [Message] { get set }
   func listenForMessages(id: String)
@@ -28,10 +29,13 @@ class ChatPresenter: ChatViewPresenterProtocol {
   weak var view: (MessagesViewController & ChatViewProtocol)?
   
   var databaseService: DatabaseMessagingProtocol
+  var storageService: StorageServiceProtocol
   
-  init(databaseService: DatabaseMessagingProtocol, conversationID: String?) {
+  
+  init(databaseService: DatabaseMessagingProtocol, conversationID: String?, storageService: StorageServiceProtocol) {
     self.databaseService = databaseService
     self.conversationID = conversationID
+    self.storageService = storageService
   }
   
   func listenForMessages(id: String) {

@@ -32,6 +32,10 @@
 		696E528826FA044D00343EDB /* ChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 696E528726FA044D00343EDB /* ChatView.swift */; };
 		696E528E26FA0EDD00343EDB /* NewConversationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 696E528D26FA0EDD00343EDB /* NewConversationViewController.swift */; };
 		696E529026FA115500343EDB /* NewConversationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 696E528F26FA115500343EDB /* NewConversationView.swift */; };
+		697AA62027149CB4002B630E /* Media.swift in Sources */ = {isa = PBXBuildFile; fileRef = 697AA61F27149CB4002B630E /* Media.swift */; };
+		697AA6262714A375002B630E /* PhotoViewerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 697AA6252714A375002B630E /* PhotoViewerViewController.swift */; };
+		697AA6282714A3BA002B630E /* PhotoViewerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 697AA6272714A3BA002B630E /* PhotoViewerView.swift */; };
+		697AA62A2714A3EC002B630E /* PhotoViewerPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 697AA6292714A3EC002B630E /* PhotoViewerPresenter.swift */; };
 		69C5D6DD26EFC44500AB2D87 /* ConversationsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69C5D6DC26EFC44500AB2D87 /* ConversationsViewController.swift */; };
 		69C5D6E026EFCBE100AB2D87 /* DatabaseService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69C5D6DF26EFCBE100AB2D87 /* DatabaseService.swift */; };
 		69C5D6E326EFCE2A00AB2D87 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69C5D6E226EFCE2A00AB2D87 /* User.swift */; };
@@ -76,6 +80,10 @@
 		696E528726FA044D00343EDB /* ChatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatView.swift; sourceTree = "<group>"; };
 		696E528D26FA0EDD00343EDB /* NewConversationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewConversationViewController.swift; sourceTree = "<group>"; };
 		696E528F26FA115500343EDB /* NewConversationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewConversationView.swift; sourceTree = "<group>"; };
+		697AA61F27149CB4002B630E /* Media.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Media.swift; sourceTree = "<group>"; };
+		697AA6252714A375002B630E /* PhotoViewerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoViewerViewController.swift; sourceTree = "<group>"; };
+		697AA6272714A3BA002B630E /* PhotoViewerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoViewerView.swift; sourceTree = "<group>"; };
+		697AA6292714A3EC002B630E /* PhotoViewerPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoViewerPresenter.swift; sourceTree = "<group>"; };
 		69C5D6DC26EFC44500AB2D87 /* ConversationsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationsViewController.swift; sourceTree = "<group>"; };
 		69C5D6DF26EFCBE100AB2D87 /* DatabaseService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseService.swift; sourceTree = "<group>"; };
 		69C5D6E226EFCE2A00AB2D87 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
@@ -144,6 +152,7 @@
 		6917783426F9DB0E00A1808E /* UILayer */ = {
 			isa = PBXGroup;
 			children = (
+				697AA6212714A331002B630E /* Photo */,
 				696E528926FA0E8900343EDB /* NewConversation */,
 				696E527C26F9FD8300343EDB /* Chat */,
 				69F5939826F5F574005AD477 /* TabBarViewController.swift */,
@@ -158,10 +167,9 @@
 		6917783526F9DB8D00A1808E /* StorageLayer */ = {
 			isa = PBXGroup;
 			children = (
-				696B9D3126FDC8FE00446BA0 /* StorageService.swift */,
+				697AA61E27145D21002B630E /* Storage */,
 				6917783626F9DCEE00A1808E /* Database */,
 				69C5D6E226EFCE2A00AB2D87 /* User.swift */,
-				696B9D3326FDDB6D00446BA0 /* StorageErrors.swift */,
 			);
 			path = StorageLayer;
 			sourceTree = "<group>";
@@ -318,6 +326,7 @@
 			children = (
 				696E528326FA039C00343EDB /* Message.swift */,
 				696E528526FA040800343EDB /* Sender.swift */,
+				697AA61F27149CB4002B630E /* Media.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -371,6 +380,49 @@
 				69EABB4026FA56F500798E5F /* NewConversationPresenter.swift */,
 			);
 			path = Presenter;
+			sourceTree = "<group>";
+		};
+		697AA61E27145D21002B630E /* Storage */ = {
+			isa = PBXGroup;
+			children = (
+				696B9D3126FDC8FE00446BA0 /* StorageService.swift */,
+				696B9D3326FDDB6D00446BA0 /* StorageErrors.swift */,
+			);
+			path = Storage;
+			sourceTree = "<group>";
+		};
+		697AA6212714A331002B630E /* Photo */ = {
+			isa = PBXGroup;
+			children = (
+				697AA6242714A34B002B630E /* Contoller */,
+				697AA6232714A346002B630E /* Presenter */,
+				697AA6222714A33A002B630E /* Model */,
+			);
+			path = Photo;
+			sourceTree = "<group>";
+		};
+		697AA6222714A33A002B630E /* Model */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		697AA6232714A346002B630E /* Presenter */ = {
+			isa = PBXGroup;
+			children = (
+				697AA6292714A3EC002B630E /* PhotoViewerPresenter.swift */,
+			);
+			path = Presenter;
+			sourceTree = "<group>";
+		};
+		697AA6242714A34B002B630E /* Contoller */ = {
+			isa = PBXGroup;
+			children = (
+				697AA6252714A375002B630E /* PhotoViewerViewController.swift */,
+				697AA6272714A3BA002B630E /* PhotoViewerView.swift */,
+			);
+			path = Contoller;
 			sourceTree = "<group>";
 		};
 		69C5D6DB26E9437300AB2D87 /* Builder */ = {
@@ -566,6 +618,8 @@
 				696E528826FA044D00343EDB /* ChatView.swift in Sources */,
 				6931D65B26E683CC0086AE5B /* LoginPresenter.swift in Sources */,
 				696E529026FA115500343EDB /* NewConversationView.swift in Sources */,
+				697AA6282714A3BA002B630E /* PhotoViewerView.swift in Sources */,
+				697AA62A2714A3EC002B630E /* PhotoViewerPresenter.swift in Sources */,
 				6931D65526E4BE300086AE5B /* RegisterView.swift in Sources */,
 				696E527926F9F5E000343EDB /* ConversationsView.swift in Sources */,
 				69F5939B26F5F887005AD477 /* ProfileViewController.swift in Sources */,
@@ -573,8 +627,10 @@
 				69C5D6DD26EFC44500AB2D87 /* ConversationsViewController.swift in Sources */,
 				6931D65F26E75A570086AE5B /* RegisterPresenter.swift in Sources */,
 				696E528626FA040800343EDB /* Sender.swift in Sources */,
+				697AA62027149CB4002B630E /* Media.swift in Sources */,
 				696E528226F9FDBF00343EDB /* ChatViewController.swift in Sources */,
 				696E528E26FA0EDD00343EDB /* NewConversationViewController.swift in Sources */,
+				697AA6262714A375002B630E /* PhotoViewerViewController.swift in Sources */,
 				6931D65726E4BEE80086AE5B /* RegisterViewController.swift in Sources */,
 				696B9D362702411800446BA0 /* DatabaseError.swift in Sources */,
 				69C5D6E026EFCBE100AB2D87 /* DatabaseService.swift in Sources */,

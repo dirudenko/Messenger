@@ -15,7 +15,7 @@ protocol Builder {
   static func buildProfileViewController() -> UIViewController
   static func buildChatViewController(with email: String, conversationID: String?) -> UIViewController
   static func buildNewConversationViewController() -> UIViewController
-
+  static func buildPhotoViewerViewController(with url: URL) -> UIViewController
 }
 
 class MessengerBuilder: Builder {
@@ -71,8 +71,18 @@ class MessengerBuilder: Builder {
   
   static func buildChatViewController(with email: String, conversationID: String?) -> UIViewController {
     let databaseService = DatabaseService()
-    let presenter = ChatPresenter(databaseService: databaseService, conversationID: conversationID)
+    let storageService = StorageService()
+    let presenter = ChatPresenter(databaseService: databaseService, conversationID: conversationID, storageService: storageService)
     let vc = ChatViewController(presenter: presenter, email: email)
+    presenter.view = vc
+    return vc
+  }
+  
+  static func buildPhotoViewerViewController(with url: URL) -> UIViewController {
+    let databaseService = DatabaseService()
+    let storageService = StorageService()
+    let presenter = PhotoViewerPresenter()
+    let vc = PhotoViewerViewController(presenter: presenter, url: url)
     presenter.view = vc
     return vc
   }

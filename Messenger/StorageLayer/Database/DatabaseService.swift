@@ -7,6 +7,7 @@
 
 import Foundation
 import FirebaseDatabase
+import MessageKit
 
 protocol DatabaseServiceProtocol {
   func didUserExist(email: String, complition: @escaping ((Bool) -> Void))
@@ -388,6 +389,22 @@ extension DatabaseService: DatabaseMessagingProtocol {
           return nil
         }
         
+        var kind: MessageKind?
+        if type == "photo" {
+          
+          guard let imageUrl = URL(string: content) else { return nil }
+          
+          let media = Media(url: imageUrl,
+                        image: nil,
+                        placeholderImage: UIImage(systemName: "plus")!,
+                        size: CGSize(width: 300, height: 300))
+          kind = .photo(media)
+        } else {
+          kind = .text(content)
+        }
+        
+        guard let finalKind = kind else { return nil}
+        
         let date = dateFormatter.date(from: dateString)
         let sender = Sender(senderId: senderEmail,
                             displayName: name,
@@ -396,7 +413,7 @@ extension DatabaseService: DatabaseMessagingProtocol {
         return Message(sender: sender,
                        messageId: messageID,
                        sentDate: date ?? Date(),
-                       kind: .text(content))
+                       kind: finalKind)
       }
       complition(.success(messages))
     }
@@ -426,7 +443,10 @@ extension DatabaseService: DatabaseMessagingProtocol {
         message = messageText
       case .attributedText(_):
         break
-      case .photo(_):
+      case .photo(let mediaItem):
+        if let targetUrl = mediaItem.url?.absoluteString {
+        message = targetUrl
+        }
         break
       case .video(_):
         break
