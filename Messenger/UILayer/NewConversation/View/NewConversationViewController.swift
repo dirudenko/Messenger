@@ -10,7 +10,7 @@ import UIKit
 class NewConversationViewController: UIViewController {
   
   var complition: (([String: String]) ->(Void))?
-  
+  var results = [[String: String]]()
   private let newConversation = NewConversationView()
   private let presenter: NewConversationViewPresenterProtocol
   
@@ -49,19 +49,19 @@ class NewConversationViewController: UIViewController {
 //MARK: - DataSource, Delegate
 extension NewConversationViewController: UITableViewDataSource, UITableViewDelegate {
   func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    return presenter.results.count
+    return results.count
   }
   
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
     let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
-    cell.textLabel?.text = presenter.results[indexPath.row]["name"]
+    cell.textLabel?.text = results[indexPath.row]["name"]
     
     return cell
   }
   
   func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     tableView.deselectRow(at: indexPath, animated: true)
-    let targetUser = presenter.results[indexPath.row]
+    let targetUser = results[indexPath.row]
     dismiss(animated: true, completion:  { [weak self] in
       self?.complition?(targetUser)
     })
@@ -77,7 +77,7 @@ extension NewConversationViewController: UISearchBarDelegate {
 //
 //    presenter.results.removeAll()
 //    presenter.searchUsers(query: text)
-    presenter.results.removeAll()
+    results.removeAll()
     
   }
   
@@ -88,21 +88,23 @@ extension NewConversationViewController: UISearchBarDelegate {
       }
       newConversation.searchBar.resignFirstResponder()
       
-      presenter.results.removeAll()
+      results.removeAll()
       presenter.searchUsers(query: text)
   }
   
 }
 //MARK: - PresenterProtocol
 extension NewConversationViewController: NewConversationViewProtocol {
-  func updateUI() {
-    if presenter.results.isEmpty {
+  func updateUI(with results: [[String : String]]) {
+    if results.isEmpty {
       newConversation.noResultLabel.isHidden = false
       newConversation.tableView.isHidden = true
       newConversation.tableView.reloadData()
     } else {
       newConversation.noResultLabel.isHidden = true
       newConversation.tableView.isHidden = false
+      self.results = results
+
       newConversation.tableView.reloadData()
     }
   }

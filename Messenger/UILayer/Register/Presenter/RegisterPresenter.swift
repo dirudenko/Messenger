@@ -67,8 +67,6 @@ class RegisterPresenter: RegisterViewPresenterProtocol {
         self.view?.successToRegister()
       })
     }
-    
-    
   }
 }
 

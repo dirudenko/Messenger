@@ -8,7 +8,7 @@
 import UIKit
 
 class ProfileView: UIView {
-
+  
   let tableView = UITableView()
   let headerView = UIView()
   
@@ -24,7 +24,7 @@ class ProfileView: UIView {
     imageView.translatesAutoresizingMaskIntoConstraints = false
     return imageView
   }()
-
+  
   override init(frame: CGRect) {
     super.init(frame: frame)
     self.configureUI()
@@ -67,7 +67,7 @@ class ProfileView: UIView {
       self.tableView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
       self.tableView.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor)
     ])
-}
+  }
   
   private func addPhoto() {
     headerView.addSubview(photoImage)
@@ -78,17 +78,5 @@ class ProfileView: UIView {
       photoImage.widthAnchor.constraint(equalToConstant: imageSize),
       photoImage.heightAnchor.constraint(equalToConstant: imageSize)
     ])
-    
-    
   }
-  
-  
-//   func createTableHeader(email: String) -> UIView? {
-//    let view = UIView(frame: CGRect(x: 0,
-//                                    y: 0,
-//                                    width: 300,
-//                                    height: 300))
-//    return view
-//  }
-  
 }

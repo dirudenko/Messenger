@@ -11,7 +11,7 @@ import FirebaseAuth
 protocol ConversationsViewProtocol: AnyObject {
   func sucessAuthorizate()
   func createChat(model: Conversation)
-  func successGetConversations()
+  func successGetConversations(conversations: [Conversation])
 }
 
 protocol ConversationsViewPresenterProtocol: AnyObject {
@@ -19,7 +19,6 @@ protocol ConversationsViewPresenterProtocol: AnyObject {
   func fetchMessages()
   func viewDidSelectChat(with model: Conversation)
   func startListeningConversation()
-  var conversations: [Conversation] { get set }
 }
 
 class ConversationsPresenter: ConversationsViewPresenterProtocol {
@@ -28,7 +27,6 @@ class ConversationsPresenter: ConversationsViewPresenterProtocol {
   
   let databaseService: DatabaseMessagingProtocol
   let storageService: StorageServiceProtocol
-  var conversations = [Conversation]()
   
   init(databaseService: DatabaseMessagingProtocol,
        storageService: StorageServiceProtocol) {
@@ -55,17 +53,16 @@ class ConversationsPresenter: ConversationsViewPresenterProtocol {
       return
     }
     let safeEmail = databaseService.safeEmail(from: email)
-      self.databaseService.getAllConversation(for: safeEmail) { [weak self] result in
+    self.databaseService.getAllConversation(for: safeEmail) { [weak self] result in
       switch result {
       case .success(let conversations):
         guard !conversations.isEmpty else {
           return
         }
-        self?.conversations = conversations
-        self?.view?.successGetConversations()
+        self?.view?.successGetConversations(conversations: conversations)
       case .failure(let error):
         print("Failed get conv \(error)")
-    }
+      }
     }
   }
   

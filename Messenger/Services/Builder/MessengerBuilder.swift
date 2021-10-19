@@ -79,8 +79,8 @@ class MessengerBuilder: Builder {
   }
   
   static func buildPhotoViewerViewController(with url: URL) -> UIViewController {
-    let databaseService = DatabaseService()
-    let storageService = StorageService()
+   // let databaseService = DatabaseService()
+   // let storageService = StorageService()
     let presenter = PhotoViewerPresenter()
     let vc = PhotoViewerViewController(presenter: presenter, url: url)
     presenter.view = vc

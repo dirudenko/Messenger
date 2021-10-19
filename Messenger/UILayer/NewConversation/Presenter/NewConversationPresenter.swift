@@ -9,17 +9,15 @@ import UIKit
 
 
 protocol NewConversationViewProtocol: AnyObject {
-  func updateUI()
+  func updateUI(with results: [[String: String]])
 }
 
 protocol NewConversationViewPresenterProtocol: AnyObject {
   func searchUsers(query: String)
-  var results: [[String: String]] { get set }
 }
 
 class NewConversationPresenter: NewConversationViewPresenterProtocol {
   
-  var results = [[String: String]]()
   weak var view: (UIViewController & NewConversationViewProtocol)?
   var complition: (([String : String]) -> (Void))?
   
@@ -61,7 +59,6 @@ class NewConversationPresenter: NewConversationViewPresenterProtocol {
       }
       return name.hasPrefix(term.lowercased())
     })
-    self.results = results
-    self.view?.updateUI()
+    self.view?.updateUI(with: results)
   }
 }

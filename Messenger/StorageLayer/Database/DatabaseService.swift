@@ -392,11 +392,12 @@ extension DatabaseService: DatabaseMessagingProtocol {
         var kind: MessageKind?
         if type == "photo" {
           
-          guard let imageUrl = URL(string: content) else { return nil }
+          guard let imageUrl = URL(string: content),
+          let placoholderImageUrl = UIImage(named: "logo") else { return nil }
           
           let media = Media(url: imageUrl,
                         image: nil,
-                        placeholderImage: UIImage(systemName: "plus")!,
+                        placeholderImage: placoholderImageUrl,
                         size: CGSize(width: 300, height: 300))
           kind = .photo(media)
         } else {

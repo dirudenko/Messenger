@@ -8,20 +8,19 @@
 import UIKit
 import MessageKit
 import InputBarAccessoryView
-import SDWebImage
 
 class ChatViewController: MessagesViewController {
   
   var isNewConversation = false
-  let otherUserEmail: String
+  private let otherUserEmail: String
+  private var messages = [Message]()
+  private var conversationID: String?
   
   private let presenter: ChatViewPresenterProtocol
   
   private var sender: Sender? {
-    guard let email = UserDefaults.standard.value(forKey: "email") as? String else { return nil }
-    let safeEmail = presenter.databaseService.safeEmail(from: email)
-    let sender = Sender(senderId: safeEmail,
-                        displayName: "Я",
+    let sender = Sender(senderId: presenter.safeMail(),
+                        displayName: "",
                         photoURL: "")
     return sender
   }
@@ -32,6 +31,7 @@ class ChatViewController: MessagesViewController {
     super.init(nibName: nil, bundle: nil)
     if let id = presenter.conversationID {
       presenter.listenForMessages(id: id)
+      self.conversationID = id
     }
   }
   
@@ -56,24 +56,6 @@ class ChatViewController: MessagesViewController {
 }
 //MARK: - Private func
 extension ChatViewController {
-  
-  private func createMessageId() -> String? {
-    let dateString = dateFormatter(from: Date())
-    guard let currentUserMail = UserDefaults.standard.value(forKey: "email") as? String else { return nil }
-    let safeEmail = presenter.databaseService.safeEmail(from: currentUserMail)
-    let newIdentifier = "\(otherUserEmail)_\(safeEmail)_\(dateString)"
-    return newIdentifier
-  }
-  
-  private func dateFormatter(from date: Date) -> String {
-    let formatter = DateFormatter()
-    formatter.dateStyle = .medium
-    formatter.timeStyle = .long
-    formatter.locale = .current
-    let stringDate = formatter.string(from: date)
-    return stringDate
-  }
-  
   private func setupInputButton() {
     let buttonSize: Double = 36
     
@@ -119,7 +101,7 @@ extension ChatViewController {
     actionSheet.addAction(UIAlertAction(title: "Камера",
                                         style: .default,
                                         handler: { [weak self] _ in
-     let picker = UIImagePickerController()
+      let picker = UIImagePickerController()
       picker.sourceType = .camera
       picker.delegate = self
       picker.allowsEditing = true
@@ -130,17 +112,17 @@ extension ChatViewController {
                                         style: .default,
                                         handler: { [weak self] _ in
       let picker = UIImagePickerController()
-       picker.sourceType = .photoLibrary
-       picker.delegate = self
-       picker.allowsEditing = true
-       self?.present(picker, animated: true)
+      picker.sourceType = .photoLibrary
+      picker.delegate = self
+      picker.allowsEditing = true
+      self?.present(picker, animated: true)
     }))
     actionSheet.addAction(UIAlertAction(title: "Отмена",
                                         style: .cancel,
                                         handler: nil))
     present(actionSheet, animated: true)
-                          
-                          }
+    
+  }
   
 }
 
@@ -155,11 +137,11 @@ extension ChatViewController: MessagesDataSource, MessagesLayoutDelegate, Messag
   }
   
   func messageForItem(at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> MessageType {
-    return presenter.messages[indexPath.section]
+    return messages[indexPath.section]
   }
   
   func numberOfSections(in messagesCollectionView: MessagesCollectionView) -> Int {
-    return presenter.messages.count
+    return messages.count
   }
   
   func configureMediaMessageImageView(_ imageView: UIImageView, for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) {
@@ -176,9 +158,10 @@ extension ChatViewController: MessagesDataSource, MessagesLayoutDelegate, Messag
 }
 
 extension ChatViewController: MessageCellDelegate {
+  /// просмотр отправленного фото
   func didTapImage(in cell: MessageCollectionViewCell) {
     guard let indexPath = messagesCollectionView.indexPath(for: cell) else { return }
-    let message = presenter.messages[indexPath.section]
+    let message = messages[indexPath.section]
     switch message.kind {
     case .photo(let media):
       guard let imageUrl = media.url else { return }
@@ -191,10 +174,11 @@ extension ChatViewController: MessageCellDelegate {
 }
 //MARK: - InputBarAccessoryViewDelegate
 extension ChatViewController: InputBarAccessoryViewDelegate {
+  /// отправка  текстового сообщения
   func inputBar(_ inputBar: InputBarAccessoryView, didPressSendButtonWith text: String) {
     guard !text.replacingOccurrences(of: " ", with: "").isEmpty,
-    let sender = sender,
-    let messageId = createMessageId() else { return }
+          let sender = sender,
+          let messageId = presenter.createMessageId(for: otherUserEmail) else { return }
     let message = Message(sender: sender,
                           messageId: messageId,
                           sentDate: Date(),
@@ -203,84 +187,53 @@ extension ChatViewController: InputBarAccessoryViewDelegate {
     if isNewConversation {
       //create conv
       
-      
-      presenter.databaseService.createNewConversation(with: otherUserEmail,
-                                                      name: self.title ?? "Пользователь",
-                                                      firstMessage: message) { success in
+      presenter.createNewConversation(message: message,
+                                      with: otherUserEmail,
+                                      title: self.title ?? "User") { success in
         if success {
-          print("message send")
           self.isNewConversation = false
-        } else {
-          print("message NOT send")
-
         }
       }
+      
     } else {
-      guard let conversationID = presenter.conversationID,
-      let name = self.title else { return }
-      presenter.databaseService.sendMessage(to: conversationID,
-                                            otherUserEmail: otherUserEmail,
-                                            name: name,
-                                            newMessage: message) { success in
-        if success {
-          print("message send")
-        } else {
-          print("message NOT send")
-        }
-      }
+      // append conv
+      guard let conversationID = conversationID,
+            let name = self.title else { return }
+      presenter.appendToConversation(message: message,
+                                     with: otherUserEmail,
+                                     to: conversationID,
+                                     name: name)
     }
     inputBar.inputTextView.text = ""
   }
 }
 
 extension ChatViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+  /// отправка фотосообщения
   func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
     picker.dismiss(animated: true, completion: nil)
   }
   func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
     picker.dismiss(animated: true, completion: nil)
-    guard let image = info[UIImagePickerController.InfoKey.editedImage] as? UIImage,
-    let imageData = image.pngData(),
-    let messageId = createMessageId(),
-    let conversationId = presenter.conversationID,
-    let name = self.title,
-    let sender = sender else { return }
-    let fileName = "photo_message_" + messageId.replacingOccurrences(of: " ", with: "-") + ".png"
-    presenter.storageService.uploadMessagePhoto(with: imageData, fileName: fileName) { [weak self] result in
-      guard let self = self else { return }
-      switch result {
-      case .success(let urlString):
-        guard let url = URL(string: urlString),
-              let placeholder = UIImage(systemName: "plus") else { return }
-        
-        let media = Media(url: url,
-                          image: nil,
-                          placeholderImage: placeholder,
-                          size: .zero)
-        let message = Message(sender: sender,
-                              messageId: messageId,
-                              sentDate: Date(),
-                              kind: .photo(media))
-        self.presenter.databaseService.sendMessage(to: conversationId,
-                                                   otherUserEmail: self.otherUserEmail,
-                                              name: name,
-                                                   newMessage: message) { success in
-          if success {
-            print("Photo sended")
-          } else {
-            print("Fail to send photo")
-          }
-        }
-      case .failure(let error):
-        print("message photo updload error: \(error)")
-      }
-    }
+    
+    presenter.sendPhotoMessage(email: otherUserEmail,
+                               conversationID: conversationID,
+                               info: info,
+                               name: self.title,
+                               sender: sender)
   }
 }
 
 //MARK: - PresenterProtocol
 extension ChatViewController: ChatViewProtocol {
-  func successGetMessages() {
+  func alertUser(with text: String) {
+    let alert = UIAlertController(title: "Ошибка", message: text, preferredStyle: .alert)
+    alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
+    present(alert, animated: true)
+  }
+  
+  func successGetMessages(messages: [Message]) {
+    self.messages = messages
     DispatchQueue.main.async {
       self.messagesCollectionView.reloadData()
     }

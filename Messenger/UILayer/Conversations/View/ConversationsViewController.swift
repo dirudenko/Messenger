@@ -12,6 +12,8 @@ class ConversationsViewController: UIViewController {
   
   private let presenter: ConversationsViewPresenterProtocol
   private let chatsView = ConversationsView()
+  private var conversations = [Conversation]()
+
   
   init(presenter: ConversationsViewPresenterProtocol) {
     self.presenter = presenter
@@ -71,12 +73,12 @@ class ConversationsViewController: UIViewController {
 //MARK: - DataSource, Delegate
 extension ConversationsViewController: UITableViewDataSource, UITableViewDelegate {
   func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    return presenter.conversations.count
+    return conversations.count
   }
   
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
     guard let cell = tableView.dequeueReusableCell(withIdentifier: "ConversationTableViewCell", for: indexPath) as? ConversationTableViewCell else { return UITableViewCell() }
-    let model = presenter.conversations[indexPath.row]
+    let model = conversations[indexPath.row]
     cell.configure(with: model)
     cell.accessoryType = .disclosureIndicator
     return cell
@@ -84,7 +86,7 @@ extension ConversationsViewController: UITableViewDataSource, UITableViewDelegat
   
   func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     tableView.deselectRow(at: indexPath, animated: true)
-    let model = presenter.conversations[indexPath.row]
+    let model = conversations[indexPath.row]
     presenter.viewDidSelectChat(with: model)
   }
   
@@ -93,8 +95,10 @@ extension ConversationsViewController: UITableViewDataSource, UITableViewDelegat
   }
 }
 //MARK: - PresenterProtocol
-extension ConversationsViewController: ConversationsViewProtocol {  
-  func successGetConversations() {
+extension ConversationsViewController: ConversationsViewProtocol {
+  
+  func successGetConversations(conversations: [Conversation]) {
+    self.conversations = conversations
     DispatchQueue.main.async {
       self.chatsView.tableView.reloadData()
     }

@@ -62,7 +62,6 @@ final class StorageService: StorageServiceProtocol {
         let urlString = url.absoluteString
         complition(.success(urlString))
       }
-      
     })
   }
   
@@ -82,5 +81,4 @@ final class StorageService: StorageServiceProtocol {
       completion(.success(url))
     }
   }
-  
 }
