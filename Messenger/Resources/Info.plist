@@ -35,6 +35,8 @@
 	<string>Пожалуйста, разрешите доступ к камере</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>Пожалуйста, разрешите доступ к фотографиям</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Пожалуйста, разрешите доступ к микрофону</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>

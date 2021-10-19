@@ -9,7 +9,7 @@ import UIKit
 
 
 protocol NewConversationViewProtocol: AnyObject {
-  func updateUI(with results: [[String: String]])
+  func updateUI(with results: [SearchResult])
 }
 
 protocol NewConversationViewPresenterProtocol: AnyObject {
@@ -52,13 +52,27 @@ class NewConversationPresenter: NewConversationViewPresenterProtocol {
   
   
   private func filterUsers(with term: String) {
-    guard hasFetched else { return }
-    let results: [[String: String]] = self.users.filter ({
+    guard let currentUserEmail = UserDefaults.standard.value(forKey: "email") as? String,
+          hasFetched else { return }
+    let safeEmail = storageService.safeEmail(email: currentUserEmail)
+    let results: [SearchResult] = self.users.filter ({
+      guard let email = $0["email"],
+            email != safeEmail else {
+              return false
+            }
       guard let name = $0["name"]?.lowercased() else {
         return false
       }
       return name.hasPrefix(term.lowercased())
-    })
+    }).compactMap {
+      
+      guard let email = $0["email"],
+            let name = $0["name"] else {
+        return nil
+      }
+      
+      return SearchResult(name: name, email: email)
+    }
     self.view?.updateUI(with: results)
   }
 }

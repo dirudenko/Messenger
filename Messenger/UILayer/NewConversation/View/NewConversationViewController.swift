@@ -9,8 +9,8 @@ import UIKit
 
 class NewConversationViewController: UIViewController {
   
-  var complition: (([String: String]) ->(Void))?
-  var results = [[String: String]]()
+  var complition: ((SearchResult) ->(Void))?
+  var results = [SearchResult]()
   private let newConversation = NewConversationView()
   private let presenter: NewConversationViewPresenterProtocol
   
@@ -53,9 +53,8 @@ extension NewConversationViewController: UITableViewDataSource, UITableViewDeleg
   }
   
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-    let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
-    cell.textLabel?.text = results[indexPath.row]["name"]
-    
+    guard let cell = tableView.dequeueReusableCell(withIdentifier: "NewConversationTableViewCell", for: indexPath) as? NewConversationTableViewCell else { return UITableViewCell() }
+    cell.configure(with: results[indexPath.row])
     return cell
   }
   
@@ -66,6 +65,11 @@ extension NewConversationViewController: UITableViewDataSource, UITableViewDeleg
       self?.complition?(targetUser)
     })
   }
+  
+  func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+    return NewConversationTableViewCell().imageSize + 20
+  }
+  
 }
 
 extension NewConversationViewController: UISearchBarDelegate {
@@ -95,7 +99,7 @@ extension NewConversationViewController: UISearchBarDelegate {
 }
 //MARK: - PresenterProtocol
 extension NewConversationViewController: NewConversationViewProtocol {
-  func updateUI(with results: [[String : String]]) {
+  func updateUI(with results: [SearchResult]) {
     if results.isEmpty {
       newConversation.noResultLabel.isHidden = false
       newConversation.tableView.isHidden = true
@@ -104,7 +108,6 @@ extension NewConversationViewController: NewConversationViewProtocol {
       newConversation.noResultLabel.isHidden = true
       newConversation.tableView.isHidden = false
       self.results = results
-
       newConversation.tableView.reloadData()
     }
   }

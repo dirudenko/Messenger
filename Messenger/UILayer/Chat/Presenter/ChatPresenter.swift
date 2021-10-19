@@ -21,6 +21,7 @@ protocol ChatViewPresenterProtocol: AnyObject {
   func createNewConversation(message: Message, with email: String, title: String, complition: @escaping (Bool) -> Void)
   func appendToConversation(message: Message, with email: String, to conversationID: String, name: String)
   func sendPhotoMessage(email: String, conversationID: String?, info: [UIImagePickerController.InfoKey : Any], name: String?, sender: Sender?)
+  func sendVideoMessage(email: String, conversationID: String?, info: [UIImagePickerController.InfoKey : Any], name: String?, sender: Sender?)
 }
 
 class ChatPresenter {
@@ -138,6 +139,48 @@ extension ChatPresenter: ChatViewPresenterProtocol {
       }
     }
   }
+    
+    func sendVideoMessage(email: String, conversationID: String?, info: [UIImagePickerController.InfoKey : Any], name: String?, sender: Sender?) {
+      guard let videoUrl = info[.mediaURL] as? URL,
+            let messageId = self.createMessageId(for: email),
+            let conversationId = conversationID,
+            let name = name,
+            let sender = sender else { return }
+      
+      let fileName = "video_message_" + messageId.replacingOccurrences(of: " ", with: "-") + ".mov"
+      storageService.uploadMessageVideo(with: videoUrl, fileName: fileName) { [weak self] result in
+        guard let self = self else { return }
+        switch result {
+        case .success(let urlString):
+          guard let url = URL(string: urlString),
+                let placeholder = UIImage(systemName: "plus") else { return }
+          
+          let media = Media(url: url,
+                            image: nil,
+                            placeholderImage: placeholder,
+                            size: .zero)
+          let message = Message(sender: sender,
+                                messageId: messageId,
+                                sentDate: Date(),
+                                kind: .video(media))
+          self.databaseService.sendMessage(to: conversationId,
+                                           otherUserEmail: email,
+                                           name: name,
+                                           newMessage: message) { success in
+            if success {
+              print("Video sended")
+            } else {
+              print("Fail to send video")
+              self.view?.alertUser(with: "Ошибка при отправке видео")
+            }
+          }
+        case .failure(let error):
+          self.view?.alertUser(with: "Ошибка при отправке видео: \(error)")
+          print("message video updload error: \(error)")
+        }
+      }
+    }
+  
   
   
   

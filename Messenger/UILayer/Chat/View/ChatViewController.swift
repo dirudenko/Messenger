@@ -8,6 +8,8 @@
 import UIKit
 import MessageKit
 import InputBarAccessoryView
+import AVFoundation
+import AVKit
 
 class ChatViewController: MessagesViewController {
   
@@ -46,11 +48,13 @@ class ChatViewController: MessagesViewController {
     messagesCollectionView.messagesDisplayDelegate = self
     messageInputBar.delegate = self
     messagesCollectionView.messageCellDelegate = self
-    setupInputButton()
-  }
+}
   
   override func viewDidAppear(_ animated: Bool) {
     super.viewDidAppear(animated)
+    setupInputButton()
+    messagesCollectionView.reloadData()
+    messagesCollectionView.scrollToLastItem(at: .bottom, animated: false)
     messageInputBar.inputTextView.becomeFirstResponder()
   }
 }
@@ -81,7 +85,7 @@ extension ChatViewController {
     actionSheet.addAction(UIAlertAction(title: "Видео",
                                         style: .default,
                                         handler: { [weak self] _ in
-      
+      self?.presentVideoActionSheet()
     }))
     actionSheet.addAction(UIAlertAction(title: "Аудио",
                                         style: .default,
@@ -114,6 +118,40 @@ extension ChatViewController {
       let picker = UIImagePickerController()
       picker.sourceType = .photoLibrary
       picker.delegate = self
+      picker.allowsEditing = true
+      self?.present(picker, animated: true)
+    }))
+    actionSheet.addAction(UIAlertAction(title: "Отмена",
+                                        style: .cancel,
+                                        handler: nil))
+    present(actionSheet, animated: true)
+    
+  }
+  
+  private func presentVideoActionSheet() {
+    let actionSheet = UIAlertController(title: "Добавление видео",
+                                        message: "Откуда вы хотите добавить видео?",
+                                        preferredStyle: .actionSheet)
+    actionSheet.addAction(UIAlertAction(title: "Камера",
+                                        style: .default,
+                                        handler: { [weak self] _ in
+      let picker = UIImagePickerController()
+      picker.sourceType = .camera
+      picker.delegate = self
+      picker.mediaTypes = ["public.movie"]
+      picker.videoQuality = .typeMedium
+      picker.allowsEditing = true
+      self?.present(picker, animated: true)
+    }))
+    
+    actionSheet.addAction(UIAlertAction(title: "Галерея",
+                                        style: .default,
+                                        handler: { [weak self] _ in
+      let picker = UIImagePickerController()
+      picker.sourceType = .photoLibrary
+      picker.delegate = self
+      picker.mediaTypes = ["public.movie"]
+      picker.videoQuality = .typeMedium
       picker.allowsEditing = true
       self?.present(picker, animated: true)
     }))
@@ -158,7 +196,6 @@ extension ChatViewController: MessagesDataSource, MessagesLayoutDelegate, Messag
 }
 
 extension ChatViewController: MessageCellDelegate {
-  /// просмотр отправленного фото
   func didTapImage(in cell: MessageCollectionViewCell) {
     guard let indexPath = messagesCollectionView.indexPath(for: cell) else { return }
     let message = messages[indexPath.section]
@@ -167,6 +204,11 @@ extension ChatViewController: MessageCellDelegate {
       guard let imageUrl = media.url else { return }
       let vc = MessengerBuilder.buildPhotoViewerViewController(with: imageUrl)
       self.navigationController?.pushViewController(vc, animated: true)
+    case .video(let media):
+      guard let videoUrl = media.url else { return }
+      let vc = AVPlayerViewController()
+      vc.player = AVPlayer(url: videoUrl)
+      present(vc, animated: true)
     default:
       break
     }
@@ -209,18 +251,27 @@ extension ChatViewController: InputBarAccessoryViewDelegate {
 }
 
 extension ChatViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
-  /// отправка фотосообщения
   func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
     picker.dismiss(animated: true, completion: nil)
   }
+  
   func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
     picker.dismiss(animated: true, completion: nil)
+    
+    if let _ = info[.editedImage] as? UIImage {
     
     presenter.sendPhotoMessage(email: otherUserEmail,
                                conversationID: conversationID,
                                info: info,
                                name: self.title,
                                sender: sender)
+    } else {
+      presenter.sendVideoMessage(email: otherUserEmail,
+                                 conversationID: conversationID,
+                                 info: info,
+                                 name: self.title,
+                                 sender: sender)
+    }
   }
 }
 

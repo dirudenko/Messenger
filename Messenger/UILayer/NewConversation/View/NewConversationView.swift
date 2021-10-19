@@ -19,7 +19,7 @@ class NewConversationView: UIView {
    let tableView = UITableView()
     tableView.isHidden = true
     tableView.translatesAutoresizingMaskIntoConstraints = false
-   tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
+   tableView.register(NewConversationTableViewCell.self, forCellReuseIdentifier: "NewConversationTableViewCell")
     return tableView
   }()
   

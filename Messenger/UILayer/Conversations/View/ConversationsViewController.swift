@@ -56,11 +56,10 @@ class ConversationsViewController: UIViewController {
     present(navVC, animated: true)
   }
   
-  private func startNewConversation(with user: [String: String]) {
-    guard
-      let name = user["name"],
-      let email = user["email"],
-      let vc = MessengerBuilder.buildChatViewController(with: email, conversationID: nil) as? ChatViewController else {
+  private func startNewConversation(with user: SearchResult) {
+    let name = user.name
+    let email = user.email
+    guard let vc = MessengerBuilder.buildChatViewController(with: email, conversationID: nil) as? ChatViewController else {
         return
       }
     

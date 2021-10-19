@@ -393,14 +393,29 @@ extension DatabaseService: DatabaseMessagingProtocol {
         if type == "photo" {
           
           guard let imageUrl = URL(string: content),
-          let placoholderImageUrl = UIImage(named: "logo") else { return nil }
+          let placoholderImageUrl = UIImage(named: "logo") else {
+            return nil
+          }
           
           let media = Media(url: imageUrl,
                         image: nil,
                         placeholderImage: placoholderImageUrl,
                         size: CGSize(width: 300, height: 300))
           kind = .photo(media)
-        } else {
+        } else if type == "video" {
+          
+          guard let videoUrl = URL(string: content),
+          let placoholderImageUrl = UIImage(named: "logo") else {
+            return nil
+          }
+          
+          let media = Media(url: videoUrl,
+                        image: nil,
+                        placeholderImage: placoholderImageUrl,
+                        size: CGSize(width: 300, height: 300))
+          kind = .video(media)
+        }
+          else {
           kind = .text(content)
         }
         
@@ -449,7 +464,10 @@ extension DatabaseService: DatabaseMessagingProtocol {
         message = targetUrl
         }
         break
-      case .video(_):
+      case .video(let mediaItem):
+        if let targetUrl = mediaItem.url?.absoluteString {
+        message = targetUrl
+        }
         break
       case .location(_):
         break
