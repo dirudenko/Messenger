@@ -69,6 +69,7 @@ extension ProfileViewController: UITableViewDataSource, UITableViewDelegate {
 extension ProfileViewController: ProfileViewProtocol {
   func sucessLogout() {
     let vc = MessengerBuilder.buildTabBar()
+    //UserDefaults.standard.removeObject(forKey: "email")
     vc.modalPresentationStyle = .fullScreen
     present(vc, animated: true)
   }

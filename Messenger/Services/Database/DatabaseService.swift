@@ -8,6 +8,7 @@
 import Foundation
 import FirebaseDatabase
 import MessageKit
+import CoreMedia
 
 protocol DatabaseServiceProtocol {
   func didUserExist(email: String, complition: @escaping ((Bool) -> Void))
@@ -21,6 +22,7 @@ protocol DatabaseMessagingProtocol {
   func getAllConversation(for email: String, complition: @escaping (Result<[Conversation], Error>) -> Void)
   func getAllMessagerForConversation(with id: String, complition: @escaping (Result<[Message], Error>) -> Void)
   func sendMessage(to conversation: String, otherUserEmail: String, name: String, newMessage: Message, complition: @escaping (Bool) -> Void)
+  func deleteConversation(conversationID: String, complition: @escaping (Bool) -> Void)
   func safeEmail(from email: String) -> String
 }
 
@@ -222,6 +224,9 @@ extension DatabaseService: DatabaseServiceProtocol {
       }
     }
   }
+  
+  
+  
 }
 //MARK: - Sending Messages
 
@@ -230,6 +235,31 @@ extension DatabaseService: DatabaseMessagingProtocol {
     var safeEmail = email.replacingOccurrences(of: ".", with: "-")
     safeEmail = safeEmail.replacingOccurrences(of: "@", with: "-")
     return safeEmail
+  }
+  
+  func deleteConversation(conversationID: String, complition: @escaping (Bool) -> Void) {
+    guard let email = UserDefaults.standard.value(forKey: "email") as? String else { return }
+    let safeEmail = safeEmail(from: email)
+    let ref = database.child("\(safeEmail)/conversations")
+    ref.observeSingleEvent(of: .value) { snapshot in
+      if var conversations = snapshot.value as? [[String: Any]] {
+        var position = Int()
+        
+        if let index = conversations.firstIndex(where: {$0["id"] as! String == conversationID}) {
+          position = index
+          print(position)
+        }
+        conversations.remove(at: position)
+        ref.setValue(conversations) { error, _ in
+          guard error == nil else {
+            print("Failed to delete conversation")
+            complition(false)
+            return
+          }
+          complition(true)
+        }
+      }
+    }
   }
   
   func createNewConversation(with otherUserEmail: String, name: String, firstMessage: Message, complition: @escaping (Bool) -> Void) {

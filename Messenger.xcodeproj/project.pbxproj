@@ -171,8 +171,6 @@
 		6917783526F9DB8D00A1808E /* StorageLayer */ = {
 			isa = PBXGroup;
 			children = (
-				697AA61E27145D21002B630E /* Storage */,
-				6917783626F9DCEE00A1808E /* Database */,
 				69C5D6E226EFCE2A00AB2D87 /* User.swift */,
 			);
 			path = StorageLayer;
@@ -214,6 +212,8 @@
 		6931D64226E365C40086AE5B /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				697AA61E27145D21002B630E /* Storage */,
+				6917783626F9DCEE00A1808E /* Database */,
 				69C5D6DB26E9437300AB2D87 /* Builder */,
 				696E527A26F9F88900343EDB /* ImageService.swift */,
 			);

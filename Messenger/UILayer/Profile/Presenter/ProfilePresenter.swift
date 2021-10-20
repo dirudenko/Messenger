@@ -30,7 +30,7 @@ class ProfilePresenter: ProfileViewPresenterProtocol {
   
   func viewDidLogout() -> UIViewController {
     let alert = UIAlertController(title: "Внимание",
-                                  message: "Вы действительно хотитте выйти?",
+                                  message: "Вы действительно хотите выйти?",
                                   preferredStyle: .actionSheet)
     alert.addAction(UIAlertAction(title: "Выйти",
                                   style: .destructive,

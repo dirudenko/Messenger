@@ -13,7 +13,6 @@ class ConversationsViewController: UIViewController {
   private let presenter: ConversationsViewPresenterProtocol
   private let chatsView = ConversationsView()
   private var conversations = [Conversation]()
-
   
   init(presenter: ConversationsViewPresenterProtocol) {
     self.presenter = presenter
@@ -36,15 +35,18 @@ class ConversationsViewController: UIViewController {
                                                         action: #selector(didTabComposeButton))
     chatsView.tableView.delegate = self
     chatsView.tableView.dataSource = self
-    
-    presenter.viewDidAuthorizate()
+    if presenter.viewDidAuthorizate() {
     presenter.startListeningConversation()
+    }
   }
   
   override func viewDidAppear(_ animated: Bool) {
     super.viewDidAppear(animated)
-    presenter.viewDidAuthorizate()
+    if presenter.viewDidAuthorizate() {
+    presenter.startListeningConversation()
+    }
   }
+  
   //MARK: - Private func
   /// Создание нового окна диалога с пользователем
   @objc private func didTabComposeButton() {
@@ -68,6 +70,13 @@ class ConversationsViewController: UIViewController {
     vc.navigationItem.largeTitleDisplayMode = .never
     navigationController?.pushViewController(vc, animated: true)
   }
+  
+  private func createChat(model: Conversation) {
+    let vc = MessengerBuilder.buildChatViewController(with: model.otherUserEmail, conversationID: model.id)
+    vc.title = model.name
+    vc.navigationItem.largeTitleDisplayMode = .never
+    navigationController?.pushViewController(vc, animated: true)
+  }
 }
 //MARK: - DataSource, Delegate
 extension ConversationsViewController: UITableViewDataSource, UITableViewDelegate {
@@ -86,28 +95,41 @@ extension ConversationsViewController: UITableViewDataSource, UITableViewDelegat
   func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     tableView.deselectRow(at: indexPath, animated: true)
     let model = conversations[indexPath.row]
-    presenter.viewDidSelectChat(with: model)
+    self.createChat(model: model)
   }
   
   func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-    return 120
+    return ConversationTableViewCell().imageSize + 20
+  }
+  
+  func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+    if editingStyle == .delete {
+      let conversationID = conversations[indexPath.row].id
+      tableView.beginUpdates()
+      presenter.deleteConversation(conversationID: conversationID) { [weak self] success in
+        if success {
+          self?.conversations.remove(at: indexPath.row)
+          tableView.deleteRows(at: [indexPath], with: .automatic)
+        }
+      }
+      
+      tableView.endUpdates()
+    }
+  }
+  func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
+    return .delete
   }
 }
 //MARK: - PresenterProtocol
 extension ConversationsViewController: ConversationsViewProtocol {
+
+  
   
   func successGetConversations(conversations: [Conversation]) {
     self.conversations = conversations
     DispatchQueue.main.async {
       self.chatsView.tableView.reloadData()
     }
-  }
-  
-  func createChat(model: Conversation) {
-    let vc = MessengerBuilder.buildChatViewController(with: model.otherUserEmail, conversationID: model.id)
-    vc.title = model.name
-    vc.navigationItem.largeTitleDisplayMode = .never
-    navigationController?.pushViewController(vc, animated: true)
   }
   
   func sucessAuthorizate() {

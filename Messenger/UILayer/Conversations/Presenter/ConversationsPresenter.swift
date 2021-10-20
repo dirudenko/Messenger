@@ -10,19 +10,16 @@ import FirebaseAuth
 
 protocol ConversationsViewProtocol: AnyObject {
   func sucessAuthorizate()
-  func createChat(model: Conversation)
   func successGetConversations(conversations: [Conversation])
 }
 
 protocol ConversationsViewPresenterProtocol: AnyObject {
-  func viewDidAuthorizate()
-  func fetchMessages()
-  func viewDidSelectChat(with model: Conversation)
+  func viewDidAuthorizate() -> Bool
   func startListeningConversation()
+  func deleteConversation(conversationID: String, complition: @escaping (Bool) -> Void) 
 }
 
 class ConversationsPresenter: ConversationsViewPresenterProtocol {
-  
   weak var view: (UIViewController & ConversationsViewProtocol)?
   
   let databaseService: DatabaseMessagingProtocol
@@ -34,19 +31,16 @@ class ConversationsPresenter: ConversationsViewPresenterProtocol {
     self.storageService = storageService
   }
   
-  func viewDidAuthorizate() {
+  func viewDidAuthorizate() -> Bool {
     if FirebaseAuth.Auth.auth().currentUser == nil {
       view?.sucessAuthorizate()
+      return false
+    } else
+    {
+      return true
     }
   }
   
-  func fetchMessages() {
-    
-  }
-  
-  func viewDidSelectChat(with model: Conversation) {
-    view?.createChat(model: model)
-  }
   
   func startListeningConversation() {
     guard let email = UserDefaults.standard.value(forKey: "email") as? String else {
@@ -65,5 +59,13 @@ class ConversationsPresenter: ConversationsViewPresenterProtocol {
       }
     }
   }
-  
+  func deleteConversation(conversationID: String, complition: @escaping (Bool) -> Void) {
+    databaseService.deleteConversation(conversationID: conversationID) { success in
+      if success {
+        complition(true)
+      } else {
+        complition(false)
+      }
+    }
+  }
 }

@@ -10,7 +10,7 @@ import SDWebImage
 
 class ConversationTableViewCell: UITableViewCell {
   
-  private let imageSize: CGFloat = 100
+  let imageSize: CGFloat = 100
   private let storageService = StorageService()
   
   private(set) lazy var userImage: UIImageView = {
