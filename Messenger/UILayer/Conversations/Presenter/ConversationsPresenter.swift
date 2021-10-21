@@ -7,6 +7,7 @@
 
 import UIKit
 import FirebaseAuth
+import SwiftUI
 
 protocol ConversationsViewProtocol: AnyObject {
   func sucessAuthorizate()
@@ -16,7 +17,9 @@ protocol ConversationsViewProtocol: AnyObject {
 protocol ConversationsViewPresenterProtocol: AnyObject {
   func viewDidAuthorizate() -> Bool
   func startListeningConversation()
-  func deleteConversation(conversationID: String, complition: @escaping (Bool) -> Void) 
+  func deleteConversation(conversationID: String, complition: @escaping (Bool) -> Void)
+  func safeMail(from email: String) -> String
+  func converstionExists(email: String, complition: @escaping (Result<String, Error>) -> Void)
 }
 
 class ConversationsPresenter: ConversationsViewPresenterProtocol {
@@ -41,6 +44,21 @@ class ConversationsPresenter: ConversationsViewPresenterProtocol {
     }
   }
   
+  func safeMail(from email: String) -> String {
+    let safeEmail = databaseService.safeEmail(from: email)
+    return safeEmail
+  }
+  
+  func converstionExists(email: String, complition: @escaping (Result<String, Error>) -> Void) {
+    databaseService.converstionExists(with: email) { result in
+      switch result {
+      case .success(let conversationId):
+        complition(.success(conversationId))
+      case .failure(_):
+        complition(.failure(DatabaseError.failedToFetch))
+      }
+    }
+  }
   
   func startListeningConversation() {
     guard let email = UserDefaults.standard.value(forKey: "email") as? String else {

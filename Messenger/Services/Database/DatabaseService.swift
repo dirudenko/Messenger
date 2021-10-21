@@ -24,6 +24,7 @@ protocol DatabaseMessagingProtocol {
   func sendMessage(to conversation: String, otherUserEmail: String, name: String, newMessage: Message, complition: @escaping (Bool) -> Void)
   func deleteConversation(conversationID: String, complition: @escaping (Bool) -> Void)
   func safeEmail(from email: String) -> String
+  func converstionExists(with targetEmail: String, complition: @escaping (Result<String, Error>) -> Void)
 }
 
 final class DatabaseService {
@@ -236,6 +237,33 @@ extension DatabaseService: DatabaseMessagingProtocol {
     safeEmail = safeEmail.replacingOccurrences(of: "@", with: "-")
     return safeEmail
   }
+  
+  func converstionExists(with targetEmail: String, complition: @escaping (Result<String, Error>) -> Void) {
+    let safeRecipientEmail = safeEmail(from: targetEmail)
+    guard let senderEmail = UserDefaults.standard.value(forKey: "email") as? String else { return }
+    let safeSenderEmail = safeEmail(from: senderEmail)
+    database.child("\(safeRecipientEmail)/conversations").observeSingleEvent(of: .value) { snapshot in
+      guard let collection = snapshot.value as? [[String: Any]] else {
+        complition(.failure(DatabaseError.failedToFetch))
+        return
+      }
+      if let conversation = collection.first(where: {
+        guard let targetSenderEmail = $0["other_user_email"] as? String else {
+          return false
+        }
+        return safeSenderEmail == targetSenderEmail
+
+      }) {
+        guard let id  = conversation["id"] as? String else {
+          complition(.failure(DatabaseError.failedToFetch))
+          return
+        }
+        complition(.success(id))
+        return
+      }
+    }
+  }
+
   
   func deleteConversation(conversationID: String, complition: @escaping (Bool) -> Void) {
     guard let email = UserDefaults.standard.value(forKey: "email") as? String else { return }
@@ -466,7 +494,6 @@ extension DatabaseService: DatabaseMessagingProtocol {
   }
   
   func sendMessage(to conversation: String, otherUserEmail: String, name: String, newMessage: Message, complition: @escaping (Bool) -> Void) {
-    
     guard let myEmail = UserDefaults.standard.value(forKey: "email") as? String else {
       complition(false)
       return
@@ -538,33 +565,58 @@ extension DatabaseService: DatabaseMessagingProtocol {
         }
         
         self.database.child("\(currentEmail)/conversations").observeSingleEvent(of: .value) { snapshot in
-          guard var currrentUserConversations = snapshot.value as? [[String: Any]] else {
-            complition(false)
-            return
-          }
-          
+          var databaseEntryConversations = [[String: Any]]()
+          var targetIndex: Int?
           let updatedValue: [String: Any] = [
             "date": dateString,
             "message": message,
             "is_read": false
           ]
-          var targetConversation: [String: Any]?
-          var targetIndex: Int?
           
-          if let index = currrentUserConversations.firstIndex(where: {$0["id"] as! String == conversation}) {
-            targetConversation = currrentUserConversations[index]
-            targetIndex = index
+          if var currrentUserConversations = snapshot.value as? [[String: Any]] {
+            var targetConversation: [String: Any]?
+            
+            
+            if let index = currrentUserConversations.firstIndex(where: {$0["id"] as! String == conversation}) {
+              targetConversation = currrentUserConversations[index]
+              targetIndex = index
+            }
+            
+           
+            guard let index = targetIndex else {
+                    complition(false)
+                    return
+                  }
+            
+            if var targetConversation = targetConversation {
+              targetConversation["latest_message"] = updatedValue
+              currrentUserConversations[index] = targetConversation
+              databaseEntryConversations = currrentUserConversations
+            } else {
+              let newConversationData: [String: Any] = [
+                  "id": conversation,
+                  "other_user_mail": self.safeEmail(from: otherUserEmail),
+                  "name": name,
+                  "latest_message": updatedValue
+              ]
+              currrentUserConversations.append(newConversationData)
+              databaseEntryConversations = currrentUserConversations
+            }
+          }
+            
+           else {
+            databaseEntryConversations = [
+              [
+                "id": conversation,
+                "other_user_mail": self.safeEmail(from: otherUserEmail),
+                "name": name,
+                "latest_message": updatedValue
+                ]
+            ]
           }
           
-          targetConversation?["latest_message"] = updatedValue
-          guard let finalConversation = targetConversation,
-                let index = targetIndex else {
-                  complition(false)
-                  return
-                }
-          
-          currrentUserConversations[index] = finalConversation
-          self.database.child("\(currentEmail)/conversations").setValue(currrentUserConversations) { error, _ in
+      
+          self.database.child("\(currentEmail)/conversations").setValue(databaseEntryConversations) { error, _ in
             guard error == nil else {
               complition(false)
               return
@@ -573,10 +625,52 @@ extension DatabaseService: DatabaseMessagingProtocol {
             // Update latest message for receiver
             
             self.database.child("\(otherUserEmail)/conversations").observeSingleEvent(of: .value) { snapshot in
-              guard var otherUserConversations = snapshot.value as? [[String: Any]] else {
-                complition(false)
+              
+              var databaseEntryConversations = [[String: Any]]()
+              guard let currentName = UserDefaults.standard.value(forKey: "name") as? String else {
                 return
               }
+              
+              if var otherUserConversations = snapshot.value as? [[String: Any]] {
+                var recipient_targetConversation: [String: Any]?
+                var recipient_targetIndex: Int?
+                
+                
+                if let recipient_index = otherUserConversations.firstIndex(where: {$0["id"] as! String == conversation}) {
+                  recipient_targetConversation = otherUserConversations[targetIndex!]
+                  recipient_targetIndex = recipient_index
+                }
+                guard let recipient_index = recipient_targetIndex else {
+                        complition(false)
+                        return
+                      }
+                if var recipient_targetConversation = recipient_targetConversation {
+                  recipient_targetConversation["latest_message"] = updatedValue
+                  otherUserConversations[recipient_index] = recipient_targetConversation
+                  databaseEntryConversations = otherUserConversations
+                } else {
+                  let newConversationData: [String: Any] = [
+                      "id": conversation,
+                      "other_user_mail": self.safeEmail(from: currentEmail),
+                      "name": currentName,
+                      "latest_message": updatedValue
+                  ]
+                  otherUserConversations.append(newConversationData)
+                  databaseEntryConversations = otherUserConversations
+                }
+              }
+                
+               else {
+                databaseEntryConversations = [
+                  [
+                    "id": conversation,
+                    "other_user_mail": self.safeEmail(from: currentEmail),
+                    "name": currentName,
+                    "latest_message": updatedValue
+                    ]
+                ]
+                }
+
               
 //              let updatedValue: [String: Any] = [
 //                "date": dateString,
@@ -584,24 +678,8 @@ extension DatabaseService: DatabaseMessagingProtocol {
 //                "is_read": false
 //              ]
               
-              var recipient_targetConversation: [String: Any]?
-              var recipient_targetIndex: Int?
-              
-              
-              if let recipient_index = otherUserConversations.firstIndex(where: {$0["id"] as! String == conversation}) {
-                recipient_targetConversation = otherUserConversations[index]
-                recipient_targetIndex = recipient_index
-              }
-              
-              recipient_targetConversation?["latest_message"] = updatedValue
-              guard let recipient_finalConversation = recipient_targetConversation,
-                    let recipient_index = recipient_targetIndex else {
-                      complition(false)
-                      return
-                    }
-              
-              otherUserConversations[recipient_index] = recipient_finalConversation
-              self.database.child("\(otherUserEmail)/conversations").setValue(otherUserConversations) { error, _ in
+             
+              self.database.child("\(otherUserEmail)/conversations").setValue(databaseEntryConversations) { error, _ in
                 guard error == nil else {
                   complition(false)
                   return

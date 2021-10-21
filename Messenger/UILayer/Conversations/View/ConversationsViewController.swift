@@ -36,14 +36,14 @@ class ConversationsViewController: UIViewController {
     chatsView.tableView.delegate = self
     chatsView.tableView.dataSource = self
     if presenter.viewDidAuthorizate() {
-    presenter.startListeningConversation()
+      presenter.startListeningConversation()
     }
   }
   
   override func viewDidAppear(_ animated: Bool) {
     super.viewDidAppear(animated)
     if presenter.viewDidAuthorizate() {
-    presenter.startListeningConversation()
+      presenter.startListeningConversation()
     }
   }
   
@@ -52,7 +52,15 @@ class ConversationsViewController: UIViewController {
   @objc private func didTabComposeButton() {
     guard let vc = MessengerBuilder.buildNewConversationViewController() as? NewConversationViewController else { return }
     vc.complition = { [weak self] result in
-      self?.startNewConversation(with: result)
+      guard let self = self else { return }
+      let currentConversations = self.conversations
+      if let targetConversation = currentConversations.first(where: {
+        $0.otherUserEmail == self.presenter.safeMail(from: result.email)
+      }) {
+        self.createChat(model: targetConversation)
+      } else {
+        self.startNewConversation(with: result)
+      }
     }
     let navVC = UINavigationController(rootViewController: vc)
     present(navVC, animated: true)
@@ -61,14 +69,36 @@ class ConversationsViewController: UIViewController {
   private func startNewConversation(with user: SearchResult) {
     let name = user.name
     let email = user.email
-    guard let vc = MessengerBuilder.buildChatViewController(with: email, conversationID: nil) as? ChatViewController else {
-        return
-      }
     
-    vc.title = name
-    vc.isNewConversation = true
-    vc.navigationItem.largeTitleDisplayMode = .never
-    navigationController?.pushViewController(vc, animated: true)
+    presenter.converstionExists(email: email) { [weak self] result in
+      guard let self = self else { return }
+      switch result {
+      case .success(let conversationID):
+        guard let vc = MessengerBuilder.buildChatViewController(with: email, conversationID: conversationID) as? ChatViewController else {
+          return
+        }
+        vc.title = name
+        vc.isNewConversation = false
+        vc.navigationItem.largeTitleDisplayMode = .never
+        self.navigationController?.pushViewController(vc, animated: true)
+      case .failure(_):
+        guard let vc = MessengerBuilder.buildChatViewController(with: email, conversationID: nil) as? ChatViewController else {
+          return
+        }
+        vc.title = name
+        vc.isNewConversation = true
+        vc.navigationItem.largeTitleDisplayMode = .never
+        self.navigationController?.pushViewController(vc, animated: true)
+      }
+    }
+    
+//    guard let vc = MessengerBuilder.buildChatViewController(with: email, conversationID: nil) as? ChatViewController else {
+//      return
+//    }
+//    vc.title = name
+//    vc.isNewConversation = true
+//    vc.navigationItem.largeTitleDisplayMode = .never
+//    navigationController?.pushViewController(vc, animated: true)
   }
   
   private func createChat(model: Conversation) {
@@ -122,7 +152,7 @@ extension ConversationsViewController: UITableViewDataSource, UITableViewDelegat
 }
 //MARK: - PresenterProtocol
 extension ConversationsViewController: ConversationsViewProtocol {
-
+  
   
   
   func successGetConversations(conversations: [Conversation]) {
