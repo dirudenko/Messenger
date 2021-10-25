@@ -43,6 +43,8 @@ class ConversationTableViewCell: UITableViewCell {
     contentView.addSubview(userImage)
     contentView.addSubview(userNameLabel)
     contentView.addSubview(userMessageLabel)
+    self.backgroundColor = .systemBackground
+
     addConstraints()
   }
   

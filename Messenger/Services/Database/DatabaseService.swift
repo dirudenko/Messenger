@@ -262,6 +262,8 @@ extension DatabaseService: DatabaseMessagingProtocol {
         return
       }
     }
+    complition(.failure(DatabaseError.failedToFetch))
+    return
   }
 
   

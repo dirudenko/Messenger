@@ -72,6 +72,7 @@ extension NewConversationViewController: UITableViewDataSource, UITableViewDeleg
   
 }
 
+
 extension NewConversationViewController: UISearchBarDelegate {
   func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
 //    guard let text = searchBar.text, !text.replacingOccurrences(of: " ", with: "").isEmpty else {

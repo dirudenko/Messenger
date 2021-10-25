@@ -19,7 +19,7 @@ class ProfileView: UIView {
     imageView.layer.cornerRadius = imageSize / 2
     imageView.contentMode = .scaleAspectFit
     imageView.image = UIImage(systemName: "person.circle")
-    imageView.tintColor = .systemBlue
+    imageView.tintColor = .secondarySystemBackground
     imageView.layer.masksToBounds = true
     imageView.translatesAutoresizingMaskIntoConstraints = false
     return imageView
@@ -36,7 +36,7 @@ class ProfileView: UIView {
   }
   
   private func configureUI() {
-    self.backgroundColor = .white
+    self.backgroundColor = .systemBackground
     self.addTableView()
     self.setupConstraints()
   }

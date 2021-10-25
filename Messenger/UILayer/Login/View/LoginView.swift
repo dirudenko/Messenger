@@ -44,7 +44,7 @@ class LoginView: UIView {
     field.layer.borderColor = UIColor.lightGray.cgColor
     field.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 5, height: 0))
     field.leftViewMode = .always
-    field.backgroundColor = .white
+    field.backgroundColor = .secondarySystemBackground
     field.returnKeyType = .continue
     return field
   }()
@@ -63,7 +63,7 @@ class LoginView: UIView {
     field.layer.borderColor = UIColor.lightGray.cgColor
     field.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 5, height: 0))
     field.leftViewMode = .always
-    field.backgroundColor = .white
+    field.backgroundColor = .secondarySystemBackground
     field.returnKeyType = .done
     return field
   }()
@@ -109,7 +109,7 @@ class LoginView: UIView {
   }
   
   private func configureUI() {
-    self.backgroundColor = .white
+    self.backgroundColor = .systemBackground
     addLogo()
     self.addSubview(loginField)
     self.addSubview(loginButton)

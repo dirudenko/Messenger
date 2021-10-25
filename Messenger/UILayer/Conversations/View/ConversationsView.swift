@@ -36,7 +36,7 @@ class ConversationsView: UIView {
   }
   
   private func configureUI() {
-    self.backgroundColor = .white
+    self.backgroundColor = .systemBackground
     self.addTableView()
     self.setupConstraints()
   }

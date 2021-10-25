@@ -44,7 +44,7 @@ class NewConversationView: UIView {
   }
   
   private func configureUI() {
-    self.backgroundColor = .white
+    self.backgroundColor = .systemBackground
     self.addSubview(tableView)
     self.addSubview(noResultLabel)
     self.setupConstraints()

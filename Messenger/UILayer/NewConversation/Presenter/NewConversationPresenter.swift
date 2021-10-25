@@ -19,10 +19,11 @@ protocol NewConversationViewPresenterProtocol: AnyObject {
 class NewConversationPresenter: NewConversationViewPresenterProtocol {
   
   weak var view: (UIViewController & NewConversationViewProtocol)?
-  var complition: (([String : String]) -> (Void))?
+ // var complition: (([String : String]) -> (Void))?
   
   private var users = [[String: String]]()
   private var hasFetched = false
+  
   
   let databaseService: DatabaseServiceProtocol
   let storageService: StorageServiceProtocol

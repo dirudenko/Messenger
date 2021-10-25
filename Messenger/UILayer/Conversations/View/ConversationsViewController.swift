@@ -91,14 +91,6 @@ class ConversationsViewController: UIViewController {
         self.navigationController?.pushViewController(vc, animated: true)
       }
     }
-    
-//    guard let vc = MessengerBuilder.buildChatViewController(with: email, conversationID: nil) as? ChatViewController else {
-//      return
-//    }
-//    vc.title = name
-//    vc.isNewConversation = true
-//    vc.navigationItem.largeTitleDisplayMode = .never
-//    navigationController?.pushViewController(vc, animated: true)
   }
   
   private func createChat(model: Conversation) {
