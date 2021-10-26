@@ -7,6 +7,7 @@
 
 import UIKit
 import MessageKit
+import CoreLocation
 
 protocol ChatViewProtocol: AnyObject {
   func successGetMessages(messages: [Message])
@@ -22,6 +23,7 @@ protocol ChatViewPresenterProtocol: AnyObject {
   func appendToConversation(message: Message, with email: String, to conversationID: String, name: String)
   func sendPhotoMessage(email: String, conversationID: String?, info: [UIImagePickerController.InfoKey : Any], name: String?, sender: Sender?)
   func sendVideoMessage(email: String, conversationID: String?, info: [UIImagePickerController.InfoKey : Any], name: String?, sender: Sender?)
+  func sendLocation(location: Location, email: String, conversationID: String?, name: String?, sender: Sender?)
 }
 
 class ChatPresenter {
@@ -41,7 +43,7 @@ class ChatPresenter {
 // MARK: - Protocol functions
 extension ChatPresenter: ChatViewPresenterProtocol {
   func listenForMessages(id: String) {
-    databaseService.getAllMessagerForConversation(with: id) { [weak self] result in
+    databaseService.getAllMessagesForConversation(with: id) { [weak self] result in
       switch result {
       case .success(let messages):
         guard !messages.isEmpty else {
@@ -180,6 +182,29 @@ extension ChatPresenter: ChatViewPresenterProtocol {
         }
       }
     }
+      
+  func sendLocation(location: Location,email: String, conversationID: String?, name: String?, sender: Sender?) {
+    guard let messageId = self.createMessageId(for: email),
+          let conversationId = conversationID,
+          let name = name,
+          let sender = sender else { return }
+          let message = Message(sender: sender,
+                              messageId: messageId,
+                              sentDate: Date(),
+                              kind: .location(location))
+        self.databaseService.sendMessage(to: conversationId,
+                                         otherUserEmail: email,
+                                         name: name,
+                                         newMessage: message) { success in
+          if success {
+            print("Location sended")
+          } else {
+            print("Fail to send location")
+            self.view?.alertUser(with: "Ошибка при отправке геопозиции")
+          }
+        }
+      }
+    
   
   
   

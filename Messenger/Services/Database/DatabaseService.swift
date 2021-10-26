@@ -9,6 +9,7 @@ import Foundation
 import FirebaseDatabase
 import MessageKit
 import CoreMedia
+import CoreLocation
 
 protocol DatabaseServiceProtocol {
   func didUserExist(email: String, complition: @escaping ((Bool) -> Void))
@@ -20,7 +21,7 @@ protocol DatabaseServiceProtocol {
 protocol DatabaseMessagingProtocol {
   func createNewConversation(with otherUserEmail: String, name: String, firstMessage: Message, complition: @escaping (Bool) -> Void)
   func getAllConversation(for email: String, complition: @escaping (Result<[Conversation], Error>) -> Void)
-  func getAllMessagerForConversation(with id: String, complition: @escaping (Result<[Message], Error>) -> Void)
+  func getAllMessagesForConversation(with id: String, complition: @escaping (Result<[Message], Error>) -> Void)
   func sendMessage(to conversation: String, otherUserEmail: String, name: String, newMessage: Message, complition: @escaping (Bool) -> Void)
   func deleteConversation(conversationID: String, complition: @escaping (Bool) -> Void)
   func safeEmail(from email: String) -> String
@@ -104,41 +105,41 @@ extension DatabaseService {
     }
   }
   
- // private func updateLastMessage(сonversations: [[String : Any]], email: String) {
-//
-//      self.database.child("\(email)/conversations").observeSingleEvent(of: .value) { snapshot in
-//        guard var currrentUserConversations = snapshot.value as? [[String: Any]] else {
-//          complition(false)
-//          return
-//        }
-//
-//        let updatedValue: [String: Any] = [
-//          "date": dateString,
-//          "message": message,
-//          "is_read": false
-//        ]
-//        var targetConversation: [String: Any]?
-//        var targetIndex: Int?
-//
-//        if let index = сonversations.firstIndex(where: {$0["id"] as! String == conversation}) {
-//          targetConversation = currrentUserConversations[index]
-//          targetIndex = index
-//        }
-//
-//        targetConversation?["latest_message"] = updatedValue
-//        guard let finalConversation = targetConversation,
-//              let index = targetIndex else {
-//                complition(false)
-//                return
-//              }
-//
-//        currrentUserConversations[index] = finalConversation
-//        self.database.child("\(currentEmail)/conversations").setValue(currrentUserConversations) { error, _ in
-//          guard error == nil else {
-//            complition(false)
-//            return
-//          }
-//  }
+  // private func updateLastMessage(сonversations: [[String : Any]], email: String) {
+  //
+  //      self.database.child("\(email)/conversations").observeSingleEvent(of: .value) { snapshot in
+  //        guard var currrentUserConversations = snapshot.value as? [[String: Any]] else {
+  //          complition(false)
+  //          return
+  //        }
+  //
+  //        let updatedValue: [String: Any] = [
+  //          "date": dateString,
+  //          "message": message,
+  //          "is_read": false
+  //        ]
+  //        var targetConversation: [String: Any]?
+  //        var targetIndex: Int?
+  //
+  //        if let index = сonversations.firstIndex(where: {$0["id"] as! String == conversation}) {
+  //          targetConversation = currrentUserConversations[index]
+  //          targetIndex = index
+  //        }
+  //
+  //        targetConversation?["latest_message"] = updatedValue
+  //        guard let finalConversation = targetConversation,
+  //              let index = targetIndex else {
+  //                complition(false)
+  //                return
+  //              }
+  //
+  //        currrentUserConversations[index] = finalConversation
+  //        self.database.child("\(currentEmail)/conversations").setValue(currrentUserConversations) { error, _ in
+  //          guard error == nil else {
+  //            complition(false)
+  //            return
+  //          }
+  //  }
   
 }
 //MARK: - Account Managment
@@ -252,7 +253,7 @@ extension DatabaseService: DatabaseMessagingProtocol {
           return false
         }
         return safeSenderEmail == targetSenderEmail
-
+        
       }) {
         guard let id  = conversation["id"] as? String else {
           complition(.failure(DatabaseError.failedToFetch))
@@ -265,7 +266,7 @@ extension DatabaseService: DatabaseMessagingProtocol {
     complition(.failure(DatabaseError.failedToFetch))
     return
   }
-
+  
   
   func deleteConversation(conversationID: String, complition: @escaping (Bool) -> Void) {
     guard let email = UserDefaults.standard.value(forKey: "email") as? String else { return }
@@ -430,7 +431,7 @@ extension DatabaseService: DatabaseMessagingProtocol {
     }
   }
   
-  func getAllMessagerForConversation(with id: String, complition: @escaping (Result<[Message], Error>) -> Void) {
+  func getAllMessagesForConversation(with id: String, complition: @escaping (Result<[Message], Error>) -> Void) {
     let dateFormatter = DateFormatter()
     database.child("\(id)/messages").observe(.value) { snapshot in
       guard let value = snapshot.value as? [[String: Any]] else {
@@ -453,33 +454,43 @@ extension DatabaseService: DatabaseMessagingProtocol {
         if type == "photo" {
           
           guard let imageUrl = URL(string: content),
-          let placoholderImageUrl = UIImage(named: "logo") else {
-            return nil
-          }
+                let placoholderImageUrl = UIImage(named: "logo") else {
+                  return nil
+                }
           
           let media = Media(url: imageUrl,
-                        image: nil,
-                        placeholderImage: placoholderImageUrl,
-                        size: CGSize(width: 300, height: 300))
+                            image: nil,
+                            placeholderImage: placoholderImageUrl,
+                            size: CGSize(width: 300, height: 300))
           kind = .photo(media)
-        } else if type == "video" {
+        } else { if type == "video" {
           
           guard let videoUrl = URL(string: content),
-          let placoholderImageUrl = UIImage(named: "logo") else {
-            return nil
-          }
+                let placoholderImageUrl = UIImage(named: "logo") else {
+                  return nil
+                }
           
           let media = Media(url: videoUrl,
-                        image: nil,
-                        placeholderImage: placoholderImageUrl,
-                        size: CGSize(width: 300, height: 300))
+                            image: nil,
+                            placeholderImage: placoholderImageUrl,
+                            size: CGSize(width: 300, height: 300))
           kind = .video(media)
+        } else { if type == "location" {
+          let locationComponents = content.components(separatedBy: ",")
+          guard  let longitude = Double(locationComponents[0]),
+                 let latitude  = Double(locationComponents[1]) else {
+                   return nil
+                 }
+          let location = Location(location: CLLocation(latitude: latitude, longitude: longitude),
+                                  size: CGSize(width: 300, height: 300))
+          kind = .location(location)
         }
           else {
-          kind = .text(content)
+            kind = .text(content)
+          }
         }
-        
-        guard let finalKind = kind else { return nil}
+        }
+        guard let finalKind = kind else { return nil }
         
         let date = dateFormatter.date(from: dateString)
         let sender = Sender(senderId: senderEmail,
@@ -496,6 +507,7 @@ extension DatabaseService: DatabaseMessagingProtocol {
   }
   
   func sendMessage(to conversation: String, otherUserEmail: String, name: String, newMessage: Message, complition: @escaping (Bool) -> Void) {
+    
     guard let myEmail = UserDefaults.standard.value(forKey: "email") as? String else {
       complition(false)
       return
@@ -520,15 +532,17 @@ extension DatabaseService: DatabaseMessagingProtocol {
         break
       case .photo(let mediaItem):
         if let targetUrl = mediaItem.url?.absoluteString {
-        message = targetUrl
+          message = targetUrl
         }
         break
       case .video(let mediaItem):
         if let targetUrl = mediaItem.url?.absoluteString {
-        message = targetUrl
+          message = targetUrl
         }
         break
-      case .location(_):
+      case .location(let locationData):
+        let location = locationData.location
+        message = "\(location.coordinate.longitude),\(location.coordinate.latitude)"
         break
       case .emoji(_):
         break
@@ -584,11 +598,11 @@ extension DatabaseService: DatabaseMessagingProtocol {
               targetIndex = index
             }
             
-           
+            
             guard let index = targetIndex else {
-                    complition(false)
-                    return
-                  }
+              complition(false)
+              return
+            }
             
             if var targetConversation = targetConversation {
               targetConversation["latest_message"] = updatedValue
@@ -596,28 +610,28 @@ extension DatabaseService: DatabaseMessagingProtocol {
               databaseEntryConversations = currrentUserConversations
             } else {
               let newConversationData: [String: Any] = [
-                  "id": conversation,
-                  "other_user_mail": self.safeEmail(from: otherUserEmail),
-                  "name": name,
-                  "latest_message": updatedValue
+                "id": conversation,
+                "other_user_mail": self.safeEmail(from: otherUserEmail),
+                "name": name,
+                "latest_message": updatedValue
               ]
               currrentUserConversations.append(newConversationData)
               databaseEntryConversations = currrentUserConversations
             }
           }
-            
-           else {
+          
+          else {
             databaseEntryConversations = [
               [
                 "id": conversation,
                 "other_user_mail": self.safeEmail(from: otherUserEmail),
                 "name": name,
                 "latest_message": updatedValue
-                ]
+              ]
             ]
           }
           
-      
+          
           self.database.child("\(currentEmail)/conversations").setValue(databaseEntryConversations) { error, _ in
             guard error == nil else {
               complition(false)
@@ -643,44 +657,44 @@ extension DatabaseService: DatabaseMessagingProtocol {
                   recipient_targetIndex = recipient_index
                 }
                 guard let recipient_index = recipient_targetIndex else {
-                        complition(false)
-                        return
-                      }
+                  complition(false)
+                  return
+                }
                 if var recipient_targetConversation = recipient_targetConversation {
                   recipient_targetConversation["latest_message"] = updatedValue
                   otherUserConversations[recipient_index] = recipient_targetConversation
                   databaseEntryConversations = otherUserConversations
                 } else {
                   let newConversationData: [String: Any] = [
-                      "id": conversation,
-                      "other_user_mail": self.safeEmail(from: currentEmail),
-                      "name": currentName,
-                      "latest_message": updatedValue
+                    "id": conversation,
+                    "other_user_mail": self.safeEmail(from: currentEmail),
+                    "name": currentName,
+                    "latest_message": updatedValue
                   ]
                   otherUserConversations.append(newConversationData)
                   databaseEntryConversations = otherUserConversations
                 }
               }
-                
-               else {
+              
+              else {
                 databaseEntryConversations = [
                   [
                     "id": conversation,
                     "other_user_mail": self.safeEmail(from: currentEmail),
                     "name": currentName,
                     "latest_message": updatedValue
-                    ]
+                  ]
                 ]
-                }
-
+              }
               
-//              let updatedValue: [String: Any] = [
-//                "date": dateString,
-//                "message": message,
-//                "is_read": false
-//              ]
               
-             
+              //              let updatedValue: [String: Any] = [
+              //                "date": dateString,
+              //                "message": message,
+              //                "is_read": false
+              //              ]
+              
+              
               self.database.child("\(otherUserEmail)/conversations").setValue(databaseEntryConversations) { error, _ in
                 guard error == nil else {
                   complition(false)

@@ -10,6 +10,7 @@ import MessageKit
 import InputBarAccessoryView
 import AVFoundation
 import AVKit
+import CoreLocation
 
 class ChatViewController: MessagesViewController {
   
@@ -92,10 +93,36 @@ extension ChatViewController {
                                         handler: { [weak self] _ in
       
     }))
+    actionSheet.addAction(UIAlertAction(title: "Геопозиция",
+                                        style: .default,
+                                        handler: { [weak self] _ in
+      self?.presentLocationPicker()
+    }))
     actionSheet.addAction(UIAlertAction(title: "Отмена",
                                         style: .cancel,
                                         handler: nil))
     present(actionSheet, animated: true)
+  }
+  
+  
+  private func presentLocationPicker() {
+    let vc = LocationPickerViewController(coordinates: nil)
+    vc.title = "Укажите геопозицию"
+    vc.navigationItem.largeTitleDisplayMode = .never
+    
+    vc.complition = { [weak self] coordinates in
+      guard let self = self else { return }
+      let longitude: Double = coordinates.longitude
+      let latitude: Double = coordinates.latitude
+      let location = Location(location: CLLocation(latitude: latitude, longitude: longitude), size: .zero)
+      self.presenter.sendLocation(location: location,
+                             email: self.otherUserEmail,
+                             conversationID: self.conversationID,
+                             name: self.title,
+                             sender: self.sender)
+    }
+    navigationController?.pushViewController(vc, animated: true)
+    
   }
   
   private func presentPhotoActionSheet() {
@@ -209,6 +236,21 @@ extension ChatViewController: MessageCellDelegate {
       let vc = AVPlayerViewController()
       vc.player = AVPlayer(url: videoUrl)
       present(vc, animated: true)
+    default:
+      break
+    }
+  }
+  
+  
+  func didTapMessage(in cell: MessageCollectionViewCell) {
+    guard let indexPath = messagesCollectionView.indexPath(for: cell) else { return }
+    let message = messages[indexPath.section]
+    switch message.kind {
+    case .location(let locationData):
+      let coordinates = locationData.location.coordinate
+      let vc = LocationPickerViewController(coordinates: coordinates)
+      vc.title = "Геопозиция"
+      self.navigationController?.pushViewController(vc, animated: true)
     default:
       break
     }
