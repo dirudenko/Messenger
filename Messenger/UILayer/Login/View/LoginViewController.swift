@@ -23,7 +23,7 @@ class LoginViewController: UIViewController {
   
   override func loadView() {
       super.loadView()
-      self.view = loginView
+      view = loginView
   }
   
   override func viewDidLoad() {

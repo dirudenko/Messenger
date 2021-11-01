@@ -7,17 +7,13 @@
 
 import UIKit
 import GoogleSignIn
-import JGProgressHUD
 
 
 class LoginView: UIView {
-  
-  let spinner = JGProgressHUD(style: .dark)
-  
+    
   private(set) lazy var scrollView: UIScrollView = {
     let scrollView = UIScrollView()
     scrollView.translatesAutoresizingMaskIntoConstraints = false
-
     return scrollView
   }()
   
@@ -77,7 +73,6 @@ class LoginView: UIView {
     button.layer.cornerRadius = 12.0
     button.layer.masksToBounds = true
     button.titleLabel?.font = .systemFont(ofSize: 20, weight: .bold)
-    
     return button
   }()
   
@@ -88,7 +83,6 @@ class LoginView: UIView {
     button.backgroundColor = .clear
     button.setTitleColor(.systemBlue, for: .normal)
     button.layer.cornerRadius = 16
-    
     return button
   }()
   
@@ -109,13 +103,13 @@ class LoginView: UIView {
   }
   
   private func configureUI() {
-    self.backgroundColor = .systemBackground
+    backgroundColor = .systemBackground
     addLogo()
-    self.addSubview(loginField)
-    self.addSubview(loginButton)
-    self.addSubview(createButton)
-    self.addSubview(passwordField)
-    self.addSubview(googleButton)
+    addSubview(loginField)
+    addSubview(loginButton)
+    addSubview(createButton)
+    addSubview(passwordField)
+    addSubview(googleButton)
     
     
     NSLayoutConstraint.activate([
@@ -142,14 +136,12 @@ class LoginView: UIView {
       
       googleButton.leftAnchor.constraint(equalTo: self.centerXAnchor, constant: -100),
       googleButton.topAnchor.constraint(equalTo: createButton.bottomAnchor, constant: 16),
-     // googleButton.widthAnchor.constraint(equalToConstant: 200),
       googleButton.heightAnchor.constraint(equalToConstant: 32)
-      
     ])
   }
   
   private func addLogo() {
-    self.addSubview(logoImage)
+    addSubview(logoImage)
     let size:CGFloat = 200
     NSLayoutConstraint.activate([
       
@@ -158,7 +150,5 @@ class LoginView: UIView {
       logoImage.widthAnchor.constraint(equalToConstant: size),
       logoImage.heightAnchor.constraint(equalToConstant: size)
     ])
-    
-    
   }
 }

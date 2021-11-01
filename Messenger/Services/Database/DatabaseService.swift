@@ -104,43 +104,6 @@ extension DatabaseService {
       complition(true)
     }
   }
-  
-  // private func updateLastMessage(сonversations: [[String : Any]], email: String) {
-  //
-  //      self.database.child("\(email)/conversations").observeSingleEvent(of: .value) { snapshot in
-  //        guard var currrentUserConversations = snapshot.value as? [[String: Any]] else {
-  //          complition(false)
-  //          return
-  //        }
-  //
-  //        let updatedValue: [String: Any] = [
-  //          "date": dateString,
-  //          "message": message,
-  //          "is_read": false
-  //        ]
-  //        var targetConversation: [String: Any]?
-  //        var targetIndex: Int?
-  //
-  //        if let index = сonversations.firstIndex(where: {$0["id"] as! String == conversation}) {
-  //          targetConversation = currrentUserConversations[index]
-  //          targetIndex = index
-  //        }
-  //
-  //        targetConversation?["latest_message"] = updatedValue
-  //        guard let finalConversation = targetConversation,
-  //              let index = targetIndex else {
-  //                complition(false)
-  //                return
-  //              }
-  //
-  //        currrentUserConversations[index] = finalConversation
-  //        self.database.child("\(currentEmail)/conversations").setValue(currrentUserConversations) { error, _ in
-  //          guard error == nil else {
-  //            complition(false)
-  //            return
-  //          }
-  //  }
-  
 }
 //MARK: - Account Managment
 
@@ -686,15 +649,6 @@ extension DatabaseService: DatabaseMessagingProtocol {
                   ]
                 ]
               }
-              
-              
-              //              let updatedValue: [String: Any] = [
-              //                "date": dateString,
-              //                "message": message,
-              //                "is_read": false
-              //              ]
-              
-              
               self.database.child("\(otherUserEmail)/conversations").setValue(databaseEntryConversations) { error, _ in
                 guard error == nil else {
                   complition(false)

@@ -102,7 +102,6 @@ class RegisterView: UIView {
     button.layer.cornerRadius = 12.0
     button.layer.masksToBounds = true
     button.titleLabel?.font = .systemFont(ofSize: 20, weight: .bold)
-    
     return button
   }()
   
@@ -118,13 +117,13 @@ class RegisterView: UIView {
   }
   
   private func configureUI() {
-    self.backgroundColor = .systemBackground
-    self.addSubview(avatarImage)
-    self.addSubview(firstNameField)
-    self.addSubview(lastNameField)
-    self.addSubview(emailField)
-    self.addSubview(passwordField)
-    self.addSubview(createButton)
+    backgroundColor = .systemBackground
+    addSubview(avatarImage)
+    addSubview(firstNameField)
+    addSubview(lastNameField)
+    addSubview(emailField)
+    addSubview(passwordField)
+    addSubview(createButton)
     
     
     NSLayoutConstraint.activate([

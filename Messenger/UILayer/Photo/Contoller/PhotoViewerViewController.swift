@@ -26,7 +26,7 @@ class PhotoViewerViewController: UIViewController {
   
   override func loadView() {
     super.loadView()
-    self.view = photoView
+    view = photoView
     title = "Фото"
     navigationItem.largeTitleDisplayMode = .never
   }

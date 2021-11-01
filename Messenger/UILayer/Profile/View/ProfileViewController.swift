@@ -25,7 +25,7 @@ class ProfileViewController: UIViewController {
   
   override func loadView() {
     super.loadView()
-    self.view = profileView
+    view = profileView
   }
   
   override func viewDidLoad() {

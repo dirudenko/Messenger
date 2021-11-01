@@ -33,18 +33,18 @@ class ProfileView: UIView {
   
   override init(frame: CGRect) {
     super.init(frame: frame)
-    self.configureUI()
+    configureUI()
   }
   
   required init?(coder aDecoder: NSCoder) {
     super.init(coder: aDecoder)
-    self.configureUI()
+    configureUI()
   }
   
   private func configureUI() {
-    self.backgroundColor = .systemBackground
-    self.addTableView()
-    self.setupConstraints()
+    backgroundColor = .systemBackground
+    addTableView()
+    setupConstraints()
   }
   
   private func addTableView() {
@@ -52,8 +52,8 @@ class ProfileView: UIView {
     headerView.translatesAutoresizingMaskIntoConstraints = false
     
     headerView.backgroundColor = .systemBackground
-    self.addSubview(tableView)
-    self.addSubview(headerView)
+    addSubview(tableView)
+    addSubview(headerView)
     addPhoto()
   }
   
@@ -62,16 +62,16 @@ class ProfileView: UIView {
     
     NSLayoutConstraint.activate([
       
-      self.headerView.topAnchor.constraint(equalTo: safeArea.topAnchor),
-      self.headerView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
-      self.headerView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
-      self.headerView.heightAnchor.constraint(equalToConstant: 200),
+      headerView.topAnchor.constraint(equalTo: safeArea.topAnchor),
+      headerView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
+      headerView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
+      headerView.heightAnchor.constraint(equalToConstant: 200),
       
       
-      self.tableView.topAnchor.constraint(equalTo: headerView.bottomAnchor, constant: 8.0),
-      self.tableView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
-      self.tableView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
-      self.tableView.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor)
+      tableView.topAnchor.constraint(equalTo: headerView.bottomAnchor, constant: 8.0),
+      tableView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
+      tableView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
+      tableView.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor)
     ])
   }
   

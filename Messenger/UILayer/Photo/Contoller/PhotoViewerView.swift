@@ -13,11 +13,7 @@ class PhotoViewerView: UIView {
   
   private(set) lazy var imageView: UIImageView = {
     let imageView = UIImageView()
-    //imageView.layer.cornerRadius = imageSize / 2
     imageView.contentMode = .scaleAspectFit
-    //imageView.image = UIImage(systemName: "person.circle")
-    //imageView.tintColor = .systemBlue
-    //imageView.layer.masksToBounds = true
     imageView.translatesAutoresizingMaskIntoConstraints = false
     return imageView
   }()
@@ -33,8 +29,8 @@ class PhotoViewerView: UIView {
   }
   
   private func configure() {
-    self.backgroundColor = .black
-    self.addSubview(imageView)
+    backgroundColor = .black
+    addSubview(imageView)
     NSLayoutConstraint.activate([
       imageView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
       imageView.leftAnchor.constraint(equalTo: safeAreaLayoutGuide.leftAnchor),

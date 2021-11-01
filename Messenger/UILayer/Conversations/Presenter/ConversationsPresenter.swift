@@ -65,7 +65,7 @@ class ConversationsPresenter: ConversationsViewPresenterProtocol {
       return
     }
     let safeEmail = databaseService.safeEmail(from: email)
-    self.databaseService.getAllConversation(for: safeEmail) { [weak self] result in
+    databaseService.getAllConversation(for: safeEmail) { [weak self] result in
       switch result {
       case .success(let conversations):
         guard !conversations.isEmpty else {

@@ -40,7 +40,7 @@ class ChatViewController: MessagesViewController {
     super.init(nibName: nil, bundle: nil)
     if let id = presenter.conversationID {
       presenter.listenForMessages(id: id)
-      self.conversationID = id
+      conversationID = id
     }
   }
   
@@ -252,7 +252,7 @@ extension ChatViewController: MessagesDataSource, MessagesLayoutDelegate, Messag
       if let otherUserUrl = otherUserImageUrl {
         avatarView.sd_setImage(with: otherUserUrl, completed: nil)
       } else {
-        let otherUserEmail = self.otherUserEmail
+        let otherUserEmail = otherUserEmail
         let safeMail = presenter.safeMail(from: otherUserEmail)
         let fileName = safeMail + "_profile_picture.png"
         let path = "images/" + fileName
@@ -271,7 +271,7 @@ extension ChatViewController: MessageCellDelegate {
     case .photo(let media):
       guard let imageUrl = media.url else { return }
       let vc = MessengerBuilder.buildPhotoViewerViewController(with: imageUrl)
-      self.navigationController?.pushViewController(vc, animated: true)
+      navigationController?.pushViewController(vc, animated: true)
     case .video(let media):
       guard let videoUrl = media.url else { return }
       let vc = AVPlayerViewController()
@@ -291,7 +291,7 @@ extension ChatViewController: MessageCellDelegate {
       let coordinates = locationData.location.coordinate
       let vc = LocationPickerViewController(coordinates: coordinates)
       vc.title = "Геопозиция"
-      self.navigationController?.pushViewController(vc, animated: true)
+      navigationController?.pushViewController(vc, animated: true)
     default:
       break
     }

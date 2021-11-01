@@ -41,11 +41,9 @@ class ProfileTableViewCell: UITableViewCell {
   
   override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
     super.init(style: style, reuseIdentifier: reuseIdentifier)
-    //contentView.addSubview(userImage)
     contentView.addSubview(userNameLabel)
     contentView.addSubview(userEmailLabel)
-    self.backgroundColor = .systemBackground
-
+    backgroundColor = .systemBackground
     addConstraints()
   }
   
@@ -55,12 +53,6 @@ class ProfileTableViewCell: UITableViewCell {
   
   private func addConstraints() {
     NSLayoutConstraint.activate([
-      
-//      userImage.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: imageSize/4 ),
-//      userImage.leftAnchor.constraint(equalTo: self.centerXAnchor, constant: -imageSize/2),
-//      userImage.widthAnchor.constraint(equalToConstant: imageSize),
-//      userImage.heightAnchor.constraint(equalToConstant: imageSize),
-//      
       userNameLabel.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
       userNameLabel.leftAnchor.constraint(equalTo: safeAreaLayoutGuide.rightAnchor, constant: 10),
       userNameLabel.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -16),
@@ -74,34 +66,16 @@ class ProfileTableViewCell: UITableViewCell {
   }
   
   func configure(with model: ProfileModel) {
-    self.textLabel?.text = model.title
+    textLabel?.text = model.title
     switch model.viewProfileType {
     case .logout:
-      self.textLabel?.text = "Выйти"
-      self.textLabel?.textColor = .red
-      self.textLabel?.textAlignment = .center
+      textLabel?.text = "Выйти"
+      textLabel?.textColor = .red
+      textLabel?.textAlignment = .center
     case.info:
-      self.textLabel?.textAlignment = .left
-      self.selectionStyle = .none
+      textLabel?.textAlignment = .left
+      selectionStyle = .none
     }
-    
   }
-  
-//  func newConf(with model: ProfileModel) {
-//    userMessageLabel.text = model.
-//    userNameLabel.text = model.title
-//    let path = "images/\(model.otherUserEmail)_profile_picture.png"
-//    storageService.downloadURL(for: path) { [weak self] result in
-//      switch result {
-//      case .success(let url):
-//        DispatchQueue.main.async {
-//          self?.userImage.sd_setImage(with: url, completed: nil)
-//        }
-//      case .failure(let error):
-//        print("Error to get image \(error)")
-//      }
-//    }
-//  }
-  
 }
 

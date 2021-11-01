@@ -27,8 +27,9 @@ final class StorageService: StorageServiceProtocol {
   func uploadProfilePhoto(with data: Data,
                           fileName: String,
                           complition: @escaping (Result<String, Error>) -> Void) {
-    storage.child("images/\(fileName)").putData(data, metadata: nil, completion: { metadata, error in
-      guard error == nil else {
+    storage.child("images/\(fileName)").putData(data, metadata: nil, completion: { [weak self] metadata, error in
+      guard let self = self,
+            error == nil else {
         complition(.failure(StorageErrors.failedToUpload))
         return
       }

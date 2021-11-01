@@ -29,7 +29,7 @@ class ConversationsView: UIView {
     
   override init(frame: CGRect) {
     super.init(frame: frame)
-    self.configureUI()
+    configureUI()
   }
   
   required init?(coder aDecoder: NSCoder) {
@@ -38,10 +38,10 @@ class ConversationsView: UIView {
   }
   
   private func configureUI() {
-    self.backgroundColor = .systemBackground
-    self.addSubview(tableView)
-    self.addSubview(noChatsLabel)
-    self.setupConstraints()
+    backgroundColor = .systemBackground
+    addSubview(tableView)
+    addSubview(noChatsLabel)
+    setupConstraints()
   }
   
   
@@ -50,10 +50,10 @@ class ConversationsView: UIView {
     let safeArea = self.safeAreaLayoutGuide
     
     NSLayoutConstraint.activate([
-      self.tableView.topAnchor.constraint(equalTo: safeArea.topAnchor),
-      self.tableView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
-      self.tableView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
-      self.tableView.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor),
+      tableView.topAnchor.constraint(equalTo: safeArea.topAnchor),
+      tableView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
+      tableView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
+      tableView.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor),
       
       noChatsLabel.topAnchor.constraint(equalTo: self.centerYAnchor, constant: -10),
       noChatsLabel.leftAnchor.constraint(equalTo: safeAreaLayoutGuide.leftAnchor, constant: 16),

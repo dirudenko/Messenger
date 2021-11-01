@@ -19,7 +19,7 @@ protocol NewConversationViewPresenterProtocol: AnyObject {
 class NewConversationPresenter: NewConversationViewPresenterProtocol {
   
   weak var view: (UIViewController & NewConversationViewProtocol)?
- // var complition: (([String : String]) -> (Void))?
+  // var complition: (([String : String]) -> (Void))?
   
   private var users = [[String: String]]()
   private var hasFetched = false
@@ -69,8 +69,8 @@ class NewConversationPresenter: NewConversationViewPresenterProtocol {
       
       guard let email = $0["email"],
             let name = $0["name"] else {
-        return nil
-      }
+              return nil
+            }
       
       return SearchResult(name: name, email: email)
     }

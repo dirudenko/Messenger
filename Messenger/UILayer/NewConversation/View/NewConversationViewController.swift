@@ -25,7 +25,7 @@ class NewConversationViewController: UIViewController {
   
   override func loadView() {
     super.loadView()
-    self.view = newConversation
+    view = newConversation
   }
   
   override func viewDidLoad() {
@@ -75,15 +75,7 @@ extension NewConversationViewController: UITableViewDataSource, UITableViewDeleg
 
 extension NewConversationViewController: UISearchBarDelegate {
   func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
-//    guard let text = searchBar.text, !text.replacingOccurrences(of: " ", with: "").isEmpty else {
-//      return
-//    }
-//    newConversation.searchBar.resignFirstResponder()
-//
-//    presenter.results.removeAll()
-//    presenter.searchUsers(query: text)
     results.removeAll()
-    
   }
   
   
@@ -92,7 +84,6 @@ extension NewConversationViewController: UISearchBarDelegate {
         return
       }
       newConversation.searchBar.resignFirstResponder()
-      
       results.removeAll()
       presenter.searchUsers(query: text)
   }

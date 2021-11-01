@@ -23,12 +23,11 @@ class RegisterViewController: UIViewController {
   
   override func loadView() {
       super.loadView()
-      self.view = registerView
+      view = registerView
   }
   
   override func viewDidLoad() {
     super.viewDidLoad()
-    
     let gesture = UITapGestureRecognizer(target: self, action: #selector(didTapChangeAvatar))
     registerView.createButton.addTarget(self, action: #selector(didTapRegister), for: .touchDown)
     registerView.avatarImage.isUserInteractionEnabled = true

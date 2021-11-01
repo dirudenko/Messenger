@@ -78,7 +78,7 @@ extension ChatPresenter: ChatViewPresenterProtocol {
   func createMessageId(for email: String) -> String? {
     let dateString = dateFormatter(from: Date())
     let userEmail = UserDefaults.standard.value(forKey: "email") as? String ?? ""
-    let safeEmail = self.safeMail(from: userEmail)
+    let safeEmail = safeMail(from: userEmail)
     let newIdentifier = "\(email)_\(safeEmail)_\(dateString)"
     return newIdentifier
   }
@@ -114,7 +114,7 @@ extension ChatPresenter: ChatViewPresenterProtocol {
   func sendPhotoMessage(email: String, conversationID: String?, info: [UIImagePickerController.InfoKey : Any], name: String?, sender: Sender?) {
     guard let image = info[UIImagePickerController.InfoKey.editedImage] as? UIImage,
           let imageData = image.pngData(),
-          let messageId = self.createMessageId(for: email),
+          let messageId = createMessageId(for: email),
           let conversationId = conversationID,
           let name = name,
           let sender = sender else { return }
@@ -155,7 +155,7 @@ extension ChatPresenter: ChatViewPresenterProtocol {
     
     func sendVideoMessage(email: String, conversationID: String?, info: [UIImagePickerController.InfoKey : Any], name: String?, sender: Sender?) {
       guard let videoUrl = info[.mediaURL] as? URL,
-            let messageId = self.createMessageId(for: email),
+            let messageId = createMessageId(for: email),
             let conversationId = conversationID,
             let name = name,
             let sender = sender else { return }
@@ -195,7 +195,7 @@ extension ChatPresenter: ChatViewPresenterProtocol {
     }
       
   func sendLocation(location: Location,email: String, conversationID: String?, name: String?, sender: Sender?) {
-    guard let messageId = self.createMessageId(for: email),
+    guard let messageId = createMessageId(for: email),
           let conversationId = conversationID,
           let name = name,
           let sender = sender else { return }
@@ -203,7 +203,7 @@ extension ChatPresenter: ChatViewPresenterProtocol {
                               messageId: messageId,
                               sentDate: Date(),
                               kind: .location(location))
-        self.databaseService.sendMessage(to: conversationId,
+        databaseService.sendMessage(to: conversationId,
                                          otherUserEmail: email,
                                          name: name,
                                          newMessage: message) { success in
