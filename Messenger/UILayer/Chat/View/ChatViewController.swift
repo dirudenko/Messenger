@@ -18,11 +18,17 @@ class ChatViewController: MessagesViewController {
   private let otherUserEmail: String
   private var messages = [Message]()
   private var conversationID: String?
+  private var senderImageUrl: URL?
+  private var otherUserImageUrl: URL?
+  private var email: String {
+    let userEmail = UserDefaults.standard.value(forKey: "email") as? String ?? ""
+    return userEmail
+  }
   
   private let presenter: ChatViewPresenterProtocol
   
   private var sender: Sender? {
-    let sender = Sender(senderId: presenter.safeMail(),
+    let sender = Sender(senderId: presenter.safeMail(from: email),
                         displayName: "",
                         photoURL: "")
     return sender
@@ -49,7 +55,7 @@ class ChatViewController: MessagesViewController {
     messagesCollectionView.messagesDisplayDelegate = self
     messageInputBar.delegate = self
     messagesCollectionView.messageCellDelegate = self
-}
+  }
   
   override func viewDidAppear(_ animated: Bool) {
     super.viewDidAppear(animated)
@@ -116,10 +122,10 @@ extension ChatViewController {
       let latitude: Double = coordinates.latitude
       let location = Location(location: CLLocation(latitude: latitude, longitude: longitude), size: .zero)
       self.presenter.sendLocation(location: location,
-                             email: self.otherUserEmail,
-                             conversationID: self.conversationID,
-                             name: self.title,
-                             sender: self.sender)
+                                  email: self.otherUserEmail,
+                                  conversationID: self.conversationID,
+                                  name: self.title,
+                                  sender: self.sender)
     }
     navigationController?.pushViewController(vc, animated: true)
     
@@ -220,7 +226,42 @@ extension ChatViewController: MessagesDataSource, MessagesLayoutDelegate, Messag
       break
     }
   }
+  func backgroundColor(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> UIColor {
+    let sender = message.sender
+    if sender.senderId == self.sender?.senderId {
+      return .link
+    }
+    return .secondarySystemBackground
+  }
+  
+  func configureAvatarView(_ avatarView: AvatarView, for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) {
+    let sender = message.sender
+    if sender.senderId == self.sender?.senderId {
+      // show sender image
+      if let currentUserUrl = senderImageUrl {
+        avatarView.sd_setImage(with: currentUserUrl, completed: nil)
+      } else {
+        
+        let safeMail = presenter.safeMail(from: email)
+        let fileName = safeMail + "_profile_picture.png"
+        let path = "images/" + fileName
+        presenter.downloadURL(for: path, image: avatarView)
+        
+      }
+    } else {
+      if let otherUserUrl = otherUserImageUrl {
+        avatarView.sd_setImage(with: otherUserUrl, completed: nil)
+      } else {
+        let otherUserEmail = self.otherUserEmail
+        let safeMail = presenter.safeMail(from: otherUserEmail)
+        let fileName = safeMail + "_profile_picture.png"
+        let path = "images/" + fileName
+        presenter.downloadURL(for: path, image: avatarView)
+      }
+    }
+  }
 }
+
 
 extension ChatViewController: MessageCellDelegate {
   func didTapImage(in cell: MessageCollectionViewCell) {
@@ -273,9 +314,12 @@ extension ChatViewController: InputBarAccessoryViewDelegate {
       
       presenter.createNewConversation(message: message,
                                       with: otherUserEmail,
-                                      title: self.title ?? "User") { success in
+                                      title: self.title ?? "User") { [weak self] success in
         if success {
-          self.isNewConversation = false
+          self?.isNewConversation = false
+          let newConversationID = "conversation_\(message.messageId)"
+          self?.conversationID = newConversationID
+          self?.presenter.listenForMessages(id: newConversationID)
         }
       }
       
@@ -288,7 +332,8 @@ extension ChatViewController: InputBarAccessoryViewDelegate {
                                      to: conversationID,
                                      name: name)
     }
-    inputBar.inputTextView.text = ""
+    inputBar.inputTextView.text = nil
+    messagesCollectionView.scrollToLastItem(at: .bottom, animated: true)
   }
 }
 
@@ -301,12 +346,12 @@ extension ChatViewController: UIImagePickerControllerDelegate, UINavigationContr
     picker.dismiss(animated: true, completion: nil)
     
     if let _ = info[.editedImage] as? UIImage {
-    
-    presenter.sendPhotoMessage(email: otherUserEmail,
-                               conversationID: conversationID,
-                               info: info,
-                               name: self.title,
-                               sender: sender)
+      
+      presenter.sendPhotoMessage(email: otherUserEmail,
+                                 conversationID: conversationID,
+                                 info: info,
+                                 name: self.title,
+                                 sender: sender)
     } else {
       presenter.sendVideoMessage(email: otherUserEmail,
                                  conversationID: conversationID,

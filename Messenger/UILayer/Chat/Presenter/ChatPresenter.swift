@@ -17,13 +17,14 @@ protocol ChatViewProtocol: AnyObject {
 protocol ChatViewPresenterProtocol: AnyObject {
   var conversationID: String? { get set }
   func listenForMessages(id: String)
-  func safeMail() -> String
+  func safeMail(from email: String) -> String
   func createMessageId(for email: String) -> String?
   func createNewConversation(message: Message, with email: String, title: String, complition: @escaping (Bool) -> Void)
   func appendToConversation(message: Message, with email: String, to conversationID: String, name: String)
   func sendPhotoMessage(email: String, conversationID: String?, info: [UIImagePickerController.InfoKey : Any], name: String?, sender: Sender?)
   func sendVideoMessage(email: String, conversationID: String?, info: [UIImagePickerController.InfoKey : Any], name: String?, sender: Sender?)
   func sendLocation(location: Location, email: String, conversationID: String?, name: String?, sender: Sender?)
+  func downloadURL(for path: String, image: UIImageView)
 }
 
 class ChatPresenter {
@@ -42,6 +43,18 @@ class ChatPresenter {
 }
 // MARK: - Protocol functions
 extension ChatPresenter: ChatViewPresenterProtocol {
+  
+  func downloadURL(for path: String, image: UIImageView) {
+    storageService.downloadURL(for: path) { result in
+      switch result {
+      case .success(let url):
+        image.sd_setImage(with: url, completed: nil)
+      case .failure(let error):
+        print(error)
+      }
+    }
+  }
+  
   func listenForMessages(id: String) {
     databaseService.getAllMessagesForConversation(with: id) { [weak self] result in
       switch result {
@@ -57,17 +70,15 @@ extension ChatPresenter: ChatViewPresenterProtocol {
     }
   }
   
-  func safeMail() -> String {
-    guard let email = UserDefaults.standard.value(forKey: "email") as? String else {
-      return ""
-    }
+  func safeMail(from email: String) -> String {
     let safeEmail = databaseService.safeEmail(from: email)
     return safeEmail
   }
   
   func createMessageId(for email: String) -> String? {
     let dateString = dateFormatter(from: Date())
-    let safeEmail = self.safeMail()
+    let userEmail = UserDefaults.standard.value(forKey: "email") as? String ?? ""
+    let safeEmail = self.safeMail(from: userEmail)
     let newIdentifier = "\(email)_\(safeEmail)_\(dateString)"
     return newIdentifier
   }

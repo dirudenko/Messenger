@@ -51,13 +51,13 @@ class LoginPresenter: LoginViewPresenterProtocol {
                 let lastName = userData["last_name"] as? String else {
                   return
                 }
-          UserDefaults.standard.set("\(firstName) \(lastName)", forKey: "name")
+          UserDefaults.standard.setValue("\(firstName) \(lastName)", forKey: "name")
+          UserDefaults.standard.setValue(email, forKey: "email")
           
         case .failure(let error):
           print("Error in getting user info: \(error)")
         }
       }
-      UserDefaults.standard.set(email, forKey: "email")
       
       self.view?.sucessToLogin()
     })

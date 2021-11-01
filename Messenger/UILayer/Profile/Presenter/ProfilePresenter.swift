@@ -8,6 +8,8 @@
 import Foundation
 import FirebaseAuth
 import GoogleSignIn
+import SDWebImage
+
 
 protocol ProfileViewProtocol: AnyObject {
   func sucessLogout()
@@ -37,6 +39,10 @@ class ProfilePresenter: ProfileViewPresenterProtocol {
                                   handler: { [weak self] _ in
       guard let self = self else { return }
       do {
+        
+        UserDefaults.standard.setValue(nil, forKey: "name")
+        UserDefaults.standard.setValue(nil, forKey: "email")
+
         /// Выход из Google
         GIDSignIn.sharedInstance.signOut()
         
@@ -59,23 +65,10 @@ class ProfilePresenter: ProfileViewPresenterProtocol {
     storageService.downloadURL(for: path) { result in
       switch result {
       case .success(let url):
-        self.downloadImage(imageView: image, url: url)
+        image.sd_setImage(with: url, completed: nil)
       case .failure(let error):
         print(error)
       }
     }
-  }
-  
-  private func downloadImage(imageView: UIImageView, url: URL) {
-    URLSession.shared.dataTask(with: url) { data, _, error in
-      guard let data = data, error == nil else {
-        return
-      }
-      DispatchQueue.main.async {
-        let image = UIImage(data: data)
-        imageView.image = image
-      }
-    }.resume()
-  }
-  
+  }  
 }

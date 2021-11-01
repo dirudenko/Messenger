@@ -11,14 +11,16 @@ class ConversationsView: UIView {
   
   let tableView: UITableView = {
     let tableView = UITableView()
-    // tableView.isHidden = true
+    tableView.isHidden = true
     tableView.register(ConversationTableViewCell.self, forCellReuseIdentifier: "ConversationTableViewCell")
+    tableView.translatesAutoresizingMaskIntoConstraints = false
     return tableView
   }()
   
-  private let noChatsLabel: UILabel = {
+   let noChatsLabel: UILabel = {
     let label = UILabel()
-    label.isHidden = true
+    label.isHidden = false
+    label.translatesAutoresizingMaskIntoConstraints = false
     label.text = "Нет чатов"
     label.textAlignment = .center
     label.font = .systemFont(ofSize: 22, weight: .semibold)
@@ -37,14 +39,12 @@ class ConversationsView: UIView {
   
   private func configureUI() {
     self.backgroundColor = .systemBackground
-    self.addTableView()
+    self.addSubview(tableView)
+    self.addSubview(noChatsLabel)
     self.setupConstraints()
   }
   
-  private func addTableView() {
-    tableView.translatesAutoresizingMaskIntoConstraints = false
-    self.addSubview(tableView)
-  }
+  
   
   private func setupConstraints() {
     let safeArea = self.safeAreaLayoutGuide
@@ -53,7 +53,12 @@ class ConversationsView: UIView {
       self.tableView.topAnchor.constraint(equalTo: safeArea.topAnchor),
       self.tableView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
       self.tableView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
-      self.tableView.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor)
+      self.tableView.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor),
+      
+      noChatsLabel.topAnchor.constraint(equalTo: self.centerYAnchor, constant: -10),
+      noChatsLabel.leftAnchor.constraint(equalTo: safeAreaLayoutGuide.leftAnchor, constant: 16),
+      noChatsLabel.rightAnchor.constraint(equalTo: safeAreaLayoutGuide.rightAnchor, constant: -16),
+      noChatsLabel.heightAnchor.constraint(equalToConstant: 52)
     ])
   }
   

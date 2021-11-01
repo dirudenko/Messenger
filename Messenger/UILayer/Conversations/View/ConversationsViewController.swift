@@ -35,9 +35,9 @@ class ConversationsViewController: UIViewController {
                                                         action: #selector(didTabComposeButton))
     chatsView.tableView.delegate = self
     chatsView.tableView.dataSource = self
-    if presenter.viewDidAuthorizate() {
-      presenter.startListeningConversation()
-    }
+//    if presenter.viewDidAuthorizate() {
+//      presenter.startListeningConversation()
+//    }
   }
   
   override func viewDidAppear(_ animated: Bool) {
@@ -50,6 +50,7 @@ class ConversationsViewController: UIViewController {
   //MARK: - Private func
   /// Создание нового окна диалога с пользователем
   @objc private func didTabComposeButton() {
+   // fatalError()
     guard let vc = MessengerBuilder.buildNewConversationViewController() as? NewConversationViewController else { return }
     vc.complition = { [weak self] result in
       guard let self = self else { return }
@@ -132,6 +133,11 @@ extension ConversationsViewController: UITableViewDataSource, UITableViewDelegat
         if success {
           self?.conversations.remove(at: indexPath.row)
           tableView.deleteRows(at: [indexPath], with: .automatic)
+          if self?.conversations.count == 0 {
+            self?.chatsView.tableView.isHidden = true
+            self?.chatsView.noChatsLabel.isHidden = false
+          }
+          tableView.reloadData()
         }
       }
       
@@ -144,11 +150,11 @@ extension ConversationsViewController: UITableViewDataSource, UITableViewDelegat
 }
 //MARK: - PresenterProtocol
 extension ConversationsViewController: ConversationsViewProtocol {
-  
-  
-  
+
   func successGetConversations(conversations: [Conversation]) {
     self.conversations = conversations
+    chatsView.tableView.isHidden = false
+    chatsView.noChatsLabel.isHidden = true
     DispatchQueue.main.async {
       self.chatsView.tableView.reloadData()
     }

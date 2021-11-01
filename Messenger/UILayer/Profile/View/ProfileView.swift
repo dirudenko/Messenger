@@ -9,7 +9,13 @@ import UIKit
 
 class ProfileView: UIView {
   
-  let tableView = UITableView()
+  let tableView: UITableView = {
+    let tableView = UITableView()
+    // tableView.isHidden = true
+    tableView.register(ProfileTableViewCell.self, forCellReuseIdentifier: "ProfileTableViewCell")
+    return tableView
+  }()
+  
   let headerView = UIView()
   
   private let imageSize: CGFloat = 150
@@ -45,7 +51,7 @@ class ProfileView: UIView {
     tableView.translatesAutoresizingMaskIntoConstraints = false
     headerView.translatesAutoresizingMaskIntoConstraints = false
     
-    headerView.backgroundColor = .blue
+    headerView.backgroundColor = .systemBackground
     self.addSubview(tableView)
     self.addSubview(headerView)
     addPhoto()

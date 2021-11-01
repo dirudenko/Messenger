@@ -41,20 +41,22 @@ class LocationPickerViewController: UIViewController {
                                                           style: .done,
                                                           target: self,
                                                           action: #selector(sendButtonPressed))
-       let gesture = UITapGestureRecognizer(target: self,
-                                            action: #selector(didTapMap(_:)))
-       gesture.numberOfTouchesRequired = 1
-       gesture.numberOfTapsRequired = 1
-       map.addGestureRecognizer(gesture)
+      let gesture = UITapGestureRecognizer(target: self,
+                                           action: #selector(didTapMap(_:)))
+      gesture.numberOfTouchesRequired = 1
+      gesture.numberOfTapsRequired = 1
+      map.addGestureRecognizer(gesture)
     } else {
       guard let coordinates = coordinates else {
         return
       }
+      let region = map.regionThatFits(MKCoordinateRegion(center: coordinates, latitudinalMeters: 200, longitudinalMeters: 200))
+      map.setRegion(region, animated: true)
       let pin = MKPointAnnotation()
       pin.coordinate = coordinates
       map.addAnnotation(pin)
     }
- 
+    
   }
   
   override func viewDidLayoutSubviews() {
@@ -79,5 +81,4 @@ class LocationPickerViewController: UIViewController {
     pin.coordinate = coordinates
     map.addAnnotation(pin)
   }
-  
 }

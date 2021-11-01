@@ -10,8 +10,9 @@ import UIKit
 class ProfileViewController: UIViewController {
   
   private let profileView = ProfileView()
-  private let data = ["Log Out"]
+  private var data = [ProfileModel]()
   private let presenter: ProfileViewPresenterProtocol
+  private var isFetched = false
   
   init(presenter: ProfileViewPresenterProtocol) {
     self.presenter = presenter
@@ -29,22 +30,44 @@ class ProfileViewController: UIViewController {
   
   override func viewDidLoad() {
     super.viewDidLoad()
-    profileView.tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
+   addUserInformation()
     profileView.tableView.delegate = self
     profileView.tableView.dataSource = self
   }
   
   
+  
   override func viewDidAppear(_ animated: Bool) {
     super.viewDidAppear(animated)
-    guard let email = UserDefaults.standard.value(forKey: "email") as? String else {
-      return
-    }
-    let safeMail = presenter.safeEmail(for: email)
+  //  addUserInformation()
+   // profileView.tableView.reloadData()
+  }
+  
+  private func addUserInformation() {
+    let userName = UserDefaults.standard.value(forKey: "name") as? String
+    data.append(ProfileModel(viewProfileType: .info,
+                             title:"Имя: \(userName ?? "Без имени")",
+                             handler: nil))
+    
+    let userEmail = UserDefaults.standard.value(forKey: "email") as? String
+    data.append(ProfileModel(viewProfileType: .info,
+                             title:"Почта: \(userEmail ?? "Почта не указана")",
+                             handler: nil))
+    
+    let safeMail = presenter.safeEmail(for: userEmail ?? "")
     let fileName = safeMail + "_profile_picture.png"
     let path = "images/" + fileName
     presenter.downloadURL(for: path, image: profileView.photoImage)
+    
+    data.append(ProfileModel(viewProfileType: .logout,
+                             title: "Выйти",
+                             handler: { [weak self] in
+      guard let self = self else { return }
+      let vc = self.presenter.viewDidLogout()
+      self.present(vc, animated: true)
+    }))
   }
+  
 }
 //MARK: - DataSource, Delegate
 extension ProfileViewController: UITableViewDataSource, UITableViewDelegate {
@@ -53,23 +76,21 @@ extension ProfileViewController: UITableViewDataSource, UITableViewDelegate {
   }
   
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-    let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
-    cell.textLabel?.text = data[indexPath.row]
-    cell.textLabel?.textAlignment = .center
-    cell.textLabel?.textColor = .red
+    guard let cell = profileView.tableView.dequeueReusableCell(withIdentifier: "ProfileTableViewCell", for: indexPath) as? ProfileTableViewCell else { return UITableViewCell()}
+    let model = data[indexPath.row]
+    cell.configure(with: model)
     return cell
   }
   
   func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     tableView.deselectRow(at: indexPath, animated: true)
-    present(presenter.viewDidLogout(), animated: true)
+    data[indexPath.row].handler?()
   }
 }
 //MARK: - PresenterProtocol
 extension ProfileViewController: ProfileViewProtocol {
   func sucessLogout() {
     let vc = MessengerBuilder.buildTabBar()
-    //UserDefaults.standard.removeObject(forKey: "email")
     vc.modalPresentationStyle = .fullScreen
     present(vc, animated: true)
   }
