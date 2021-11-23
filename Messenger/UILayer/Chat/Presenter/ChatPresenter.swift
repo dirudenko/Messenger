@@ -17,7 +17,6 @@ protocol ChatViewProtocol: AnyObject {
 protocol ChatViewPresenterProtocol: AnyObject {
   var conversationID: String? { get set }
   func listenForMessages(id: String)
-  func safeMail(from email: String) -> String
   func createMessageId(for email: String) -> String?
   func createNewConversation(message: Message, with email: String, title: String, complition: @escaping (Bool) -> Void)
   func appendToConversation(message: Message, with email: String, to conversationID: String, name: String)
@@ -70,15 +69,10 @@ extension ChatPresenter: ChatViewPresenterProtocol {
     }
   }
   
-  func safeMail(from email: String) -> String {
-    let safeEmail = databaseService.safeEmail(from: email)
-    return safeEmail
-  }
-  
   func createMessageId(for email: String) -> String? {
-    let dateString = dateFormatter(from: Date())
+    let dateString = Date().dateFormatter()
     let userEmail = UserDefaults.standard.value(forKey: "email") as? String ?? ""
-    let safeEmail = safeMail(from: userEmail)
+    let safeEmail = userEmail.safeEmail
     let newIdentifier = "\(email)_\(safeEmail)_\(dateString)"
     return newIdentifier
   }
@@ -216,21 +210,5 @@ extension ChatPresenter: ChatViewPresenterProtocol {
         }
       }
     
-  
-  
-  
-  
-  
-  //MARK: - Private functions
-  private func dateFormatter(from date: Date) -> String {
-    let formatter = DateFormatter()
-    formatter.dateStyle = .medium
-    formatter.timeStyle = .long
-    formatter.locale = .current
-    let stringDate = formatter.string(from: date)
-    return stringDate
-  }
-  
-  
 }
 

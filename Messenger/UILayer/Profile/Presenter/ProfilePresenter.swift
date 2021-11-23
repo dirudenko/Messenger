@@ -17,7 +17,6 @@ protocol ProfileViewProtocol: AnyObject {
 
 protocol ProfileViewPresenterProtocol: AnyObject {
   func viewDidLogout() -> UIViewController
-  func safeEmail(for email: String) -> String
   func downloadURL(for path: String, image: UIImageView)
 }
 
@@ -55,10 +54,6 @@ class ProfilePresenter: ProfileViewPresenterProtocol {
     }))
     alert.addAction(UIAlertAction(title: "Отмена", style: .cancel))
     return alert
-  }
-  
-  func safeEmail(for email: String) -> String {
-    return storageService.safeEmail(email: email)
   }
   
   func downloadURL(for path: String, image: UIImageView) {

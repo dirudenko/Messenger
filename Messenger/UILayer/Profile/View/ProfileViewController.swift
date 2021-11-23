@@ -30,7 +30,7 @@ class ProfileViewController: UIViewController {
   
   override func viewDidLoad() {
     super.viewDidLoad()
-   addUserInformation()
+    addUserInformation()
     profileView.tableView.delegate = self
     profileView.tableView.dataSource = self
   }
@@ -54,7 +54,7 @@ class ProfileViewController: UIViewController {
                              title:"Почта: \(userEmail ?? "Почта не указана")",
                              handler: nil))
     
-    let safeMail = presenter.safeEmail(for: userEmail ?? "")
+    guard let safeMail = userEmail?.safeEmail else { return }
     let fileName = safeMail + "_profile_picture.png"
     let path = "images/" + fileName
     presenter.downloadURL(for: path, image: profileView.photoImage)

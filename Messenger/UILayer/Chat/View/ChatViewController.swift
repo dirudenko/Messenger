@@ -28,7 +28,7 @@ class ChatViewController: MessagesViewController {
   private let presenter: ChatViewPresenterProtocol
   
   private var sender: Sender? {
-    let sender = Sender(senderId: presenter.safeMail(from: email),
+    let sender = Sender(senderId: email.safeEmail,
                         displayName: "",
                         photoURL: "")
     return sender
@@ -55,6 +55,8 @@ class ChatViewController: MessagesViewController {
     messagesCollectionView.messagesDisplayDelegate = self
     messageInputBar.delegate = self
     messagesCollectionView.messageCellDelegate = self
+    
+   // self.showLoadingView()
   }
   
   override func viewDidAppear(_ animated: Bool) {
@@ -93,11 +95,6 @@ extension ChatViewController {
                                         style: .default,
                                         handler: { [weak self] _ in
       self?.presentVideoActionSheet()
-    }))
-    actionSheet.addAction(UIAlertAction(title: "Аудио",
-                                        style: .default,
-                                        handler: { [weak self] _ in
-      
     }))
     actionSheet.addAction(UIAlertAction(title: "Геопозиция",
                                         style: .default,
@@ -200,11 +197,7 @@ extension ChatViewController {
 //MARK: - DataSource, Delegate
 extension ChatViewController: MessagesDataSource, MessagesLayoutDelegate, MessagesDisplayDelegate {
   func currentSender() -> SenderType {
-    if let sender = sender {
-      return sender
-    } else {
-      fatalError("sender is nil")
-    }
+      return sender!
   }
   
   func messageForItem(at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> MessageType {
@@ -226,6 +219,7 @@ extension ChatViewController: MessagesDataSource, MessagesLayoutDelegate, Messag
       break
     }
   }
+  
   func backgroundColor(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> UIColor {
     let sender = message.sender
     if sender.senderId == self.sender?.senderId {
@@ -242,7 +236,7 @@ extension ChatViewController: MessagesDataSource, MessagesLayoutDelegate, Messag
         avatarView.sd_setImage(with: currentUserUrl, completed: nil)
       } else {
         
-        let safeMail = presenter.safeMail(from: email)
+        let safeMail = email.safeEmail
         let fileName = safeMail + "_profile_picture.png"
         let path = "images/" + fileName
         presenter.downloadURL(for: path, image: avatarView)
@@ -253,7 +247,7 @@ extension ChatViewController: MessagesDataSource, MessagesLayoutDelegate, Messag
         avatarView.sd_setImage(with: otherUserUrl, completed: nil)
       } else {
         let otherUserEmail = otherUserEmail
-        let safeMail = presenter.safeMail(from: otherUserEmail)
+        let safeMail = otherUserEmail.safeEmail
         let fileName = safeMail + "_profile_picture.png"
         let path = "images/" + fileName
         presenter.downloadURL(for: path, image: avatarView)
@@ -267,16 +261,20 @@ extension ChatViewController: MessageCellDelegate {
   func didTapImage(in cell: MessageCollectionViewCell) {
     guard let indexPath = messagesCollectionView.indexPath(for: cell) else { return }
     let message = messages[indexPath.section]
+    
     switch message.kind {
+      
     case .photo(let media):
       guard let imageUrl = media.url else { return }
       let vc = MessengerBuilder.buildPhotoViewerViewController(with: imageUrl)
       navigationController?.pushViewController(vc, animated: true)
+      
     case .video(let media):
       guard let videoUrl = media.url else { return }
       let vc = AVPlayerViewController()
       vc.player = AVPlayer(url: videoUrl)
       present(vc, animated: true)
+      
     default:
       break
     }
@@ -365,9 +363,7 @@ extension ChatViewController: UIImagePickerControllerDelegate, UINavigationContr
 //MARK: - PresenterProtocol
 extension ChatViewController: ChatViewProtocol {
   func alertUser(with text: String) {
-    let alert = UIAlertController(title: "Ошибка", message: text, preferredStyle: .alert)
-    alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
-    present(alert, animated: true)
+    self.presentAlert(title: "Ошибка", message: text)
   }
   
   func successGetMessages(messages: [Message]) {

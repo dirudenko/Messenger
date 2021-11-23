@@ -55,7 +55,7 @@ class NewConversationPresenter: NewConversationViewPresenterProtocol {
   private func filterUsers(with term: String) {
     guard let currentUserEmail = UserDefaults.standard.value(forKey: "email") as? String,
           hasFetched else { return }
-    let safeEmail = storageService.safeEmail(email: currentUserEmail)
+    let safeEmail = currentUserEmail.safeEmail
     let results: [SearchResult] = self.users.filter ({
       guard let email = $0["email"],
             email != safeEmail else {

@@ -19,9 +19,11 @@ protocol Builder {
 }
 
 class MessengerBuilder: Builder {
+  
+  private static let databaseService = DatabaseService()
+  private static let storageService = StorageService()
+  
   static func buildNewConversationViewController() -> UIViewController {
-    let databaseService = DatabaseService()
-    let storageService = StorageService()
     let presenter = NewConversationPresenter(databaseService: databaseService, storageService: storageService)
     let vc = NewConversationViewController(presenter: presenter)
     presenter.view = vc
@@ -30,13 +32,11 @@ class MessengerBuilder: Builder {
   
   static func buildTabBar() -> UIViewController {
     let vc = TabBarViewController()
+    vc.selectedIndex = 0
     return vc
   }
   
   static func buildConversationsViewController() -> UIViewController {
-    let databaseService = DatabaseService()
-    let storageService = StorageService()
-
     let presenter = ConversationsPresenter(databaseService: databaseService, storageService: storageService)
     let vc = ConversationsViewController(presenter: presenter)
     presenter.view = vc
@@ -44,8 +44,6 @@ class MessengerBuilder: Builder {
   }
   
   static func buildLoginScreenViewController() -> UIViewController {
-    let databaseService = DatabaseService()
-    let storageService = StorageService()
     let presenter = LoginPresenter(databaseService: databaseService, storageService: storageService)
     let viewController = LoginViewController(presenter: presenter)
     presenter.view = viewController
@@ -53,8 +51,6 @@ class MessengerBuilder: Builder {
   }
   
   static func buildRegisterViewController() -> UIViewController {
-    let databaseService = DatabaseService()
-    let storageService = StorageService()
     let presenter = RegisterPresenter(databaseService: databaseService, storageService: storageService)
     let viewController = RegisterViewController(presenter: presenter)
     presenter.view = viewController
@@ -62,7 +58,6 @@ class MessengerBuilder: Builder {
   }
 
   static func buildProfileViewController() -> UIViewController {
-    let storageService = StorageService()
     let presenter = ProfilePresenter(storageService: storageService)
     let viewController = ProfileViewController(presenter: presenter)
     presenter.view = viewController
@@ -70,8 +65,6 @@ class MessengerBuilder: Builder {
   }
   
   static func buildChatViewController(with email: String, conversationID: String?) -> UIViewController {
-    let databaseService = DatabaseService()
-    let storageService = StorageService()
     let presenter = ChatPresenter(databaseService: databaseService, conversationID: conversationID, storageService: storageService)
     let vc = ChatViewController(presenter: presenter, email: email)
     presenter.view = vc

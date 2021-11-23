@@ -15,7 +15,6 @@ protocol StorageServiceProtocol: AnyObject {
   func uploadMessagePhoto(with data: Data,
                           fileName: String,
                           complition: @escaping (Result<String, Error>) -> Void)
-  func safeEmail(email: String) -> String
   func downloadURL(for path: String, completion: @escaping (Result<URL, Error>) -> Void)
   func uploadMessageVideo(with fileUrl: URL, fileName: String, complition: @escaping (Result<String, Error>) -> Void)
 }

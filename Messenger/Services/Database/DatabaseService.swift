@@ -24,7 +24,6 @@ protocol DatabaseMessagingProtocol {
   func getAllMessagesForConversation(with id: String, complition: @escaping (Result<[Message], Error>) -> Void)
   func sendMessage(to conversation: String, otherUserEmail: String, name: String, newMessage: Message, complition: @escaping (Bool) -> Void)
   func deleteConversation(conversationID: String, complition: @escaping (Bool) -> Void)
-  func safeEmail(from email: String) -> String
   func converstionExists(with targetEmail: String, complition: @escaping (Result<String, Error>) -> Void)
 }
 
@@ -33,21 +32,11 @@ final class DatabaseService {
 }
 //MARK: - private func
 extension DatabaseService {
-  
-  private func dateFormatter(from date: Date) -> String {
-    let formatter = DateFormatter()
-    formatter.dateStyle = .medium
-    formatter.timeStyle = .long
-    formatter.locale = .current
-    let stringDate = formatter.string(from: date)
-    return stringDate
-  }
-  
-  
+    
   private func finishCreatingConversation(name: String, conversationID: String, firstMessage: Message, complition: @escaping (Bool) -> Void) {
     
     let messageDate = firstMessage.sentDate
-    let dateString = dateFormatter(from: messageDate)
+    let dateString = messageDate.dateFormatter()
     var message = ""
     
     switch firstMessage.kind {
@@ -78,7 +67,7 @@ extension DatabaseService {
       return
     }
     
-    let currentUserEmail = safeEmail(from: myEmail)
+    let currentUserEmail = myEmail.safeEmail
     
     let collectionMessage: [String: Any] = [
       "id": firstMessage.messageId,
@@ -120,7 +109,7 @@ extension DatabaseService: DatabaseServiceProtocol {
   
   /// проверка на наличие пользователя в БД
   func didUserExist(email: String, complition: @escaping ((Bool) -> Void)) {
-    let safeEmail = self.safeEmail(from: email)
+    let safeEmail = email.safeEmail
     database.child(safeEmail).observeSingleEvent(of: .value) { snapshot in
       guard snapshot.exists() else {
         complition(false)
@@ -196,16 +185,12 @@ extension DatabaseService: DatabaseServiceProtocol {
 //MARK: - Sending Messages
 
 extension DatabaseService: DatabaseMessagingProtocol {
-  func safeEmail(from email: String) -> String {
-    var safeEmail = email.replacingOccurrences(of: ".", with: "-")
-    safeEmail = safeEmail.replacingOccurrences(of: "@", with: "-")
-    return safeEmail
-  }
   
   func converstionExists(with targetEmail: String, complition: @escaping (Result<String, Error>) -> Void) {
-    let safeRecipientEmail = safeEmail(from: targetEmail)
+    let safeRecipientEmail = targetEmail.safeEmail
     guard let senderEmail = UserDefaults.standard.value(forKey: "email") as? String else { return }
-    let safeSenderEmail = safeEmail(from: senderEmail)
+    let safeSenderEmail = senderEmail.safeEmail
+    
     database.child("\(safeRecipientEmail)/conversations").observeSingleEvent(of: .value) { snapshot in
       guard let collection = snapshot.value as? [[String: Any]] else {
         complition(.failure(DatabaseError.failedToFetch))
@@ -233,7 +218,7 @@ extension DatabaseService: DatabaseMessagingProtocol {
   
   func deleteConversation(conversationID: String, complition: @escaping (Bool) -> Void) {
     guard let email = UserDefaults.standard.value(forKey: "email") as? String else { return }
-    let safeEmail = safeEmail(from: email)
+    let safeEmail = email.safeEmail
     let ref = database.child("\(safeEmail)/conversations")
     ref.observeSingleEvent(of: .value) { snapshot in
       if var conversations = snapshot.value as? [[String: Any]] {
@@ -259,7 +244,7 @@ extension DatabaseService: DatabaseMessagingProtocol {
   func createNewConversation(with otherUserEmail: String, name: String, firstMessage: Message, complition: @escaping (Bool) -> Void) {
     guard let currentEmail = UserDefaults.standard.value(forKey: "email") as? String,
           let currentName = UserDefaults.standard.value(forKey: "name") as? String else { return }
-    let safeEmail = self.safeEmail(from: currentEmail)
+    let safeEmail = currentEmail.safeEmail
     let ref = database.child("\(safeEmail)")
     ref.observeSingleEvent(of: .value) { [weak self] snapshot in
       guard let self = self,
@@ -269,7 +254,7 @@ extension DatabaseService: DatabaseMessagingProtocol {
             }
       
       let messageDate = firstMessage.sentDate
-      let dateString = self.dateFormatter(from: messageDate)
+      let dateString = messageDate.dateFormatter()
       var message = ""
       
       switch firstMessage.kind {
@@ -476,7 +461,7 @@ extension DatabaseService: DatabaseMessagingProtocol {
       return
     }
     
-    let currentEmail = safeEmail(from: myEmail)
+    let currentEmail = myEmail.safeEmail
     
     database.child("\(conversation)/messages").observeSingleEvent(of: .value) { [weak self] snapshot in
       guard let self = self,
@@ -485,7 +470,7 @@ extension DatabaseService: DatabaseMessagingProtocol {
               return
             }
       let messageDate = newMessage.sentDate
-      let dateString = self.dateFormatter(from: messageDate)
+      let dateString = messageDate.dateFormatter()
       var message = ""
       
       switch newMessage.kind {
@@ -519,19 +504,13 @@ extension DatabaseService: DatabaseMessagingProtocol {
         break
       }
       
-      guard let myEmail = UserDefaults.standard.value(forKey: "email") as? String else {
-        complition(false)
-        return
-      }
-      
-      let currentUserEmail = self.safeEmail(from: myEmail)
       
       let newMessageEntry: [String: Any] = [
         "id": newMessage.messageId,
         "type": newMessage.kind.description,
         "content": message,
         "date": dateString,
-        "sender_email": currentUserEmail,
+        "sender_email": currentEmail,
         "is_read": false,
         "name": name
       ]
@@ -574,7 +553,7 @@ extension DatabaseService: DatabaseMessagingProtocol {
             } else {
               let newConversationData: [String: Any] = [
                 "id": conversation,
-                "other_user_mail": self.safeEmail(from: otherUserEmail),
+                "other_user_mail": otherUserEmail.safeEmail,
                 "name": name,
                 "latest_message": updatedValue
               ]
@@ -587,7 +566,7 @@ extension DatabaseService: DatabaseMessagingProtocol {
             databaseEntryConversations = [
               [
                 "id": conversation,
-                "other_user_mail": self.safeEmail(from: otherUserEmail),
+                "other_user_mail": otherUserEmail.safeEmail,
                 "name": name,
                 "latest_message": updatedValue
               ]
@@ -630,7 +609,7 @@ extension DatabaseService: DatabaseMessagingProtocol {
                 } else {
                   let newConversationData: [String: Any] = [
                     "id": conversation,
-                    "other_user_mail": self.safeEmail(from: currentEmail),
+                    "other_user_mail": currentEmail.safeEmail,
                     "name": currentName,
                     "latest_message": updatedValue
                   ]
@@ -643,7 +622,7 @@ extension DatabaseService: DatabaseMessagingProtocol {
                 databaseEntryConversations = [
                   [
                     "id": conversation,
-                    "other_user_mail": self.safeEmail(from: currentEmail),
+                    "other_user_mail": currentEmail.safeEmail,
                     "name": currentName,
                     "latest_message": updatedValue
                   ]

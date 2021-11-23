@@ -35,9 +35,6 @@ class ConversationsViewController: UIViewController {
                                                         action: #selector(didTabComposeButton))
     chatsView.tableView.delegate = self
     chatsView.tableView.dataSource = self
-//    if presenter.viewDidAuthorizate() {
-//      presenter.startListeningConversation()
-//    }
   }
   
   override func viewDidAppear(_ animated: Bool) {
@@ -50,13 +47,12 @@ class ConversationsViewController: UIViewController {
   //MARK: - Private func
   /// Создание нового окна диалога с пользователем
   @objc private func didTabComposeButton() {
-   // fatalError()
     guard let vc = MessengerBuilder.buildNewConversationViewController() as? NewConversationViewController else { return }
     vc.complition = { [weak self] result in
       guard let self = self else { return }
       let currentConversations = self.conversations
       if let targetConversation = currentConversations.first(where: {
-        $0.otherUserEmail == self.presenter.safeMail(from: result.email)
+        $0.otherUserEmail == result.email.safeEmail
       }) {
         self.createChat(model: targetConversation)
       } else {
@@ -160,9 +156,10 @@ extension ConversationsViewController: ConversationsViewProtocol {
     }
   }
   
-  func sucessAuthorizate() {
+  func unableToAuthorizate() {
     let vc = MessengerBuilder.buildLoginScreenViewController()
     vc.modalPresentationStyle = .fullScreen
     navigationController?.pushViewController(vc, animated: false)
+    tabBarController?.tabBar.isHidden = true
   }
 }

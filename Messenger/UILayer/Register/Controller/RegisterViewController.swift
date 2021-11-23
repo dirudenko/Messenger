@@ -132,12 +132,8 @@ extension RegisterViewController: RegisterViewProtocol {
     present(alert, animated: true)
     
    // navigationController?.dismiss(animated: true, completion: nil)
-
-    
   }
   func alertUser(_ alert: String) {
-    let alert = UIAlertController(title: "Ошибка", message: alert, preferredStyle: .alert)
-    alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
-    present(alert, animated: true)
+    self.presentAlert(title: "Ошибка", message: alert)
   }
 }

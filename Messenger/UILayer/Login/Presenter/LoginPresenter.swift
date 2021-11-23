@@ -37,12 +37,12 @@ class LoginPresenter: LoginViewPresenterProtocol {
     FirebaseAuth.Auth.auth().signIn(withEmail: email, password: password, completion: { [weak self] result , error in
       guard let self = self else { return }
       
-      guard let result = result,
+      guard let _ = result,
             error == nil else {
               self.view?.alertUser(error?.localizedDescription ?? "Error")
               return
             }
-      let safeEmail = self.databaseService.safeEmail(from: email)
+      let safeEmail = email.safeEmail
       self.databaseService.getData(path: safeEmail) { result in
         switch result {
         case .success(let data):
@@ -115,7 +115,11 @@ class LoginPresenter: LoginViewPresenterProtocol {
               if success {
                 if (user?.profile?.hasImage) != nil {
                   guard let url = user?.profile?.imageURL(withDimension: 200) else { return }
-                  URLSession.shared.dataTask(with: url) { data, _, _ in
+                  URLSession.shared.dataTask(with: url) { data, response, error in
+                    
+                    if let _ = error { return }
+                    guard let response = response as? HTTPURLResponse, response.statusCode == 200 else { return }
+
                     guard let data  = data else { return }
                     let fileName = newUser.UserPictureName
                     self.storageService.uploadProfilePhoto(with: data,
