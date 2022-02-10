@@ -7,7 +7,7 @@
 
 import UIKit
 
-fileprivate var containerView: UIView!
+private var containerView: UIView!
 
 extension UIViewController {
   
@@ -41,7 +41,6 @@ extension UIViewController {
           activityIndicator.startAnimating()
       }
       
-      
       func dismissLoadingView() {
     
           DispatchQueue.main.async {
@@ -49,6 +48,5 @@ extension UIViewController {
               containerView = nil
           }
       }
-
   
 }

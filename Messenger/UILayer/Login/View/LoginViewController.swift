@@ -43,7 +43,7 @@ class LoginViewController: UIViewController {
     super.viewWillDisappear(animated)
     navigationController?.navigationBar.isHidden = false
   }
-  //MARK: - Private func
+  // MARK: - Private func
   @objc private func didTapRegister() {
     presenter.viewDidRegister()
   }
@@ -68,14 +68,14 @@ class LoginViewController: UIViewController {
   }
   
 }
-//MARK: - PresenterProtocol
+// MARK: - PresenterProtocol
 extension LoginViewController: LoginViewProtocol {
   func sucessToLogin() {
     
     navigationController?.dismiss(animated: false, completion: nil)
-    let vc = MessengerBuilder.buildTabBar()
-    vc.modalPresentationStyle = .fullScreen
-    present(vc, animated: false)
+    let viewController = MessengerBuilder.buildTabBar()
+    viewController.modalPresentationStyle = .fullScreen
+    present(viewController, animated: false)
   }
   
   func alertUser(_ alert: String) {

@@ -38,7 +38,7 @@ class PhotoService {
     guard let filePath = self.getFilePath(at: url) else { return }
     let imageData = image.pngData()
     FileManager.default.createFile(atPath: filePath, contents: imageData)
-    //print(self.memoryImageCache)
+    // print(self.memoryImageCache)
   }
   
   private func getImageFromCache(at url: URL) -> UIImage? {
@@ -65,9 +65,8 @@ extension PhotoService {
     
     let defaultSession = URLSession(configuration: .default)
     var dataTask: URLSessionDataTask?
-
     
-    dataTask = defaultSession.dataTask(with: url) { [weak self] data ,response,_ in
+    dataTask = defaultSession.dataTask(with: url) { [weak self] data, _, _ in
       guard
         let data = data,
         let image = UIImage(data: data),
@@ -90,8 +89,7 @@ extension PhotoService {
       return completion(image)
     } else
     if let image = self.getImageFromCache(at: url) {
-      return completion(image) }
-    else {
+      return completion(image) } else {
       self.loadImage(at: url, completion: completion)
     }
   }

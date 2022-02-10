@@ -30,7 +30,7 @@ protocol DatabaseMessagingProtocol {
 final class DatabaseService {
   private let database = Database.database().reference()
 }
-//MARK: - private func
+// MARK: - private func
 extension DatabaseService {
     
   private func finishCreatingConversation(name: String, conversationID: String, firstMessage: Message, complition: @escaping (Bool) -> Void) {
@@ -42,23 +42,23 @@ extension DatabaseService {
     switch firstMessage.kind {
     case .text(let messageText):
       message = messageText
-    case .attributedText(_):
+    case .attributedText:
       break
-    case .photo(_):
+    case .photo:
       break
-    case .video(_):
+    case .video:
       break
-    case .location(_):
+    case .location:
       break
-    case .emoji(_):
+    case .emoji:
       break
-    case .audio(_):
+    case .audio:
       break
-    case .contact(_):
+    case .contact:
       break
-    case .linkPreview(_):
+    case .linkPreview:
       break
-    case .custom(_):
+    case .custom:
       break
     }
     
@@ -94,7 +94,7 @@ extension DatabaseService {
     }
   }
 }
-//MARK: - Account Managment
+// MARK: - Account Managment
 
 extension DatabaseService: DatabaseServiceProtocol {
   func getData(path: String, complition: @escaping (Result<Any, Error>) -> Void) {
@@ -135,7 +135,7 @@ extension DatabaseService: DatabaseServiceProtocol {
       "first_name": user.firstName,
       "last_name": user.lastName
     ]) { error, _ in
-      guard error == nil else  {
+      guard error == nil else {
         complition(false)
         return
       }
@@ -179,10 +179,8 @@ extension DatabaseService: DatabaseServiceProtocol {
     }
   }
   
-  
-  
 }
-//MARK: - Sending Messages
+// MARK: - Sending Messages
 
 extension DatabaseService: DatabaseMessagingProtocol {
   
@@ -214,7 +212,6 @@ extension DatabaseService: DatabaseMessagingProtocol {
     complition(.failure(DatabaseError.failedToFetch))
     return
   }
-  
   
   func deleteConversation(conversationID: String, complition: @escaping (Bool) -> Void) {
     guard let email = UserDefaults.standard.value(forKey: "email") as? String else { return }
@@ -260,23 +257,23 @@ extension DatabaseService: DatabaseMessagingProtocol {
       switch firstMessage.kind {
       case .text(let messageText):
         message = messageText
-      case .attributedText(_):
+      case .attributedText:
         break
-      case .photo(_):
+      case .photo:
         break
-      case .video(_):
+      case .video:
         break
-      case .location(_):
+      case .location:
         break
-      case .emoji(_):
+      case .emoji:
         break
-      case .audio(_):
+      case .audio:
         break
-      case .contact(_):
+      case .contact:
         break
-      case .linkPreview(_):
+      case .linkPreview:
         break
-      case .custom(_):
+      case .custom:
         break
       }
       
@@ -307,15 +304,14 @@ extension DatabaseService: DatabaseMessagingProtocol {
       
       self.database.child("\(otherUserEmail)/conversations").observeSingleEvent(of: .value) { [weak self] snapshot in
         if var conversations = snapshot.value as? [[String: Any]] {
-          //append
+          // append
           conversations.append(recipient_newConversationData)
           self?.database.child("\(otherUserEmail)/conversations").setValue(conversations)
         } else {
-          //create
+          // create
           self?.database.child("\(otherUserEmail)/conversations").setValue([recipient_newConversationData])
         }
       }
-      
       
       // Update current user conv
       if var conversations = userNode["conversations"] as? [[String: Any]] {
@@ -370,7 +366,7 @@ extension DatabaseService: DatabaseMessagingProtocol {
         let latestMessageObject = LatestMessage(date: date,
                                                 text: message,
                                                 isRead: isRead)
-        return Conversation (id: conversationID,
+        return Conversation(id: conversationID,
                              name: name,
                              otherUserEmail: otherUserEmail,
                              latestMessage: latestMessageObject)
@@ -432,8 +428,7 @@ extension DatabaseService: DatabaseMessagingProtocol {
           let location = Location(location: CLLocation(latitude: latitude, longitude: longitude),
                                   size: CGSize(width: 300, height: 300))
           kind = .location(location)
-        }
-          else {
+        } else {
             kind = .text(content)
           }
         }
@@ -476,34 +471,30 @@ extension DatabaseService: DatabaseMessagingProtocol {
       switch newMessage.kind {
       case .text(let messageText):
         message = messageText
-      case .attributedText(_):
+      case .attributedText:
         break
       case .photo(let mediaItem):
         if let targetUrl = mediaItem.url?.absoluteString {
           message = targetUrl
         }
-        break
       case .video(let mediaItem):
         if let targetUrl = mediaItem.url?.absoluteString {
           message = targetUrl
         }
-        break
       case .location(let locationData):
         let location = locationData.location
         message = "\(location.coordinate.longitude),\(location.coordinate.latitude)"
+      case .emoji:
         break
-      case .emoji(_):
+      case .audio:
         break
-      case .audio(_):
+      case .contact:
         break
-      case .contact(_):
+      case .linkPreview:
         break
-      case .linkPreview(_):
-        break
-      case .custom(_):
+      case .custom:
         break
       }
-      
       
       let newMessageEntry: [String: Any] = [
         "id": newMessage.messageId,
@@ -534,12 +525,10 @@ extension DatabaseService: DatabaseMessagingProtocol {
           if var currrentUserConversations = snapshot.value as? [[String: Any]] {
             var targetConversation: [String: Any]?
             
-            
             if let index = currrentUserConversations.firstIndex(where: {$0["id"] as! String == conversation}) {
               targetConversation = currrentUserConversations[index]
               targetIndex = index
             }
-            
             
             guard let index = targetIndex else {
               complition(false)
@@ -560,9 +549,7 @@ extension DatabaseService: DatabaseMessagingProtocol {
               currrentUserConversations.append(newConversationData)
               databaseEntryConversations = currrentUserConversations
             }
-          }
-          
-          else {
+          } else {
             databaseEntryConversations = [
               [
                 "id": conversation,
@@ -572,7 +559,6 @@ extension DatabaseService: DatabaseMessagingProtocol {
               ]
             ]
           }
-          
           
           self.database.child("\(currentEmail)/conversations").setValue(databaseEntryConversations) { error, _ in
             guard error == nil else {
@@ -592,7 +578,6 @@ extension DatabaseService: DatabaseMessagingProtocol {
               if var otherUserConversations = snapshot.value as? [[String: Any]] {
                 var recipient_targetConversation: [String: Any]?
                 var recipient_targetIndex: Int?
-                
                 
                 if let recipient_index = otherUserConversations.firstIndex(where: {$0["id"] as! String == conversation}) {
                   recipient_targetConversation = otherUserConversations[targetIndex!]
@@ -616,9 +601,7 @@ extension DatabaseService: DatabaseMessagingProtocol {
                   otherUserConversations.append(newConversationData)
                   databaseEntryConversations = otherUserConversations
                 }
-              }
-              
-              else {
+              } else {
                 databaseEntryConversations = [
                   [
                     "id": conversation,

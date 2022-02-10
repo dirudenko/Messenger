@@ -15,9 +15,6 @@ protocol PhotoViewerPresenterProtocol: AnyObject {
   
 }
 
-
-
-
 class PhotoViewerPresenter: PhotoViewerPresenterProtocol {
   weak var view: (UIViewController & PhotoViewerProtocol)?
 

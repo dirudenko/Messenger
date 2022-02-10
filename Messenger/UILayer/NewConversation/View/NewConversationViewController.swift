@@ -9,7 +9,7 @@ import UIKit
 
 class NewConversationViewController: UIViewController {
   
-  var complition: ((SearchResult) ->(Void))?
+  var complition: ((SearchResult) -> Void)?
   var results = [SearchResult]()
   private let newConversation = NewConversationView()
   private let presenter: NewConversationViewPresenterProtocol
@@ -40,13 +40,13 @@ class NewConversationViewController: UIViewController {
     newConversation.tableView.delegate = self
     newConversation.tableView.dataSource = self
   }
-  //MARK: - Private func
+  // MARK: - Private func
   @objc private func dismissSearch() {
     dismiss(animated: true, completion: nil)
   }
 }
 
-//MARK: - DataSource, Delegate
+// MARK: - DataSource, Delegate
 extension NewConversationViewController: UITableViewDataSource, UITableViewDelegate {
   func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
     return results.count
@@ -61,7 +61,7 @@ extension NewConversationViewController: UITableViewDataSource, UITableViewDeleg
   func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     tableView.deselectRow(at: indexPath, animated: true)
     let targetUser = results[indexPath.row]
-    dismiss(animated: true, completion:  { [weak self] in
+    dismiss(animated: true, completion: { [weak self] in
       self?.complition?(targetUser)
     })
   }
@@ -72,12 +72,10 @@ extension NewConversationViewController: UITableViewDataSource, UITableViewDeleg
   
 }
 
-
 extension NewConversationViewController: UISearchBarDelegate {
   func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
     results.removeAll()
   }
-  
   
   func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
       guard let text = searchBar.text, !text.replacingOccurrences(of: " ", with: "").isEmpty else {
@@ -89,7 +87,7 @@ extension NewConversationViewController: UISearchBarDelegate {
   }
   
 }
-//MARK: - PresenterProtocol
+// MARK: - PresenterProtocol
 extension NewConversationViewController: NewConversationViewProtocol {
   func updateUI(with results: [SearchResult]) {
     if results.isEmpty {

@@ -68,4 +68,3 @@ class NewConversationView: UIView {
     ])
   }
 }
-

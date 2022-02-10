@@ -11,7 +11,6 @@ enum ProfileModelType {
   case info, logout
 }
 
-
 struct ProfileModel {
   let viewProfileType: ProfileModelType
   let title: String

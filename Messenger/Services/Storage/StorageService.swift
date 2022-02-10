@@ -26,14 +26,14 @@ final class StorageService: StorageServiceProtocol {
   func uploadProfilePhoto(with data: Data,
                           fileName: String,
                           complition: @escaping (Result<String, Error>) -> Void) {
-    storage.child("images/\(fileName)").putData(data, metadata: nil, completion: { [weak self] metadata, error in
+    storage.child("images/\(fileName)").putData(data, metadata: nil, completion: { [weak self] _, error in
       guard let self = self,
             error == nil else {
         complition(.failure(StorageErrors.failedToUpload))
         return
       }
       
-      self.storage.child("images/\(fileName)").downloadURL { url, error in
+      self.storage.child("images/\(fileName)").downloadURL { url, _ in
         guard let url = url else {
           complition(.failure(StorageErrors.failedToGetUploadedURL))
           return
@@ -45,18 +45,17 @@ final class StorageService: StorageServiceProtocol {
     })
   }
   
-  
   func uploadMessagePhoto(with data: Data,
                           fileName: String,
                           complition: @escaping (Result<String, Error>) -> Void) {
-    storage.child("message_images/\(fileName)").putData(data, metadata: nil, completion: { [weak self] metadata, error in
+    storage.child("message_images/\(fileName)").putData(data, metadata: nil, completion: { [weak self] _, error in
       guard let self = self,
             error == nil else {
         complition(.failure(StorageErrors.failedToUpload))
         return
       }
       
-      self.storage.child("message_images/\(fileName)").downloadURL { url, error in
+      self.storage.child("message_images/\(fileName)").downloadURL { url, _ in
         guard let url = url else {
           complition(.failure(StorageErrors.failedToGetUploadedURL))
           return
@@ -70,14 +69,14 @@ final class StorageService: StorageServiceProtocol {
   func uploadMessageVideo(with fileUrl: URL,
                           fileName: String,
                           complition: @escaping (Result<String, Error>) -> Void) {
-    storage.child("message_videos/\(fileName)").putFile(from: fileUrl, metadata: nil, completion: { [weak self] metadata, error in
+    storage.child("message_videos/\(fileName)").putFile(from: fileUrl, metadata: nil, completion: { [weak self] _, error in
       guard let self = self,
             error == nil else {
               complition(.failure(StorageErrors.failedToUpload))
               return
             }
       
-      self.storage.child("message_videos/\(fileName)").downloadURL { url, error in
+      self.storage.child("message_videos/\(fileName)").downloadURL { url, _ in
         guard let url = url else {
           complition(.failure(StorageErrors.failedToGetUploadedURL))
           return

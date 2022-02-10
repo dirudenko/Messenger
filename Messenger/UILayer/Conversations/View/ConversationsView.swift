@@ -44,8 +44,6 @@ class ConversationsView: UIView {
     setupConstraints()
   }
   
-  
-  
   private func setupConstraints() {
     let safeArea = self.safeAreaLayoutGuide
     

@@ -9,7 +9,6 @@ import UIKit
 
 class RegisterView: UIView {
   
-  
   private let imageSize: CGFloat = 200
   
   private(set) lazy var avatarImage: UIImageView = {
@@ -105,7 +104,6 @@ class RegisterView: UIView {
     return button
   }()
   
-  
   override init(frame: CGRect) {
     super.init(frame: frame)
     configureUI()
@@ -124,7 +122,6 @@ class RegisterView: UIView {
     addSubview(emailField)
     addSubview(passwordField)
     addSubview(createButton)
-    
     
     NSLayoutConstraint.activate([
       
@@ -156,8 +153,7 @@ class RegisterView: UIView {
       createButton.leftAnchor.constraint(equalTo: self.centerXAnchor, constant: -100),
       createButton.topAnchor.constraint(equalTo: passwordField.bottomAnchor, constant: 16),
       createButton.widthAnchor.constraint(equalToConstant: 200),
-      createButton.heightAnchor.constraint(equalToConstant: 32),
+      createButton.heightAnchor.constraint(equalToConstant: 32)
     ])
   }
 }
-

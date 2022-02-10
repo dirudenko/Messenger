@@ -19,11 +19,14 @@ class TabBarViewController: UITabBarController {
   
   func setupVCs() {
     viewControllers = [
-      createNavController(for: MessengerBuilder.buildConversationsViewController(), title: NSLocalizedString("Чаты", comment: ""), image: UIImage(systemName: "message")!),
-      createNavController(for: MessengerBuilder.buildProfileViewController(), title: NSLocalizedString("Профиль", comment: ""), image: UIImage(systemName: "gearshape")!)
+      createNavController(for: MessengerBuilder.buildConversationsViewController(),
+                             title: NSLocalizedString("Чаты", comment: ""),
+                             image: UIImage(systemName: "message")!),
+      createNavController(for: MessengerBuilder.buildProfileViewController(),
+                             title: NSLocalizedString("Профиль", comment: ""),
+                             image: UIImage(systemName: "gearshape")!)
     ]
   }
-  
   
   private func createNavController(for rootViewController: UIViewController,
                                    title: String,

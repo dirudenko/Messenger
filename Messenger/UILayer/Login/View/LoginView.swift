@@ -8,7 +8,6 @@
 import UIKit
 import GoogleSignIn
 
-
 class LoginView: UIView {
     
   private(set) lazy var scrollView: UIScrollView = {
@@ -111,7 +110,6 @@ class LoginView: UIView {
     addSubview(passwordField)
     addSubview(googleButton)
     
-    
     NSLayoutConstraint.activate([
       
       loginField.topAnchor.constraint(equalTo: self.centerYAnchor, constant: -10),
@@ -142,7 +140,7 @@ class LoginView: UIView {
   
   private func addLogo() {
     addSubview(logoImage)
-    let size:CGFloat = 200
+    let size: CGFloat = 200
     NSLayoutConstraint.activate([
       
       logoImage.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: size/2),

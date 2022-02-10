@@ -20,8 +20,8 @@ protocol ChatViewPresenterProtocol: AnyObject {
   func createMessageId(for email: String) -> String?
   func createNewConversation(message: Message, with email: String, title: String, complition: @escaping (Bool) -> Void)
   func appendToConversation(message: Message, with email: String, to conversationID: String, name: String)
-  func sendPhotoMessage(email: String, conversationID: String?, info: [UIImagePickerController.InfoKey : Any], name: String?, sender: Sender?)
-  func sendVideoMessage(email: String, conversationID: String?, info: [UIImagePickerController.InfoKey : Any], name: String?, sender: Sender?)
+  func sendPhotoMessage(email: String, conversationID: String?, info: [UIImagePickerController.InfoKey: Any], name: String?, sender: Sender?)
+  func sendVideoMessage(email: String, conversationID: String?, info: [UIImagePickerController.InfoKey: Any], name: String?, sender: Sender?)
   func sendLocation(location: Location, email: String, conversationID: String?, name: String?, sender: Sender?)
   func downloadURL(for path: String, image: UIImageView)
 }
@@ -32,7 +32,6 @@ class ChatPresenter {
   
   private let databaseService: DatabaseMessagingProtocol
   private let storageService: StorageServiceProtocol
-  
   
   init(databaseService: DatabaseMessagingProtocol, conversationID: String?, storageService: StorageServiceProtocol) {
     self.databaseService = databaseService
@@ -105,7 +104,7 @@ extension ChatPresenter: ChatViewPresenterProtocol {
     }
   }
   
-  func sendPhotoMessage(email: String, conversationID: String?, info: [UIImagePickerController.InfoKey : Any], name: String?, sender: Sender?) {
+  func sendPhotoMessage(email: String, conversationID: String?, info: [UIImagePickerController.InfoKey: Any], name: String?, sender: Sender?) {
     guard let image = info[UIImagePickerController.InfoKey.editedImage] as? UIImage,
           let imageData = image.pngData(),
           let messageId = createMessageId(for: email),
@@ -147,7 +146,7 @@ extension ChatPresenter: ChatViewPresenterProtocol {
     }
   }
     
-    func sendVideoMessage(email: String, conversationID: String?, info: [UIImagePickerController.InfoKey : Any], name: String?, sender: Sender?) {
+    func sendVideoMessage(email: String, conversationID: String?, info: [UIImagePickerController.InfoKey: Any], name: String?, sender: Sender?) {
       guard let videoUrl = info[.mediaURL] as? URL,
             let messageId = createMessageId(for: email),
             let conversationId = conversationID,
@@ -188,7 +187,7 @@ extension ChatPresenter: ChatViewPresenterProtocol {
       }
     }
       
-  func sendLocation(location: Location,email: String, conversationID: String?, name: String?, sender: Sender?) {
+  func sendLocation(location: Location, email: String, conversationID: String?, name: String?, sender: Sender?) {
     guard let messageId = createMessageId(for: email),
           let conversationId = conversationID,
           let name = name,
@@ -211,4 +210,3 @@ extension ChatPresenter: ChatViewPresenterProtocol {
       }
     
 }
-

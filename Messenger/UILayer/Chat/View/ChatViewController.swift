@@ -67,7 +67,7 @@ class ChatViewController: MessagesViewController {
     messageInputBar.inputTextView.becomeFirstResponder()
   }
 }
-//MARK: - Private func
+// MARK: - Private func
 extension ChatViewController {
   private func setupInputButton() {
     let buttonSize: Double = 36
@@ -107,13 +107,12 @@ extension ChatViewController {
     present(actionSheet, animated: true)
   }
   
-  
   private func presentLocationPicker() {
-    let vc = LocationPickerViewController(coordinates: nil)
-    vc.title = "Укажите геопозицию"
-    vc.navigationItem.largeTitleDisplayMode = .never
+    let viewController = LocationPickerViewController(coordinates: nil)
+    viewController.title = "Укажите геопозицию"
+    viewController.navigationItem.largeTitleDisplayMode = .never
     
-    vc.complition = { [weak self] coordinates in
+    viewController.complition = { [weak self] coordinates in
       guard let self = self else { return }
       let longitude: Double = coordinates.longitude
       let latitude: Double = coordinates.latitude
@@ -124,7 +123,7 @@ extension ChatViewController {
                                   name: self.title,
                                   sender: self.sender)
     }
-    navigationController?.pushViewController(vc, animated: true)
+    navigationController?.pushViewController(viewController, animated: true)
     
   }
   
@@ -194,7 +193,7 @@ extension ChatViewController {
   
 }
 
-//MARK: - DataSource, Delegate
+// MARK: - DataSource, Delegate
 extension ChatViewController: MessagesDataSource, MessagesLayoutDelegate, MessagesDisplayDelegate {
   func currentSender() -> SenderType {
       return sender!
@@ -256,7 +255,6 @@ extension ChatViewController: MessagesDataSource, MessagesLayoutDelegate, Messag
   }
 }
 
-
 extension ChatViewController: MessageCellDelegate {
   func didTapImage(in cell: MessageCollectionViewCell) {
     guard let indexPath = messagesCollectionView.indexPath(for: cell) else { return }
@@ -266,20 +264,19 @@ extension ChatViewController: MessageCellDelegate {
       
     case .photo(let media):
       guard let imageUrl = media.url else { return }
-      let vc = MessengerBuilder.buildPhotoViewerViewController(with: imageUrl)
-      navigationController?.pushViewController(vc, animated: true)
+      let viewController = MessengerBuilder.buildPhotoViewerViewController(with: imageUrl)
+      navigationController?.pushViewController(viewController, animated: true)
       
     case .video(let media):
       guard let videoUrl = media.url else { return }
-      let vc = AVPlayerViewController()
-      vc.player = AVPlayer(url: videoUrl)
-      present(vc, animated: true)
+      let viewController = AVPlayerViewController()
+      viewController.player = AVPlayer(url: videoUrl)
+      present(viewController, animated: true)
       
     default:
       break
     }
   }
-  
   
   func didTapMessage(in cell: MessageCollectionViewCell) {
     guard let indexPath = messagesCollectionView.indexPath(for: cell) else { return }
@@ -287,15 +284,15 @@ extension ChatViewController: MessageCellDelegate {
     switch message.kind {
     case .location(let locationData):
       let coordinates = locationData.location.coordinate
-      let vc = LocationPickerViewController(coordinates: coordinates)
-      vc.title = "Геопозиция"
-      navigationController?.pushViewController(vc, animated: true)
+      let viewController = LocationPickerViewController(coordinates: coordinates)
+      viewController.title = "Геопозиция"
+      navigationController?.pushViewController(viewController, animated: true)
     default:
       break
     }
   }
 }
-//MARK: - InputBarAccessoryViewDelegate
+// MARK: - InputBarAccessoryViewDelegate
 extension ChatViewController: InputBarAccessoryViewDelegate {
   /// отправка  текстового сообщения
   func inputBar(_ inputBar: InputBarAccessoryView, didPressSendButtonWith text: String) {
@@ -308,7 +305,7 @@ extension ChatViewController: InputBarAccessoryViewDelegate {
                           kind: .text(text))
     // send message
     if isNewConversation {
-      //create conv
+      // create conv
       
       presenter.createNewConversation(message: message,
                                       with: otherUserEmail,
@@ -340,10 +337,10 @@ extension ChatViewController: UIImagePickerControllerDelegate, UINavigationContr
     picker.dismiss(animated: true, completion: nil)
   }
   
-  func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+  func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
     picker.dismiss(animated: true, completion: nil)
     
-    if let _ = info[.editedImage] as? UIImage {
+    if info[.editedImage] as? UIImage != nil {
       
       presenter.sendPhotoMessage(email: otherUserEmail,
                                  conversationID: conversationID,
@@ -360,7 +357,7 @@ extension ChatViewController: UIImagePickerControllerDelegate, UINavigationContr
   }
 }
 
-//MARK: - PresenterProtocol
+// MARK: - PresenterProtocol
 extension ChatViewController: ChatViewProtocol {
   func alertUser(with text: String) {
     self.presentAlert(title: "Ошибка", message: text)

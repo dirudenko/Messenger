@@ -9,6 +9,4 @@ import MessageKit
 
 class ChatView: UIView {
 
-  
-
 }

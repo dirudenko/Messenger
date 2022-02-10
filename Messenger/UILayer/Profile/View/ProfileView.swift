@@ -67,7 +67,6 @@ class ProfileView: UIView {
       headerView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
       headerView.heightAnchor.constraint(equalToConstant: 200),
       
-      
       tableView.topAnchor.constraint(equalTo: headerView.bottomAnchor, constant: 8.0),
       tableView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
       tableView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
