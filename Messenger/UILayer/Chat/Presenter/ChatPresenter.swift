@@ -88,10 +88,32 @@ extension ChatPresenter: ChatViewPresenterProtocol {
         complition(false)
       }
     }
+    databaseService.createNewConversationForRecepient(with: email,
+                                          name: title,
+                                          firstMessage: message) { [weak self] success in
+      if success {
+        print("message send")
+        complition(true)
+      } else {
+        self?.view?.alertUser(with: "Ошибка при отправке сообщения")
+        complition(false)
+      }
+    }
   }
   
   func appendToConversation(message: Message, with email: String, to conversationID: String, name: String) {
     databaseService.sendMessage(to: conversationID,
+                                otherUserEmail: email,
+                                name: name,
+                                newMessage: message) { [weak self] success in
+      if success {
+        print("message send")
+      } else {
+        print("message NOT send")
+        self?.view?.alertUser(with: "Ошибка при отправке сообщения")
+      }
+    }
+    databaseService.sendMessageForReceiver(to: conversationID,
                                 otherUserEmail: email,
                                 name: name,
                                 newMessage: message) { [weak self] success in
@@ -139,9 +161,18 @@ extension ChatPresenter: ChatViewPresenterProtocol {
             self.view?.alertUser(with: "Ошибка при отправке фото")
           }
         }
+        self.databaseService.sendMessageForReceiver(to: conversationId,
+                                    otherUserEmail: email,
+                                    name: name,
+                                    newMessage: message) { [weak self] success in
+          if success {
+            print("message send")
+          } else {
+            self?.view?.alertUser(with: "Ошибка при отправке сообщения")
+          }
+        }
       case .failure(let error):
         self.view?.alertUser(with: "Ошибка при отправке фото: \(error)")
-        print("message photo updload error: \(error)")
       }
     }
   }
@@ -180,9 +211,18 @@ extension ChatPresenter: ChatViewPresenterProtocol {
               self.view?.alertUser(with: "Ошибка при отправке видео")
             }
           }
+          self.databaseService.sendMessageForReceiver(to: conversationId,
+                                      otherUserEmail: email,
+                                      name: name,
+                                      newMessage: message) { [weak self] success in
+            if success {
+              print("message send")
+            } else {
+              self?.view?.alertUser(with: "Ошибка при отправке сообщения")
+            }
+          }
         case .failure(let error):
           self.view?.alertUser(with: "Ошибка при отправке видео: \(error)")
-          print("message video updload error: \(error)")
         }
       }
     }

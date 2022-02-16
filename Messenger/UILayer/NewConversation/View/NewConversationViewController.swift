@@ -53,7 +53,8 @@ extension NewConversationViewController: UITableViewDataSource, UITableViewDeleg
   }
   
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-    guard let cell = tableView.dequeueReusableCell(withIdentifier: "NewConversationTableViewCell", for: indexPath) as? NewConversationTableViewCell else { return UITableViewCell() }
+    guard let cell = tableView.dequeueReusableCell(withIdentifier: "NewConversationTableViewCell", for: indexPath) as? NewConversationTableViewCell
+    else { return UITableViewCell() }
     cell.configure(with: results[indexPath.row])
     return cell
   }
