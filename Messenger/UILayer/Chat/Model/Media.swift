@@ -5,7 +5,7 @@
 //  Created by Dmitry on 11.10.2021.
 //
 
-import Foundation
+import UIKit
 import MessageKit
 
 struct Media: MediaItem {
