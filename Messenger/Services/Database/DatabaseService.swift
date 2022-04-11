@@ -27,10 +27,16 @@ protocol DatabaseMessagingProtocol {
   func sendMessageForReceiver(to conversation: String, otherUserEmail: String, name: String, newMessage: Message, complition: @escaping (Bool) -> Void)
   func deleteConversation(conversationID: String, complition: @escaping (Bool) -> Void)
   func converstionExists(with targetEmail: String, complition: @escaping (Result<String, Error>) -> Void)
+  func updateUserToken(email: String, complition: @escaping (Bool) -> Void)
+}
+
+protocol DatabaseNotificationProtocol {
+  
 }
 
 final class DatabaseService {
   let database = Database.database().reference()
+  let networkManager = NetworkService()
 }
 // MARK: - public func
 extension DatabaseService {
@@ -127,6 +133,21 @@ extension DatabaseService: DatabaseServiceProtocol {
     }
   }
   
+  func updateUserToken(email: String, complition: @escaping (Bool) -> Void) {
+    guard let token = UserDefaults.standard.object(forKey: "token") as? String else {
+      complition(false)
+      return
+    }
+    let ref = database.child("\(email.safeEmail)")
+    ref.observeSingleEvent(of: .value) { snapshot in
+      guard var userNode = snapshot.value as? [String: Any] else {
+              complition(false)
+              return
+            }
+      userNode["token"] = token
+      ref.setValue(userNode)
+  }
+  }
   /// add new user to database
   func addUser(user: User, complition: @escaping (Bool) -> Void) {
     database.child(user.safeEmail).setValue([

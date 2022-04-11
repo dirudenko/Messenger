@@ -50,9 +50,6 @@ class LoginViewController: UIViewController {
   
   @objc private func didTapLogin() {
     
-    loginView.loginField.resignFirstResponder()
-    loginView.passwordField.resignFirstResponder()
-    
     guard let login = loginView.loginField.text,
           let password = loginView.passwordField.text,
           !login.isEmpty,

@@ -59,6 +59,12 @@ class LoginPresenter: LoginViewPresenterProtocol {
         }
       }
       
+      self.databaseService.updateUserToken(email: email) { result in
+        if result == false {
+          fatalError()
+        }
+      }
+      
       self.view?.sucessToLogin()
     })
   }
@@ -101,7 +107,14 @@ class LoginPresenter: LoginViewPresenterProtocol {
           print("User is exist")
           FirebaseAuth.Auth.auth().signIn(with: credential) { result, error in
             guard  result != nil, error == nil else { return }
-            self.view?.sucessToLogin()
+            
+            self.databaseService.updateUserToken(email: email) { result in
+              if result == false {
+                fatalError()
+              } else {
+                self.view?.sucessToLogin()
+                }
+            }
           }
         } else {
           print("User is not exist")
@@ -135,7 +148,13 @@ class LoginPresenter: LoginViewPresenterProtocol {
                   }.resume()
                 }
               }
-              self.view?.sucessToLogin()
+              self.databaseService.updateUserToken(email: email) { result in
+                if result == false {
+                  fatalError()
+                } else {
+                  self.view?.sucessToLogin()
+                  }
+              }
             })
           }
         }

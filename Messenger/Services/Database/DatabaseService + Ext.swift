@@ -145,6 +145,13 @@ extension DatabaseService: DatabaseMessagingProtocol {
                                            complition: complition)
         }
       }
+      self.receiveToken(for: otherUserEmail) { result in
+        let token: String = result ?? ""
+        // swiftlint:disable force_cast
+        let message: String = message 
+        let userName = UserDefaults.standard.value(forKey: "name") as? String
+        self.sendNotification(from: userName ?? "Error", content: message, token: token)
+      }
     }
   }
   
@@ -313,7 +320,7 @@ extension DatabaseService: DatabaseMessagingProtocol {
     }
   }
   
-  private func prepareForSendMessage( conversation: String, otherUserEmail: String, name: String, newMessage: Message, complition: @escaping ([[String: Any]]?) -> Void) {
+  private func prepareForSendMessage(conversation: String, otherUserEmail: String, name: String, newMessage: Message, complition: @escaping ([[String: Any]]?) -> Void) {
     database.child("\(conversation)/messages").observeSingleEvent(of: .value) { snapshot in
       guard var currentMessage = snapshot.value as? [[String: Any]],
             let myEmail = UserDefaults.standard.value(forKey: "email") as? String else {
@@ -422,6 +429,15 @@ extension DatabaseService: DatabaseMessagingProtocol {
               ]
             ]
           }
+          
+          self.receiveToken(for: otherUserEmail) { result in
+            let token: String = result ?? ""
+            // swiftlint:disable force_cast
+            let message: String = currentMessage.last?["content"] as! String
+            let userName = UserDefaults.standard.value(forKey: "name") as? String
+            self.sendNotification(from: userName ?? "Error", content: message, token: token)
+          }
+         
           
           self.database.child("\(currentEmail)/conversations").setValue(databaseEntryConversations) { error, _ in
             guard error == nil else {

@@ -13,7 +13,7 @@ extension Date {
    let formatter = DateFormatter()
    formatter.dateStyle = .medium
    formatter.timeStyle = .long
-   formatter.locale = .current
+  formatter.locale = Locale(identifier: "en_us")
    let stringDate = formatter.string(from: self)
    return stringDate
  }

@@ -64,6 +64,10 @@
 		69C5D6E526F0A72600AB2D87 /* UserFBModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69C5D6E426F0A72600AB2D87 /* UserFBModel.swift */; };
 		69CA9238271F402A00283BFC /* NewConversationTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69CA9237271F402A00283BFC /* NewConversationTableViewCell.swift */; };
 		69CA923A271F413700283BFC /* SearchResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69CA9239271F413700283BFC /* SearchResult.swift */; };
+		69D5DAF527BE7A3B00A89915 /* DatabaseService + Notification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69D5DAF427BE7A3B00A89915 /* DatabaseService + Notification.swift */; };
+		69D5DAF827BE80D900A89915 /* NetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69D5DAF727BE80D900A89915 /* NetworkService.swift */; };
+		69D5DAFC27BEC2EF00A89915 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69D5DAFB27BEC2EF00A89915 /* Constants.swift */; };
+		69D5DAFF27BEC39900A89915 /* NetworkErrors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69D5DAFE27BEC39900A89915 /* NetworkErrors.swift */; };
 		69EABB4126FA56F500798E5F /* NewConversationPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69EABB4026FA56F500798E5F /* NewConversationPresenter.swift */; };
 		69EABB4326FA59A300798E5F /* ChatPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69EABB4226FA59A300798E5F /* ChatPresenter.swift */; };
 		69F5939926F5F574005AD477 /* TabBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69F5939826F5F574005AD477 /* TabBarViewController.swift */; };
@@ -83,6 +87,7 @@
 		6912398127BD67DE001C07EC /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		6912399827BD6D9B001C07EC /* Pods-Messenger.debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "Pods-Messenger.debug.xcconfig"; sourceTree = "<group>"; };
 		6912399927BD6D9C001C07EC /* Pods-Messenger.release.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "Pods-Messenger.release.xcconfig"; sourceTree = "<group>"; };
+		691239A227BD73C0001C07EC /* Messenger.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Messenger.entitlements; sourceTree = "<group>"; };
 		6912A17A274D561A009BC31D /* String+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Ext.swift"; sourceTree = "<group>"; };
 		6912A17C274D59D9009BC31D /* UIViewController+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Ext.swift"; sourceTree = "<group>"; };
 		6912A181274D609B009BC31D /* Date+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Ext.swift"; sourceTree = "<group>"; };
@@ -121,6 +126,10 @@
 		69C5D6E426F0A72600AB2D87 /* UserFBModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserFBModel.swift; sourceTree = "<group>"; };
 		69CA9237271F402A00283BFC /* NewConversationTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewConversationTableViewCell.swift; sourceTree = "<group>"; };
 		69CA9239271F413700283BFC /* SearchResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResult.swift; sourceTree = "<group>"; };
+		69D5DAF427BE7A3B00A89915 /* DatabaseService + Notification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DatabaseService + Notification.swift"; sourceTree = "<group>"; };
+		69D5DAF727BE80D900A89915 /* NetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkService.swift; sourceTree = "<group>"; };
+		69D5DAFB27BEC2EF00A89915 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		69D5DAFE27BEC39900A89915 /* NetworkErrors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkErrors.swift; sourceTree = "<group>"; };
 		69EABB4026FA56F500798E5F /* NewConversationPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewConversationPresenter.swift; sourceTree = "<group>"; };
 		69EABB4226FA59A300798E5F /* ChatPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatPresenter.swift; sourceTree = "<group>"; };
 		69F5939826F5F574005AD477 /* TabBarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarViewController.swift; sourceTree = "<group>"; };
@@ -170,6 +179,8 @@
 		6908E3D126E35459001082ED /* Messenger */ = {
 			isa = PBXGroup;
 			children = (
+				69D5DAF927BEC2DA00A89915 /* Helpers */,
+				691239A227BD73C0001C07EC /* Messenger.entitlements */,
 				6912399C27BD6DC9001C07EC /* Pods-Messenger */,
 				6912A179274D55E1009BC31D /* Extensions */,
 				6931D63E26E365760086AE5B /* Core */,
@@ -229,6 +240,7 @@
 				69C5D6DF26EFCBE100AB2D87 /* DatabaseService.swift */,
 				696B9D352702411800446BA0 /* DatabaseError.swift */,
 				6912397F27BD5AC5001C07EC /* DatabaseService + Ext.swift */,
+				69D5DAF427BE7A3B00A89915 /* DatabaseService + Notification.swift */,
 			);
 			path = Database;
 			sourceTree = "<group>";
@@ -292,6 +304,7 @@
 		6931D64226E365C40086AE5B /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				69D5DAF327BE793000A89915 /* Network */,
 				697AA61E27145D21002B630E /* Storage */,
 				6917783626F9DCEE00A1808E /* Database */,
 				69C5D6DB26E9437300AB2D87 /* Builder */,
@@ -541,6 +554,23 @@
 			path = Cell;
 			sourceTree = "<group>";
 		};
+		69D5DAF327BE793000A89915 /* Network */ = {
+			isa = PBXGroup;
+			children = (
+				69D5DAF727BE80D900A89915 /* NetworkService.swift */,
+				69D5DAFE27BEC39900A89915 /* NetworkErrors.swift */,
+			);
+			path = Network;
+			sourceTree = "<group>";
+		};
+		69D5DAF927BEC2DA00A89915 /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				69D5DAFB27BEC2EF00A89915 /* Constants.swift */,
+			);
+			path = Helpers;
+			sourceTree = "<group>";
+		};
 		69F5939326F5F3C0005AD477 /* Profile */ = {
 			isa = PBXGroup;
 			children = (
@@ -713,6 +743,7 @@
 				6912A17B274D561A009BC31D /* String+Ext.swift in Sources */,
 				6940D7D0272AA00E00ACBB29 /* ProfileTableViewCell.swift in Sources */,
 				697AA6282714A3BA002B630E /* PhotoViewerView.swift in Sources */,
+				69D5DAF827BE80D900A89915 /* NetworkService.swift in Sources */,
 				697AA62A2714A3EC002B630E /* PhotoViewerPresenter.swift in Sources */,
 				6931D65526E4BE300086AE5B /* RegisterView.swift in Sources */,
 				696E527926F9F5E000343EDB /* ConversationsView.swift in Sources */,
@@ -722,7 +753,10 @@
 				696B9D3426FDDB6D00446BA0 /* StorageErrors.swift in Sources */,
 				69C5D6DD26EFC44500AB2D87 /* ConversationsViewController.swift in Sources */,
 				6931D65F26E75A570086AE5B /* RegisterPresenter.swift in Sources */,
+				69D5DAFF27BEC39900A89915 /* NetworkErrors.swift in Sources */,
 				696E528626FA040800343EDB /* Sender.swift in Sources */,
+				69D5DAF527BE7A3B00A89915 /* DatabaseService + Notification.swift in Sources */,
+				69D5DAFC27BEC2EF00A89915 /* Constants.swift in Sources */,
 				697AA62027149CB4002B630E /* Media.swift in Sources */,
 				696E528226F9FDBF00343EDB /* ChatViewController.swift in Sources */,
 				696E528E26FA0EDD00343EDB /* NewConversationViewController.swift in Sources */,
@@ -815,7 +849,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -870,7 +904,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -885,8 +919,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Messenger/Messenger.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 7;
 				DEVELOPMENT_TEAM = N3G8R7BNR2;
 				INFOPLIST_FILE = Messenger/Resources/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
@@ -907,8 +942,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Messenger/Messenger.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 7;
 				DEVELOPMENT_TEAM = N3G8R7BNR2;
 				INFOPLIST_FILE = Messenger/Resources/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
