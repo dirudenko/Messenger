@@ -49,7 +49,7 @@ class NewConversationTableViewCell: UITableViewCell {
       userNameLabel.topAnchor.constraint(equalTo: userImage.topAnchor),
       userNameLabel.leftAnchor.constraint(equalTo: userImage.rightAnchor, constant: 10),
       userNameLabel.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -16),
-      userNameLabel.heightAnchor.constraint(equalToConstant: 52),
+      userNameLabel.heightAnchor.constraint(equalToConstant: 52)
     ])
   }
   
@@ -68,4 +68,3 @@ class NewConversationTableViewCell: UITableViewCell {
     }
   }
 }
-

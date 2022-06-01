@@ -3,9 +3,9 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>368082364748-p3d4ed9c1co77fb821272tefd5fugdt7.apps.googleusercontent.com</string>
+	<string>368082364748-c3lrf9b27au3v46o7is69mef6dqo3d9o.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.368082364748-p3d4ed9c1co77fb821272tefd5fugdt7</string>
+	<string>com.googleusercontent.apps.368082364748-c3lrf9b27au3v46o7is69mef6dqo3d9o</string>
 	<key>API_KEY</key>
 	<string>AIzaSyAJ-GSjKL-SDrvUwuGRudi5QbQMuBccnbI</string>
 	<key>GCM_SENDER_ID</key>
@@ -13,7 +13,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>home.Messenger</string>
+	<string>Dmitry-Rudenko.FBMessengerApp</string>
 	<key>PROJECT_ID</key>
 	<string>messenger-6df1e</string>
 	<key>STORAGE_BUCKET</key>
@@ -29,7 +29,7 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:368082364748:ios:b8cb5303e2733c3e3147e9</string>
+	<string>1:368082364748:ios:0c3e5168b406cc363147e9</string>
 	<key>DATABASE_URL</key>
 	<string>https://messenger-6df1e-default-rtdb.europe-west1.firebasedatabase.app</string>
 </dict>

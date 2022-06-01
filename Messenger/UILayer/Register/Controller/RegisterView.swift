@@ -9,7 +9,6 @@ import UIKit
 
 class RegisterView: UIView {
   
-  
   private let imageSize: CGFloat = 200
   
   private(set) lazy var avatarImage: UIImageView = {
@@ -105,7 +104,6 @@ class RegisterView: UIView {
     return button
   }()
   
-  
   override init(frame: CGRect) {
     super.init(frame: frame)
     configureUI()
@@ -124,11 +122,14 @@ class RegisterView: UIView {
     addSubview(emailField)
     addSubview(passwordField)
     addSubview(createButton)
-    
+    firstNameField.delegate = self
+    lastNameField.delegate = self
+    emailField.delegate = self
+    passwordField.delegate = self
     
     NSLayoutConstraint.activate([
       
-      avatarImage.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: imageSize / 2),
+      avatarImage.topAnchor.constraint(equalTo: topAnchor, constant: imageSize / 2),
       avatarImage.leftAnchor.constraint(equalTo: self.centerXAnchor, constant: -imageSize / 2),
       avatarImage.widthAnchor.constraint(equalToConstant: imageSize),
       avatarImage.heightAnchor.constraint(equalToConstant: imageSize),
@@ -156,8 +157,17 @@ class RegisterView: UIView {
       createButton.leftAnchor.constraint(equalTo: self.centerXAnchor, constant: -100),
       createButton.topAnchor.constraint(equalTo: passwordField.bottomAnchor, constant: 16),
       createButton.widthAnchor.constraint(equalToConstant: 200),
-      createButton.heightAnchor.constraint(equalToConstant: 32),
+      createButton.heightAnchor.constraint(equalToConstant: 32)
     ])
   }
 }
 
+extension RegisterView: UITextFieldDelegate {
+  func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+    passwordField.resignFirstResponder() // dismiss keyboard
+    firstNameField.resignFirstResponder()
+    emailField.resignFirstResponder()
+    lastNameField.resignFirstResponder()
+    return true
+  }
+}

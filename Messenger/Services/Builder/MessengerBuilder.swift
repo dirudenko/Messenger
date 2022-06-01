@@ -25,22 +25,22 @@ class MessengerBuilder: Builder {
   
   static func buildNewConversationViewController() -> UIViewController {
     let presenter = NewConversationPresenter(databaseService: databaseService, storageService: storageService)
-    let vc = NewConversationViewController(presenter: presenter)
-    presenter.view = vc
-    return vc
+    let viewController = NewConversationViewController(presenter: presenter)
+    presenter.view = viewController
+    return viewController
   }
   
   static func buildTabBar() -> UIViewController {
-    let vc = TabBarViewController()
-    vc.selectedIndex = 0
-    return vc
+    let viewController = TabBarViewController()
+    viewController.selectedIndex = 0
+    return viewController
   }
   
   static func buildConversationsViewController() -> UIViewController {
     let presenter = ConversationsPresenter(databaseService: databaseService, storageService: storageService)
-    let vc = ConversationsViewController(presenter: presenter)
-    presenter.view = vc
-    return vc
+    let viewController = ConversationsViewController(presenter: presenter)
+    presenter.view = viewController
+    return viewController
   }
   
   static func buildLoginScreenViewController() -> UIViewController {
@@ -66,15 +66,15 @@ class MessengerBuilder: Builder {
   
   static func buildChatViewController(with email: String, conversationID: String?) -> UIViewController {
     let presenter = ChatPresenter(databaseService: databaseService, conversationID: conversationID, storageService: storageService)
-    let vc = ChatViewController(presenter: presenter, email: email)
-    presenter.view = vc
-    return vc
+    let viewController = ChatViewController(presenter: presenter, email: email)
+    presenter.view = viewController
+    return viewController
   }
   
   static func buildPhotoViewerViewController(with url: URL) -> UIViewController {
     let presenter = PhotoViewerPresenter()
-    let vc = PhotoViewerViewController(presenter: presenter, url: url)
-    presenter.view = vc
-    return vc
+    let viewController = PhotoViewerViewController(presenter: presenter, url: url)
+    presenter.view = viewController
+    return viewController
   }
 }

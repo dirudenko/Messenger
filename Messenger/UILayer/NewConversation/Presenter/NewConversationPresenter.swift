@@ -7,7 +7,6 @@
 
 import UIKit
 
-
 protocol NewConversationViewProtocol: AnyObject {
   func updateUI(with results: [SearchResult])
 }
@@ -23,7 +22,6 @@ class NewConversationPresenter: NewConversationViewPresenterProtocol {
   
   private var users = [[String: String]]()
   private var hasFetched = false
-  
   
   let databaseService: DatabaseServiceProtocol
   let storageService: StorageServiceProtocol
@@ -51,12 +49,11 @@ class NewConversationPresenter: NewConversationViewPresenterProtocol {
     }
   }
   
-  
   private func filterUsers(with term: String) {
     guard let currentUserEmail = UserDefaults.standard.value(forKey: "email") as? String,
           hasFetched else { return }
     let safeEmail = currentUserEmail.safeEmail
-    let results: [SearchResult] = self.users.filter ({
+    let results: [SearchResult] = self.users.filter({
       guard let email = $0["email"],
             email != safeEmail else {
               return false

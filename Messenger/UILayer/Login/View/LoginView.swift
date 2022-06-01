@@ -8,9 +8,8 @@
 import UIKit
 import GoogleSignIn
 
-
 class LoginView: UIView {
-    
+  
   private(set) lazy var scrollView: UIScrollView = {
     let scrollView = UIScrollView()
     scrollView.translatesAutoresizingMaskIntoConstraints = false
@@ -110,7 +109,8 @@ class LoginView: UIView {
     addSubview(createButton)
     addSubview(passwordField)
     addSubview(googleButton)
-    
+    passwordField.delegate = self
+    loginField.delegate = self
     
     NSLayoutConstraint.activate([
       
@@ -142,7 +142,7 @@ class LoginView: UIView {
   
   private func addLogo() {
     addSubview(logoImage)
-    let size:CGFloat = 200
+    let size: CGFloat = 200
     NSLayoutConstraint.activate([
       
       logoImage.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: size/2),
@@ -150,5 +150,13 @@ class LoginView: UIView {
       logoImage.widthAnchor.constraint(equalToConstant: size),
       logoImage.heightAnchor.constraint(equalToConstant: size)
     ])
+  }
+}
+
+extension LoginView: UITextFieldDelegate {
+  func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+    passwordField.resignFirstResponder() // dismiss keyboard
+    loginField.resignFirstResponder()
+    return true
   }
 }

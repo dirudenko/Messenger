@@ -11,7 +11,7 @@ import MapKit
 
 class LocationPickerViewController: UIViewController {
   
-  var complition: ((CLLocationCoordinate2D) ->(Void))?
+  var complition: ((CLLocationCoordinate2D) -> Void)?
   
   private var isPickable = true
   private var coordinates: CLLocationCoordinate2D?

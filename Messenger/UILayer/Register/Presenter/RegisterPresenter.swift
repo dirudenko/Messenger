@@ -14,7 +14,7 @@ protocol RegisterViewProtocol: AnyObject {
 }
 
 protocol RegisterViewPresenterProtocol: AnyObject {
-  func viewDidRegister(firstName: String, lastName: String,email: String, password: String, image: UIImage)
+  func viewDidRegister(firstName: String, lastName: String, email: String, password: String, image: UIImage)
 }
 
 class RegisterPresenter: RegisterViewPresenterProtocol {
@@ -51,7 +51,7 @@ class RegisterPresenter: RegisterViewPresenterProtocol {
 
         self.databaseService.addUser(user: newUser, complition: { success in
           if success {
-            let fileName = newUser.UserPictureName
+            let fileName = newUser.userPictureName
             guard let data = image.pngData() else { return }
             self.storageService.uploadProfilePhoto(with: data,
                                                    fileName: fileName) { result in
@@ -70,5 +70,3 @@ class RegisterPresenter: RegisterViewPresenterProtocol {
     }
   }
 }
-
-

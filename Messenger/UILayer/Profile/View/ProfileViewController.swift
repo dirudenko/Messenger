@@ -35,8 +35,6 @@ class ProfileViewController: UIViewController {
     profileView.tableView.dataSource = self
   }
   
-  
-  
   override func viewDidAppear(_ animated: Bool) {
     super.viewDidAppear(animated)
   //  addUserInformation()
@@ -46,12 +44,12 @@ class ProfileViewController: UIViewController {
   private func addUserInformation() {
     let userName = UserDefaults.standard.value(forKey: "name") as? String
     data.append(ProfileModel(viewProfileType: .info,
-                             title:"Имя: \(userName ?? "Без имени")",
+                             title: "Имя: \(userName ?? "Без имени")",
                              handler: nil))
     
     let userEmail = UserDefaults.standard.value(forKey: "email") as? String
     data.append(ProfileModel(viewProfileType: .info,
-                             title:"Почта: \(userEmail ?? "Почта не указана")",
+                             title: "Почта: \(userEmail ?? "Почта не указана")",
                              handler: nil))
     
     guard let safeMail = userEmail?.safeEmail else { return }
@@ -63,20 +61,21 @@ class ProfileViewController: UIViewController {
                              title: "Выйти",
                              handler: { [weak self] in
       guard let self = self else { return }
-      let vc = self.presenter.viewDidLogout()
-      self.present(vc, animated: true)
+      let viewController = self.presenter.viewDidLogout()
+      self.present(viewController, animated: true)
     }))
   }
   
 }
-//MARK: - DataSource, Delegate
+// MARK: - DataSource, Delegate
 extension ProfileViewController: UITableViewDataSource, UITableViewDelegate {
   func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
     return data.count
   }
   
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-    guard let cell = profileView.tableView.dequeueReusableCell(withIdentifier: "ProfileTableViewCell", for: indexPath) as? ProfileTableViewCell else { return UITableViewCell()}
+    guard let cell = profileView.tableView.dequeueReusableCell(withIdentifier: "ProfileTableViewCell", for: indexPath) as? ProfileTableViewCell
+    else { return UITableViewCell()}
     let model = data[indexPath.row]
     cell.configure(with: model)
     return cell
@@ -87,11 +86,11 @@ extension ProfileViewController: UITableViewDataSource, UITableViewDelegate {
     data[indexPath.row].handler?()
   }
 }
-//MARK: - PresenterProtocol
+// MARK: - PresenterProtocol
 extension ProfileViewController: ProfileViewProtocol {
   func sucessLogout() {
-    let vc = MessengerBuilder.buildTabBar()
-    vc.modalPresentationStyle = .fullScreen
-    present(vc, animated: true)
+    let viewController = MessengerBuilder.buildTabBar()
+    viewController.modalPresentationStyle = .fullScreen
+    present(viewController, animated: true)
   }
 }

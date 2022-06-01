@@ -44,11 +44,11 @@ class ConversationsViewController: UIViewController {
     }
   }
   
-  //MARK: - Private func
+  // MARK: - Private func
   /// Создание нового окна диалога с пользователем
   @objc private func didTabComposeButton() {
-    guard let vc = MessengerBuilder.buildNewConversationViewController() as? NewConversationViewController else { return }
-    vc.complition = { [weak self] result in
+    guard let viewController = MessengerBuilder.buildNewConversationViewController() as? NewConversationViewController else { return }
+    viewController.complition = { [weak self] result in
       guard let self = self else { return }
       let currentConversations = self.conversations
       if let targetConversation = currentConversations.first(where: {
@@ -59,8 +59,8 @@ class ConversationsViewController: UIViewController {
         self.startNewConversation(with: result)
       }
     }
-    let navVC = UINavigationController(rootViewController: vc)
-    present(navVC, animated: true)
+    let navigationviewController = UINavigationController(rootViewController: viewController)
+    present(navigationviewController, animated: true)
   }
   
   private func startNewConversation(with user: SearchResult) {
@@ -71,40 +71,41 @@ class ConversationsViewController: UIViewController {
       guard let self = self else { return }
       switch result {
       case .success(let conversationID):
-        guard let vc = MessengerBuilder.buildChatViewController(with: email, conversationID: conversationID) as? ChatViewController else {
+        guard let viewController = MessengerBuilder.buildChatViewController(with: email, conversationID: conversationID) as? ChatViewController else {
           return
         }
-        vc.title = name
-        vc.isNewConversation = false
-        vc.navigationItem.largeTitleDisplayMode = .never
-        self.navigationController?.pushViewController(vc, animated: true)
-      case .failure(_):
-        guard let vc = MessengerBuilder.buildChatViewController(with: email, conversationID: nil) as? ChatViewController else {
+        viewController.title = name
+        viewController.isNewConversation = false
+        viewController.navigationItem.largeTitleDisplayMode = .never
+        self.navigationController?.pushViewController(viewController, animated: true)
+      case .failure:
+        guard let viewController = MessengerBuilder.buildChatViewController(with: email, conversationID: nil) as? ChatViewController else {
           return
         }
-        vc.title = name
-        vc.isNewConversation = true
-        vc.navigationItem.largeTitleDisplayMode = .never
-        self.navigationController?.pushViewController(vc, animated: true)
+        viewController.title = name
+        viewController.isNewConversation = true
+        viewController.navigationItem.largeTitleDisplayMode = .never
+        self.navigationController?.pushViewController(viewController, animated: true)
       }
     }
   }
   
   private func createChat(model: Conversation) {
-    let vc = MessengerBuilder.buildChatViewController(with: model.otherUserEmail, conversationID: model.id)
-    vc.title = model.name
-    vc.navigationItem.largeTitleDisplayMode = .never
-    navigationController?.pushViewController(vc, animated: true)
+    let viewController = MessengerBuilder.buildChatViewController(with: model.otherUserEmail, conversationID: model.id)
+    viewController.title = model.name
+    viewController.navigationItem.largeTitleDisplayMode = .never
+    navigationController?.pushViewController(viewController, animated: true)
   }
 }
-//MARK: - DataSource, Delegate
+// MARK: - DataSource, Delegate
 extension ConversationsViewController: UITableViewDataSource, UITableViewDelegate {
   func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
     return conversations.count
   }
   
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-    guard let cell = tableView.dequeueReusableCell(withIdentifier: "ConversationTableViewCell", for: indexPath) as? ConversationTableViewCell else { return UITableViewCell() }
+    guard let cell = tableView.dequeueReusableCell(withIdentifier: "ConversationTableViewCell", for: indexPath)
+            as? ConversationTableViewCell else { return UITableViewCell() }
     let model = conversations[indexPath.row]
     cell.configure(with: model)
     cell.accessoryType = .disclosureIndicator
@@ -126,12 +127,13 @@ extension ConversationsViewController: UITableViewDataSource, UITableViewDelegat
       let conversationID = conversations[indexPath.row].id
       tableView.beginUpdates()
       presenter.deleteConversation(conversationID: conversationID) { [weak self] success in
+        guard let self = self else { return }
         if success {
-          self?.conversations.remove(at: indexPath.row)
+          self.conversations.remove(at: indexPath.row)
           tableView.deleteRows(at: [indexPath], with: .automatic)
-          if self?.conversations.count == 0 {
-            self?.chatsView.tableView.isHidden = true
-            self?.chatsView.noChatsLabel.isHidden = false
+          if self.conversations.isEmpty {
+            self.chatsView.tableView.isHidden = true
+            self.chatsView.noChatsLabel.isHidden = false
           }
           tableView.reloadData()
         }
@@ -144,7 +146,7 @@ extension ConversationsViewController: UITableViewDataSource, UITableViewDelegat
     return .delete
   }
 }
-//MARK: - PresenterProtocol
+// MARK: - PresenterProtocol
 extension ConversationsViewController: ConversationsViewProtocol {
 
   func successGetConversations(conversations: [Conversation]) {
@@ -157,9 +159,9 @@ extension ConversationsViewController: ConversationsViewProtocol {
   }
   
   func unableToAuthorizate() {
-    let vc = MessengerBuilder.buildLoginScreenViewController()
-    vc.modalPresentationStyle = .fullScreen
-    navigationController?.pushViewController(vc, animated: false)
+    let viewController = MessengerBuilder.buildLoginScreenViewController()
+    viewController.modalPresentationStyle = .fullScreen
+    navigationController?.pushViewController(viewController, animated: false)
     tabBarController?.tabBar.isHidden = true
   }
 }

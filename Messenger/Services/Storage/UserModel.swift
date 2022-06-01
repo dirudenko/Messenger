@@ -12,7 +12,7 @@ struct User {
   let lastName: String
   var fullName: String { firstName + lastName }
   let email: String
-  var UserPictureName: String {
+  var userPictureName: String {
     return "\(safeEmail)_profile_picture.png"
   }
   var safeEmail: String {

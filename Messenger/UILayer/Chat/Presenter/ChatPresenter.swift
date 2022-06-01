@@ -20,8 +20,8 @@ protocol ChatViewPresenterProtocol: AnyObject {
   func createMessageId(for email: String) -> String?
   func createNewConversation(message: Message, with email: String, title: String, complition: @escaping (Bool) -> Void)
   func appendToConversation(message: Message, with email: String, to conversationID: String, name: String)
-  func sendPhotoMessage(email: String, conversationID: String?, info: [UIImagePickerController.InfoKey : Any], name: String?, sender: Sender?)
-  func sendVideoMessage(email: String, conversationID: String?, info: [UIImagePickerController.InfoKey : Any], name: String?, sender: Sender?)
+  func sendPhotoMessage(email: String, conversationID: String?, info: [UIImagePickerController.InfoKey: Any], name: String?, sender: Sender?)
+  func sendVideoMessage(email: String, conversationID: String?, info: [UIImagePickerController.InfoKey: Any], name: String?, sender: Sender?)
   func sendLocation(location: Location, email: String, conversationID: String?, name: String?, sender: Sender?)
   func downloadURL(for path: String, image: UIImageView)
 }
@@ -32,7 +32,6 @@ class ChatPresenter {
   
   private let databaseService: DatabaseMessagingProtocol
   private let storageService: StorageServiceProtocol
-  
   
   init(databaseService: DatabaseMessagingProtocol, conversationID: String?, storageService: StorageServiceProtocol) {
     self.databaseService = databaseService
@@ -89,6 +88,17 @@ extension ChatPresenter: ChatViewPresenterProtocol {
         complition(false)
       }
     }
+    databaseService.createNewConversationForRecepient(with: email,
+                                          name: title,
+                                          firstMessage: message) { [weak self] success in
+      if success {
+        print("message send")
+        complition(true)
+      } else {
+        self?.view?.alertUser(with: "Ошибка при отправке сообщения")
+        complition(false)
+      }
+    }
   }
   
   func appendToConversation(message: Message, with email: String, to conversationID: String, name: String) {
@@ -103,9 +113,20 @@ extension ChatPresenter: ChatViewPresenterProtocol {
         self?.view?.alertUser(with: "Ошибка при отправке сообщения")
       }
     }
+    databaseService.sendMessageForReceiver(to: conversationID,
+                                otherUserEmail: email,
+                                name: name,
+                                newMessage: message) { [weak self] success in
+      if success {
+        print("message send")
+      } else {
+        print("message NOT send")
+        self?.view?.alertUser(with: "Ошибка при отправке сообщения")
+      }
+    }
   }
   
-  func sendPhotoMessage(email: String, conversationID: String?, info: [UIImagePickerController.InfoKey : Any], name: String?, sender: Sender?) {
+  func sendPhotoMessage(email: String, conversationID: String?, info: [UIImagePickerController.InfoKey: Any], name: String?, sender: Sender?) {
     guard let image = info[UIImagePickerController.InfoKey.editedImage] as? UIImage,
           let imageData = image.pngData(),
           let messageId = createMessageId(for: email),
@@ -140,14 +161,23 @@ extension ChatPresenter: ChatViewPresenterProtocol {
             self.view?.alertUser(with: "Ошибка при отправке фото")
           }
         }
+        self.databaseService.sendMessageForReceiver(to: conversationId,
+                                    otherUserEmail: email,
+                                    name: name,
+                                    newMessage: message) { [weak self] success in
+          if success {
+            print("message send")
+          } else {
+            self?.view?.alertUser(with: "Ошибка при отправке сообщения")
+          }
+        }
       case .failure(let error):
         self.view?.alertUser(with: "Ошибка при отправке фото: \(error)")
-        print("message photo updload error: \(error)")
       }
     }
   }
     
-    func sendVideoMessage(email: String, conversationID: String?, info: [UIImagePickerController.InfoKey : Any], name: String?, sender: Sender?) {
+    func sendVideoMessage(email: String, conversationID: String?, info: [UIImagePickerController.InfoKey: Any], name: String?, sender: Sender?) {
       guard let videoUrl = info[.mediaURL] as? URL,
             let messageId = createMessageId(for: email),
             let conversationId = conversationID,
@@ -181,14 +211,23 @@ extension ChatPresenter: ChatViewPresenterProtocol {
               self.view?.alertUser(with: "Ошибка при отправке видео")
             }
           }
+          self.databaseService.sendMessageForReceiver(to: conversationId,
+                                      otherUserEmail: email,
+                                      name: name,
+                                      newMessage: message) { [weak self] success in
+            if success {
+              print("message send")
+            } else {
+              self?.view?.alertUser(with: "Ошибка при отправке сообщения")
+            }
+          }
         case .failure(let error):
           self.view?.alertUser(with: "Ошибка при отправке видео: \(error)")
-          print("message video updload error: \(error)")
         }
       }
     }
       
-  func sendLocation(location: Location,email: String, conversationID: String?, name: String?, sender: Sender?) {
+  func sendLocation(location: Location, email: String, conversationID: String?, name: String?, sender: Sender?) {
     guard let messageId = createMessageId(for: email),
           let conversationId = conversationID,
           let name = name,
@@ -211,4 +250,3 @@ extension ChatPresenter: ChatViewPresenterProtocol {
       }
     
 }
-

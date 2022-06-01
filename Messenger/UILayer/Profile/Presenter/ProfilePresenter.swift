@@ -10,7 +10,6 @@ import FirebaseAuth
 import GoogleSignIn
 import SDWebImage
 
-
 protocol ProfileViewProtocol: AnyObject {
   func sucessLogout()
 }
@@ -47,8 +46,7 @@ class ProfilePresenter: ProfileViewPresenterProtocol {
         
         try FirebaseAuth.Auth.auth().signOut()
         self.view?.sucessLogout()
-      }
-      catch {
+      } catch {
         print("Failed to logout")
       }
     }))

@@ -37,8 +37,7 @@ class ConversationsPresenter: ConversationsViewPresenterProtocol {
     if FirebaseAuth.Auth.auth().currentUser == nil {
       view?.unableToAuthorizate()
       return false
-    } else
-    {
+    } else {
       return true
     }
   }
@@ -48,7 +47,7 @@ class ConversationsPresenter: ConversationsViewPresenterProtocol {
       switch result {
       case .success(let conversationId):
         complition(.success(conversationId))
-      case .failure(_):
+      case .failure:
         complition(.failure(DatabaseError.failedToFetch))
       }
     }

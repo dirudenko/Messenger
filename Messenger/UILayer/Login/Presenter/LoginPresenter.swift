@@ -34,10 +34,10 @@ class LoginPresenter: LoginViewPresenterProtocol {
   
   /// Авторизация через приложение
   func viewDidLogin(email: String, password: String) {
-    FirebaseAuth.Auth.auth().signIn(withEmail: email, password: password, completion: { [weak self] result , error in
+    FirebaseAuth.Auth.auth().signIn(withEmail: email, password: password, completion: { [weak self] result, error in
       guard let self = self else { return }
       
-      guard let _ = result,
+      guard result != nil,
             error == nil else {
               self.view?.alertUser(error?.localizedDescription ?? "Error")
               return
@@ -59,13 +59,19 @@ class LoginPresenter: LoginViewPresenterProtocol {
         }
       }
       
+      self.databaseService.updateUserToken(email: email) { result in
+        if result == false {
+          fatalError()
+        }
+      }
+      
       self.view?.sucessToLogin()
     })
   }
   
   func viewDidRegister() {
-    let vc = MessengerBuilder.buildRegisterViewController()
-    view?.navigationController?.pushViewController(vc, animated: true)
+    let viewController = MessengerBuilder.buildRegisterViewController()
+    view?.navigationController?.pushViewController(viewController, animated: true)
   }
   
   /// Авторизация через Google
@@ -78,7 +84,7 @@ class LoginPresenter: LoginViewPresenterProtocol {
       guard let self = self else { return }
       
       if let error = error {
-        print (error.localizedDescription)
+        print(error.localizedDescription)
         return
       }
       guard let authentication = user?.authentication,
@@ -101,7 +107,14 @@ class LoginPresenter: LoginViewPresenterProtocol {
           print("User is exist")
           FirebaseAuth.Auth.auth().signIn(with: credential) { result, error in
             guard  result != nil, error == nil else { return }
-            self.view?.sucessToLogin()
+            
+            self.databaseService.updateUserToken(email: email) { result in
+              if result == false {
+                fatalError()
+              } else {
+                self.view?.sucessToLogin()
+                }
+            }
           }
         } else {
           print("User is not exist")
@@ -117,17 +130,17 @@ class LoginPresenter: LoginViewPresenterProtocol {
                   guard let url = user?.profile?.imageURL(withDimension: 200) else { return }
                   URLSession.shared.dataTask(with: url) { data, response, error in
                     
-                    if let _ = error { return }
+                    if error != nil { return }
                     guard let response = response as? HTTPURLResponse, response.statusCode == 200 else { return }
 
                     guard let data  = data else { return }
-                    let fileName = newUser.UserPictureName
+                    let fileName = newUser.userPictureName
                     self.storageService.uploadProfilePhoto(with: data,
                                                            fileName: fileName) { result in
                       switch result {
                       case .success(let downloadURL):
                         UserDefaults.standard.set(downloadURL, forKey: "profile_picture_url")
-                        //print(downloadURL)
+                        // print(downloadURL)
                       case .failure(let error):
                         print(error)
                       }
@@ -135,7 +148,13 @@ class LoginPresenter: LoginViewPresenterProtocol {
                   }.resume()
                 }
               }
-              self.view?.sucessToLogin()
+              self.databaseService.updateUserToken(email: email) { result in
+                if result == false {
+                  fatalError()
+                } else {
+                  self.view?.sucessToLogin()
+                  }
+              }
             })
           }
         }

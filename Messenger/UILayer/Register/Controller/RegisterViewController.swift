@@ -39,7 +39,6 @@ class RegisterViewController: UIViewController {
     navigationController?.navigationBar.isHidden = true
   }
   
-  
   @objc private func didTapRegister() {
     
     registerView.firstNameField.resignFirstResponder()
@@ -90,24 +89,23 @@ extension RegisterViewController: UIImagePickerControllerDelegate, UINavigationC
     present(action, animated: true)
   }
   
-  
   private func presentFromCamera() {
-    let vc = UIImagePickerController()
-    vc.sourceType = .camera
-    vc.delegate = self
-    vc.allowsEditing = true
-    present(vc, animated: true)
+    let viewController = UIImagePickerController()
+    viewController.sourceType = .camera
+    viewController.delegate = self
+    viewController.allowsEditing = true
+    present(viewController, animated: true)
   }
   
   private func presentFromPhotoLibrary() {
-    let vc = UIImagePickerController()
-    vc.sourceType = .photoLibrary
-    vc.delegate = self
-    vc.allowsEditing = true
-    present(vc, animated: true)
+    let viewController = UIImagePickerController()
+    viewController.sourceType = .photoLibrary
+    viewController.delegate = self
+    viewController.allowsEditing = true
+    present(viewController, animated: true)
   }
   
-  internal func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+  internal func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
     picker.dismiss(animated: true, completion: nil)
     guard let selectedImage = info[UIImagePickerController.InfoKey.editedImage] as? UIImage else { return }
     registerView.avatarImage.image = selectedImage
@@ -123,11 +121,10 @@ extension RegisterViewController: RegisterViewProtocol {
   
   func successToRegister() {
     let alert = UIAlertController(title: "Ура", message: "Пользователь успешно создан", preferredStyle: .alert)
-    alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler:
-                                    { [weak self] _ in
-      let vc = MessengerBuilder.buildTabBar()
-      vc.modalPresentationStyle = .fullScreen
-      self?.present(vc, animated: false)
+    alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: { [weak self] _ in
+      let viewController = MessengerBuilder.buildTabBar()
+      viewController.modalPresentationStyle = .fullScreen
+      self?.present(viewController, animated: false)
                                     }))
     present(alert, animated: true)
     

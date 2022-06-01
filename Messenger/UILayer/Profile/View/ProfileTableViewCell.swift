@@ -38,7 +38,6 @@ class ProfileTableViewCell: UITableViewCell {
     return label
   }()
   
-  
   override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
     super.init(style: style, reuseIdentifier: reuseIdentifier)
     contentView.addSubview(userNameLabel)
@@ -78,4 +77,3 @@ class ProfileTableViewCell: UITableViewCell {
     }
   }
 }
-
